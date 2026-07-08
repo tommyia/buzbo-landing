@@ -1,0 +1,514 @@
+---
+import '../styles/global.css';
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link rel="icon" type="image/png" href="/brand/mark-crimson.png" />
+		<link rel="apple-touch-icon" href="/brand/app-icon-source.png" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Buzbo</title>
+	</head>
+	<body class="font-sans antialiased">
+			<div class="bg-primary-beige">
+				<header class="absolute inset-x-0 top-0 z-50">
+					<div class="relative flex items-center gap-x-6 bg-primary-crimson px-6 py-2.5 after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-primary-beige/20 sm:px-3.5 sm:before:flex-1">
+						<p class="text-sm/6 text-white">
+							<a href="#">
+								<strong class="font-semibold">✨ The Buzbo app is launching soon! ✨</strong><svg viewBox="0 0 2 2" aria-hidden="true" class="mx-2 inline size-0.5 fill-current"></svg>→ Join the waitlist&nbsp;<span aria-hidden="true"></span>
+							</a>
+						</p>
+						<div class="flex flex-1 justify-end">
+							<button type="button" class="-m-3 p-3 focus-visible:-outline-offset-4">
+								<span class="sr-only">Dismiss</span>
+								<svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5 text-white">
+									<path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+								</svg>
+							</button>
+						</div>
+					</div>
+					
+					<nav aria-label="Global" class="flex items-center justify-between p-6 lg:px-8">
+						<div class="flex lg:flex-1">
+							<a href="#" class="-m-1.5 p-1.5">
+								<span class="sr-only">Buzbo</span>
+								<img src="/brand/logo-full-crimson.png" alt="Buzbo" class="h-20 w-auto" />
+							</a>
+						</div>
+						<div class="flex lg:hidden">
+							<button type="button" command="show-modal" commandfor="mobile-menu" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700">
+								<span class="sr-only">Open main menu</span>
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6">
+									<path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" stroke-linecap="round" stroke-linejoin="round" />
+								</svg>
+							</button>
+						</div>
+						<div class="hidden lg:flex lg:gap-x-12">
+							<a href="#" class="text-sm/6 font-semibold text-gray-900">FOR PROFESSIONAL</a>
+							<a href="#" class="text-sm/6 font-semibold text-gray-900">FOR BUSINESS</a>
+							<a href="#" class="text-sm/6 font-semibold text-gray-900">EVENTS</a>
+							<a href="#" class="text-sm/6 font-semibold text-gray-900">ABOUT US</a>
+						</div>
+						<div class="hidden lg:flex lg:flex-1 lg:justify-end">
+							<a href="#" class="font-semibold bg-primary-crimson py-2 px-7 rounded-full text-white text-lg ">Join the waitlist</a>
+						</div>
+					</nav>
+					<el-dialog>
+						<dialog id="mobile-menu" class="m-0 p-0 backdrop:bg-transparent lg:hidden">
+							<div tabindex="0" class="fixed inset-0 focus:outline focus:outline-0">
+								<el-dialog-panel class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+									<div class="flex items-center justify-between">
+										<a href="#" class="-m-1.5 p-1.5">
+											<span class="sr-only">Buzbo</span>
+											<img src="/brand/logo-full-crimson.png" alt="Buzbo" class="h-8 w-auto" />
+										</a>
+										<button type="button" command="close" commandfor="mobile-menu" class="-m-2.5 rounded-md p-2.5 text-gray-700">
+											<span class="sr-only">Close menu</span>
+											<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6">
+												<path d="M6 18 18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
+											</svg>
+										</button>
+									</div>
+									<div class="mt-6 flow-root">
+										<div class="-my-6 divide-y divide-gray-500/10">
+											<div class="space-y-2 py-6">
+												<a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Product</a>
+												<a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Features</a>
+												<a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Marketplace</a>
+												<a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Company</a>
+											</div>
+											<div class="py-6">
+												<a href="#" class="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">Log in</a>
+											</div>
+										</div>
+									</div>
+								</el-dialog-panel>
+							</div>
+						</dialog>
+					</el-dialog>
+				</header>
+
+				<div class="relative isolate pt-14">
+					<svg aria-hidden="true" class="absolute inset-0 -z-10 size-full stroke-gray-200 [mask-image:radial-gradient(100%_100%_at_top_right,white,transparent)]">
+						<defs>
+							<pattern id="83fd4e5a-9d52-42fc-97b6-718e5d7ee527" width="200" height="200" x="50%" y="-1" patternUnits="userSpaceOnUse">
+								<path d="M100 200V.5M.5 .5H200" fill="none" />
+							</pattern>
+						</defs>
+						<svg x="50%" y="-1" class="overflow-visible fill-primary-beige">
+							<path d="M-100.5 0h201v201h-201Z M699.5 0h201v201h-201Z M499.5 400h201v201h-201Z M-300.5 600h201v201h-201Z" stroke-width="0" />
+						</svg>
+						<rect width="100%" height="100%" fill="url(#83fd4e5a-9d52-42fc-97b6-718e5d7ee527)" stroke-width="0" />
+					</svg>
+					<div class="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:flex lg:items-center lg:gap-x-12 xl:gap-x-16 lg:px-8 lg:py-40">
+						<div class="mx-auto max-w-2xl lg:mx-0 lg:w-1/2 lg:flex-none">
+							<div class="flex">
+								<div class="relative flex items-center ">
+									<span class="font-semibold text-primary-crimson uppercase">human-first hiring</span>
+								</div>
+							</div>
+							<h1 class="mt-10 text-pretty text-5xl font-extrabold tracking-tight text-gray-900 sm:text-7xl font-sans">Get hired for who you are. <span class="italic font-normal font-serif">Not what's on your CV</span>.</h1>
+							<p class="mt-8 text-pretty text-lg font-normal text-gray-900 sm:text-xl/8">Buzbo is a new way to connect ambitious professionals with  companies that hire for mindset, passion and character —  not just experience. The app isn't live yet. The waitlist is  how you get in first.</p>
+							<div class="mt-10 flex items-center gap-x-6">
+								<a href="#" class="font-semibold bg-primary-crimson py-2 px-7 rounded-full text-white text-lg ">Join the waitlist</a>
+							</div>
+						</div>
+						<div class="mt-16 flex flex-1 items-center justify-center sm:mt-24 lg:mt-0 lg:justify-end">
+							<img
+								src="/hero.png"
+								width="595"
+								height="548"
+								alt="Buzbo team network showing people connected across departments"
+								class="w-full max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-xl drop-shadow-2xl"
+								loading="eager"
+							/>
+						</div>
+					</div>
+				</div>
+
+				<div class="bg-primary-beige">
+					<div class="mx-auto max-w-7xl px-6 lg:px-8">
+						<div class="mx-auto grid max-w-2xl grid-cols-1 items-start gap-x-8 gap-y-16 sm:gap-y-24 lg:mx-0 lg:max-w-none lg:grid-cols-2">
+							<div class="lg:pr-4">
+								<img src="/app-view.png" alt="" class="" />
+							</div>
+							<div>
+								<div class="text-base/7 text-gray-700 lg:max-w-lg">
+									<p class="text-base/7 font-semibold text-primary-crimson">JOIN THE MOVEMENT</p>
+									<h1 class="mt-2 text-pretty text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">This is just the beginning and it's growing fast.</h1>
+									<div class="max-w-xl">
+										<p class="mt-6">Every day, more professionals and companies join the Buzbo  waitlist. Not because we told them to, but because they're  done with hiring that ignores who people actually are. Join now, and you're part of the first wave — before the  app even exists.</p>
+									</div>
+								</div>
+								<div class="mt-10 flex">
+									<a href="#" class="font-semibold bg-primary-crimson py-2 px-7 rounded-full text-white text-lg ">Join the waitlist</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="bg-white/60 py-24 sm:py-32">
+					<div class="mx-auto max-w-2xl px-6 lg:max-w-7xl lg:px-8">
+						<h2 class="text-base/7 font-semibold text-primary-crimson">Why Buzbo?</h2>
+						<p class="mt-2 max-w-lg text-pretty text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">Built for two sides of the same problem.</p>
+						<div class="mt-10 grid grid-cols-1 gap-4 sm:mt-16 lg:grid-cols-6 lg:grid-rows-2">
+							<div class="flex p-px lg:col-span-4">
+								<div class="w-full overflow-hidden rounded-lg bg-white shadow outline outline-1 outline-black/5 max-lg:rounded-t-[2rem] lg:rounded-tl-[2rem]">
+									<img src="https://tailwindcss.com/plus-assets/img/component-images/bento-02-releases.png" alt="" class="h-80 object-cover object-left" />
+									<div class="p-10">
+										<h3 class="text-sm/4 font-semibold text-gray-500">Releases</h3>
+										<p class="mt-2 text-lg font-medium tracking-tight text-gray-900">Push to deploy</p>
+										<p class="mt-2 max-w-lg text-sm/6 text-gray-600">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In gravida justo et nulla efficitur, maximus egestas sem pellentesque.</p>
+									</div>
+								</div>
+							</div>
+							<div class="flex p-px lg:col-span-2">
+								<div class="w-full overflow-hidden rounded-lg bg-white shadow outline outline-1 outline-black/5 lg:rounded-tr-[2rem]">
+									<img src="https://tailwindcss.com/plus-assets/img/component-images/bento-02-integrations.png" alt="" class="h-80 object-cover" />
+									<div class="p-10">
+										<h3 class="text-sm/4 font-semibold text-gray-500">Integrations</h3>
+										<p class="mt-2 text-lg font-medium tracking-tight text-gray-900">Connect your favorite tools</p>
+										<p class="mt-2 max-w-lg text-sm/6 text-gray-600">Curabitur auctor, ex quis auctor venenatis, eros arcu rhoncus massa.</p>
+									</div>
+								</div>
+							</div>
+							<div class="flex p-px lg:col-span-2">
+								<div class="w-full overflow-hidden rounded-lg bg-white shadow outline outline-1 outline-black/5 lg:rounded-bl-[2rem]">
+									<img src="https://tailwindcss.com/plus-assets/img/component-images/bento-02-security.png" alt="" class="h-80 object-cover" />
+									<div class="p-10">
+										<h3 class="text-sm/4 font-semibold text-gray-500">Security</h3>
+										<p class="mt-2 text-lg font-medium tracking-tight text-gray-900">Advanced access control</p>
+										<p class="mt-2 max-w-lg text-sm/6 text-gray-600">Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia.</p>
+									</div>
+								</div>
+							</div>
+							<div class="flex p-px lg:col-span-4">
+								<div class="w-full overflow-hidden rounded-lg bg-white shadow outline outline-1 outline-black/5 max-lg:rounded-b-[2rem] lg:rounded-br-[2rem]">
+									<img src="https://tailwindcss.com/plus-assets/img/component-images/bento-02-performance.png" alt="" class="h-80 object-cover object-left" />
+									<div class="p-10">
+										<h3 class="text-sm/4 font-semibold text-gray-500">Performance</h3>
+										<p class="mt-2 text-lg font-medium tracking-tight text-gray-900">Lightning-fast builds</p>
+										<p class="mt-2 max-w-lg text-sm/6 text-gray-600">Sed congue eros non finibus molestie. Vestibulum euismod augue vel commodo vulputate. Maecenas at augue sed elit dictum vulputate.</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="relative isolate bg-primary-beige pb-32 pt-24 sm:pt-32">
+					<div aria-hidden="true" class="absolute inset-x-0 top-1/2 -z-10 -translate-y-1/2 transform-gpu overflow-hidden opacity-30 blur-3xl">
+						<div style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" class="ml-[max(50%,38rem)] aspect-[1313/771] w-[82.0625rem] bg-gradient-to-tr from-primary-beige to-primary-crimson"></div>
+					</div>
+					<div aria-hidden="true" class="absolute inset-x-0 top-0 -z-10 flex transform-gpu overflow-hidden pt-32 opacity-25 blur-3xl sm:pt-40 xl:justify-end">
+						<div style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" class="ml-[-22rem] aspect-[1313/771] w-[82.0625rem] flex-none origin-top-right rotate-[30deg] bg-gradient-to-tr from-primary-beige to-primary-crimson xl:ml-0 xl:mr-[calc(50%-12rem)]"></div>
+					</div>
+					<div class="mx-auto max-w-7xl px-6 lg:px-8">
+						<div class="mx-auto max-w-2xl text-center">
+							<h2 class="text-base/7 font-semibold text-primary-crimson">Testimonials</h2>
+							<p class="mt-2 text-balance text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">We have worked with thousands of amazing people</p>
+						</div>
+						<div class="mx-auto mt-16 grid max-w-2xl grid-cols-1 grid-rows-1 gap-8 text-sm/6 text-gray-900 sm:mt-20 sm:grid-cols-2 xl:mx-0 xl:max-w-none xl:grid-flow-col xl:grid-cols-4">
+							<figure class="rounded-2xl bg-white shadow-lg ring-1 ring-gray-900/5 sm:col-span-2 xl:col-start-2 xl:row-end-1">
+								<blockquote class="p-6 text-lg font-semibold tracking-tight text-gray-900 sm:p-12 sm:text-xl/8">
+									<p>“Integer id nunc sit semper purus. Bibendum at lacus ut arcu blandit montes vitae auctor libero. Hac condimentum dignissim nibh vulputate ut nunc. Amet nibh orci mi venenatis blandit vel et proin. Non hendrerit in vel ac diam.”</p>
+								</blockquote>
+								<figcaption class="flex flex-wrap items-center gap-x-4 gap-y-4 border-t border-gray-900/10 px-6 py-4 sm:flex-nowrap">
+									<img src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=1024&h=1024&q=80" alt="" class="size-10 flex-none rounded-full bg-gray-50" />
+									<div class="flex-auto">
+										<div class="font-semibold text-gray-900">Brenna Goyette</div>
+										<div class="text-gray-600">@brennagoyette</div>
+									</div>
+									<img src="/brand/wordmark-crimson.png" alt="Buzbo" class="h-10 w-auto flex-none" />
+								</figcaption>
+							</figure>
+							<div class="space-y-8 xl:contents xl:space-y-0">
+								<div class="space-y-8 xl:row-span-2">
+									<figure class="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5">
+										<blockquote class="text-gray-900">
+											<p>“Laborum quis quam. Dolorum et ut quod quia. Voluptas numquam delectus nihil. Aut enim doloremque et ipsam.”</p>
+										</blockquote>
+										<figcaption class="mt-6 flex items-center gap-x-4">
+											<img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" class="size-10 rounded-full bg-gray-50" />
+											<div>
+												<div class="font-semibold text-gray-900">Leslie Alexander</div>
+												<div class="text-gray-600">@lesliealexander</div>
+											</div>
+										</figcaption>
+									</figure>
+									<figure class="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5">
+										<blockquote class="text-gray-900">
+											<p>“Quia dolorem qui et. Atque quo aliquid sit eos officia. Dolores similique laboriosam quaerat cupiditate.”</p>
+										</blockquote>
+										<figcaption class="mt-6 flex items-center gap-x-4">
+											<img src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" class="size-10 rounded-full bg-gray-50" />
+											<div>
+												<div class="font-semibold text-gray-900">Michael Foster</div>
+												<div class="text-gray-600">@michaelfoster</div>
+											</div>
+										</figcaption>
+									</figure>
+									<figure class="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5">
+										<blockquote class="text-gray-900">
+											<p>“Consequatur ut atque. Itaque nostrum molestiae id veniam eos cumque. Ut quia eum fugit laborum autem inventore ut voluptate.”</p>
+										</blockquote>
+										<figcaption class="mt-6 flex items-center gap-x-4">
+											<img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" class="size-10 rounded-full bg-gray-50" />
+											<div>
+												<div class="font-semibold text-gray-900">Dries Vincent</div>
+												<div class="text-gray-600">@driesvincent</div>
+											</div>
+										</figcaption>
+									</figure>
+								</div>
+								<div class="space-y-8 xl:row-start-1">
+									<figure class="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5">
+										<blockquote class="text-gray-900">
+											<p>“Aut reprehenderit voluptatem eum asperiores beatae id. Iure molestiae ipsam ut officia rem nulla blanditiis.”</p>
+										</blockquote>
+										<figcaption class="mt-6 flex items-center gap-x-4">
+											<img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" class="size-10 rounded-full bg-gray-50" />
+											<div>
+												<div class="font-semibold text-gray-900">Lindsay Walton</div>
+												<div class="text-gray-600">@lindsaywalton</div>
+											</div>
+										</figcaption>
+									</figure>
+									<figure class="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5">
+										<blockquote class="text-gray-900">
+											<p>“Nam nesciunt dolorem dolor asperiores cum. Incidunt molestiae quis deleniti vitae ut in earum delectus iusto.”</p>
+										</blockquote>
+										<figcaption class="mt-6 flex items-center gap-x-4">
+											<img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" class="size-10 rounded-full bg-gray-50" />
+											<div>
+												<div class="font-semibold text-gray-900">Courtney Henry</div>
+												<div class="text-gray-600">@courtneyhenry</div>
+											</div>
+										</figcaption>
+									</figure>
+								</div>
+							</div>
+							<div class="space-y-8 xl:contents xl:space-y-0">
+								<div class="space-y-8 xl:row-start-1">
+									<figure class="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5">
+										<blockquote class="text-gray-900">
+											<p>“Voluptas quos itaque ipsam in voluptatem est. Iste eos blanditiis repudiandae. Earum deserunt enim molestiae ipsum perferendis recusandae saepe corrupti.”</p>
+										</blockquote>
+										<figcaption class="mt-6 flex items-center gap-x-4">
+											<img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" class="size-10 rounded-full bg-gray-50" />
+											<div>
+												<div class="font-semibold text-gray-900">Tom Cook</div>
+												<div class="text-gray-600">@tomcook</div>
+											</div>
+										</figcaption>
+									</figure>
+									<figure class="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5">
+										<blockquote class="text-gray-900">
+											<p>“Aliquid dolore praesentium ratione. Cumque ea officia repellendus laboriosam. Vitae quod id explicabo non sunt.”</p>
+										</blockquote>
+										<figcaption class="mt-6 flex items-center gap-x-4">
+											<img src="https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" class="size-10 rounded-full bg-gray-50" />
+											<div>
+												<div class="font-semibold text-gray-900">Whitney Francis</div>
+												<div class="text-gray-600">@whitneyfrancis</div>
+											</div>
+										</figcaption>
+									</figure>
+								</div>
+								<div class="space-y-8 xl:row-span-2">
+									<figure class="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5">
+										<blockquote class="text-gray-900">
+											<p>“Molestias ea earum quos nostrum doloremque sed. Quaerat quasi aut velit incidunt excepturi rerum voluptatem minus harum.”</p>
+										</blockquote>
+										<figcaption class="mt-6 flex items-center gap-x-4">
+											<img src="https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" class="size-10 rounded-full bg-gray-50" />
+											<div>
+												<div class="font-semibold text-gray-900">Leonard Krasner</div>
+												<div class="text-gray-600">@leonardkrasner</div>
+											</div>
+										</figcaption>
+									</figure>
+									<figure class="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5">
+										<blockquote class="text-gray-900">
+											<p>“Architecto libero natus est. Est quam debitis officia enim atque et ut non. Sunt reiciendis quasi eaque. Itaque error ut et.”</p>
+										</blockquote>
+										<figcaption class="mt-6 flex items-center gap-x-4">
+											<img src="https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" class="size-10 rounded-full bg-gray-50" />
+											<div>
+												<div class="font-semibold text-gray-900">Floyd Miles</div>
+												<div class="text-gray-600">@floydmiles</div>
+											</div>
+										</figcaption>
+									</figure>
+									<figure class="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5">
+										<blockquote class="text-gray-900">
+											<p>“Temporibus ea molestiae impedit adipisci perspiciatis illo aliquid. Quis ut ratione et voluptatem et. Nostrum explicabo iste unde beatae.”</p>
+										</blockquote>
+										<figcaption class="mt-6 flex items-center gap-x-4">
+											<img src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" class="size-10 rounded-full bg-gray-50" />
+											<div>
+												<div class="font-semibold text-gray-900">Emily Selman</div>
+												<div class="text-gray-600">@emilyselman</div>
+											</div>
+										</figcaption>
+									</figure>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<section aria-labelledby="how-it-works-heading" class="overflow-hidden bg-[#fff8f0] py-24 sm:py-32">
+					<div class="mx-auto max-w-7xl px-6 lg:px-8">
+						<p class="text-sm font-semibold uppercase tracking-[0.2em] text-primary-crimson">How it will work</p>
+						<h2 id="how-it-works-heading" class="mt-4 max-w-4xl text-pretty text-4xl text-primary-crimson sm:text-5xl lg:text-6xl">
+							Four simple steps to better connections.
+						</h2>
+
+						<div class="relative mx-auto mt-16 max-w-5xl lg:mt-24">
+							<svg aria-hidden="true" viewBox="0 0 960 1320" preserveAspectRatio="none" class="pointer-events-none absolute inset-0 hidden h-full w-full lg:block">
+								<path d="M520 120 C680 120, 760 220, 760 320" stroke="var(--color-step-line)" stroke-width="2" stroke-dasharray="8 8" fill="none" />
+								<path d="M760 420 C760 520, 680 620, 520 680" stroke="var(--color-step-line)" stroke-width="2" stroke-dasharray="8 8" fill="none" />
+								<path d="M520 780 C360 780, 280 880, 280 980" stroke="var(--color-step-line)" stroke-width="2" stroke-dasharray="8 8" fill="none" />
+								<path d="M280 1080 C280 1180, 360 1240, 520 1240" stroke="var(--color-step-line)" stroke-width="2" stroke-dasharray="8 8" fill="none" />
+							</svg>
+
+							<ol class="relative space-y-20 lg:space-y-28">
+								<li class="relative lg:grid lg:grid-cols-12 lg:items-center lg:gap-x-10">
+									<div class="mb-8 flex justify-center lg:col-span-5 lg:mb-0 lg:justify-end">
+										<div class="flex aspect-square w-full max-w-[17rem] items-center justify-center rounded-[2rem] bg-primary-beige/50 ring-1 ring-dashed ring-primary-crimson/20">
+											<!-- Replace with /how-it-works/step-1.png -->
+											<span class="px-6 text-center text-sm text-primary-crimson/45">Step 1 illustration</span>
+										</div>
+									</div>
+									<div class="lg:col-span-6 lg:col-start-7">
+										<div class="rounded-[2rem] bg-step-card px-8 py-10 sm:px-10 sm:py-12">
+											<p class="text-sm font-medium text-gray-700">#1</p>
+											<h3 class="mt-3 font-sans text-2xl font-bold text-gray-900 sm:text-3xl">Create your profile</h3>
+											<p class="mt-4 max-w-md text-base/7 text-gray-800">Show more than your work history. Share your personality, values and ambition.</p>
+										</div>
+									</div>
+								</li>
+
+								<li class="relative lg:grid lg:grid-cols-12 lg:items-center lg:gap-x-10">
+									<div class="order-2 mb-8 flex justify-center lg:order-1 lg:col-span-6 lg:col-start-2 lg:mb-0">
+										<div class="rounded-[2rem] bg-step-card px-8 py-10 sm:px-10 sm:py-12">
+											<p class="text-sm font-medium text-gray-700">#2</p>
+											<h3 class="mt-3 font-sans text-2xl font-bold text-gray-900 sm:text-3xl">Discover meaningful matches</h3>
+											<p class="mt-4 max-w-md text-base/7 text-gray-800">Our matching technology will connect you with people and companies who truly align with who you are.</p>
+										</div>
+									</div>
+									<div class="order-1 flex justify-center lg:order-2 lg:col-span-5 lg:col-start-8 lg:justify-start">
+										<div class="flex aspect-square w-full max-w-[17rem] items-center justify-center rounded-[2rem] bg-primary-beige/50 ring-1 ring-dashed ring-primary-crimson/20">
+											<!-- Replace with /how-it-works/step-2.png -->
+											<span class="px-6 text-center text-sm text-primary-crimson/45">Step 2 illustration</span>
+										</div>
+									</div>
+								</li>
+
+								<li class="relative lg:grid lg:grid-cols-12 lg:items-center lg:gap-x-10">
+									<div class="mb-8 flex justify-center lg:col-span-5 lg:mb-0 lg:justify-end">
+										<div class="flex aspect-square w-full max-w-[17rem] items-center justify-center rounded-[2rem] bg-primary-beige/50 ring-1 ring-dashed ring-primary-crimson/20">
+											<!-- Replace with /how-it-works/step-3.png -->
+											<span class="px-6 text-center text-sm text-primary-crimson/45">Step 3 illustration</span>
+										</div>
+									</div>
+									<div class="lg:col-span-6 lg:col-start-7">
+										<div class="rounded-[2rem] bg-step-card px-8 py-10 sm:px-10 sm:py-12">
+											<p class="text-sm font-medium text-gray-700">#3</p>
+											<h3 class="mt-3 font-sans text-2xl font-bold text-gray-900 sm:text-3xl">Start authentic conversations</h3>
+											<p class="mt-4 max-w-md text-base/7 text-gray-800">Get to know each other beyond the job title. Build trust before you decide.</p>
+										</div>
+									</div>
+								</li>
+
+								<li class="relative lg:grid lg:grid-cols-12 lg:items-center lg:gap-x-10">
+									<div class="mb-8 flex justify-center lg:col-span-5 lg:col-start-2 lg:mb-0 lg:justify-end">
+										<div class="flex aspect-square w-full max-w-[17rem] items-center justify-center rounded-[2rem] bg-primary-beige/50 ring-1 ring-dashed ring-primary-crimson/20">
+											<!-- Replace with /how-it-works/step-4.png -->
+											<span class="px-6 text-center text-sm text-primary-crimson/45">Step 4 illustration</span>
+										</div>
+									</div>
+									<div class="lg:col-span-6 lg:col-start-7">
+										<div class="rounded-[2rem] bg-step-card px-8 py-10 sm:px-10 sm:py-12">
+											<p class="text-sm font-medium text-gray-700">#4</p>
+											<h3 class="mt-3 font-sans text-2xl font-bold text-gray-900 sm:text-3xl">Unlock new opportunities</h3>
+											<p class="mt-4 max-w-md text-base/7 text-gray-800">Whether you're hiring or looking for your next role, it starts with the right connection.</p>
+										</div>
+									</div>
+								</li>
+							</ol>
+						</div>
+					</div>
+				</section>
+
+				<section aria-labelledby="cta-heading" class="bg-primary-beige py-24 sm:py-32">
+					<div class="mx-auto max-w-7xl px-6 lg:px-8">
+						<div class="relative overflow-visible rounded-[2.5rem] bg-primary-crimson px-8 py-14 sm:px-12 sm:py-16 lg:px-16 lg:py-8 lg:pr-64 xl:pr-80">
+							<div class="relative z-0 lg:max-w-xl">
+								<h2 id="cta-heading" class="font-sans text-pretty text-xl font-extrabold leading-[1.1] tracking-tight text-white sm:text-xl lg:text-4xl">
+									Your next opportunity shouldn't depend on who you know or <span class="text-primary-beige/75">what your CV looks like.</span>
+								</h2>
+								<p class="mt-2 max-w-md text-lg/8 text-white/90">Join the waitlist. Be part of what's being built.</p>
+								<div class="mt-10">
+									<a href="#" class="inline-flex font-semibold rounded-full bg-primary-beige px-7 py-2.5 text-lg text-primary-crimson transition hover:bg-primary-beige/90">Join the waitlist</a>
+								</div>
+							</div>
+							<div class="relative z-10 mt-14 flex justify-center lg:absolute lg:-right-2 lg:-top-14 lg:mt-0 xl:-right-6 xl:-top-20">
+								<img
+									src="/app-view-2.png"
+									width="257"
+									height="448"
+									alt="Buzbo app onboarding screen asking what brings you here"
+									class="w-52 rotate-[7deg] drop-shadow-[0_28px_55px_rgba(0,0,0,0.38)] sm:w-60 lg:w-64 xl:w-72"
+								/>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<footer class="bg-primary-beige">
+					<div class="mx-auto max-w-7xl px-6 py-12 md:flex md:items-center md:justify-between lg:px-8">
+						<div class="flex justify-center gap-x-6 md:order-2">
+							<a href="#" class="text-gray-600 hover:text-gray-800">
+								<span class="sr-only">Facebook</span>
+								<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="size-6">
+									<path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" fill-rule="evenodd" />
+								</svg>
+							</a>
+							<a href="#" class="text-gray-600 hover:text-gray-800">
+								<span class="sr-only">Instagram</span>
+								<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="size-6">
+									<path d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd" fill-rule="evenodd" />
+								</svg>
+							</a>
+							<a href="#" class="text-gray-600 hover:text-gray-800">
+								<span class="sr-only">X</span>
+								<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="size-6">
+									<path d="M13.6823 10.6218L20.2391 3H18.6854L12.9921 9.61788L8.44486 3H3.2002L10.0765 13.0074L3.2002 21H4.75404L10.7663 14.0113L15.5685 21H20.8131L13.6819 10.6218H13.6823ZM11.5541 13.0956L10.8574 12.0991L5.31391 4.16971H7.70053L12.1742 10.5689L12.8709 11.5655L18.6861 19.8835H16.2995L11.5541 13.096V13.0956Z" />
+								</svg>
+							</a>
+							<a href="#" class="text-gray-600 hover:text-gray-800">
+								<span class="sr-only">GitHub</span>
+								<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="size-6">
+									<path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" fill-rule="evenodd" />
+								</svg>
+							</a>
+							<a href="#" class="text-gray-600 hover:text-gray-800">
+								<span class="sr-only">YouTube</span>
+								<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="size-6">
+									<path d="M19.812 5.418c.861.23 1.538.907 1.768 1.768C21.998 8.746 22 12 22 12s0 3.255-.418 4.814a2.504 2.504 0 0 1-1.768 1.768c-1.56.419-7.814.419-7.814.419s-6.255 0-7.814-.419a2.505 2.505 0 0 1-1.768-1.768C2 15.255 2 12 2 12s0-3.255.417-4.814a2.507 2.507 0 0 1 1.768-1.768C5.744 5 11.998 5 11.998 5s6.255 0 7.814.418ZM15.194 12 10 15V9l5.194 3Z" clip-rule="evenodd" fill-rule="evenodd" />
+								</svg>
+							</a>
+						</div>
+						<p class="mt-8 text-center text-sm/6 text-gray-600 md:order-1 md:mt-0">&copy; 2026 Buzbo. All rights reserved.</p>
+					</div>
+				</footer>
+			</div>
+	</body>
+</html>

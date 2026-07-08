@@ -1,0 +1,27 @@
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap");
+@import "tailwindcss";
+
+@theme {
+	--color-primary-crimson: #841b2b;
+	--color-primary-beige: #ffecd2;
+	--color-step-card: #f3dbbe;
+	--color-step-line: #c9956a;
+	--font-sans: "Archivo", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+	--font-serif: "DM Serif Display", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
+@layer base {
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		font-family: var(--font-serif);
+	}
+}
+
+body {
+	background-color: var(--color-primary-beige);
+	font-family: var(--font-sans);
+}

@@ -1,0 +1,104 @@
+---
+interface Props {
+	waitlistAnchor?: boolean;
+}
+
+const { waitlistAnchor = false } = Astro.props;
+---
+
+<footer id={waitlistAnchor ? 'join-waitlist' : undefined} class:list={['reveal bg-primary-crimson', waitlistAnchor && 'scroll-mt-32']}>
+	<div class="mx-auto max-w-2xl px-6 py-24 text-center sm:py-32">
+		<h2 class="text-4xl font-extrabold tracking-tight text-primary-beige sm:text-5xl font-sans">Start showing who you really are.</h2>
+		<p class="mt-4 text-base/7 text-primary-beige/80">Your next opportunity starts here.</p>
+		<form data-waitlist-form class="mx-auto mt-10 max-w-lg">
+			<div class="flex flex-col gap-4 sm:flex-row">
+				<label for="footer-name" class="sr-only">Name</label>
+				<input id="footer-name" name="name" type="text" required placeholder="Name" class="w-full rounded-xl bg-white px-5 py-3 text-base text-gray-900 shadow-sm outline outline-1 outline-black/5 placeholder:text-gray-400 focus:outline-2 focus:outline-primary-beige" />
+				<label for="footer-mail" class="sr-only">Mail</label>
+				<input id="footer-mail" name="email" type="email" required placeholder="Mail" class="w-full rounded-xl bg-white px-5 py-3 text-base text-gray-900 shadow-sm outline outline-1 outline-black/5 placeholder:text-gray-400 focus:outline-2 focus:outline-primary-beige" />
+			</div>
+			<button type="submit" class="mt-6 inline-flex rounded-full bg-primary-beige px-8 py-2.5 text-lg font-semibold text-primary-crimson transition hover:bg-primary-beige/90">Join the waitlist</button>
+		</form>
+		<p class="mt-6 flex items-center justify-center gap-2 text-sm font-semibold text-primary-beige">
+			<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-5">
+				<path d="M16.704 5.29a.75.75 0 0 1 .006 1.06l-7.5 7.6a.75.75 0 0 1-1.07 0l-3.75-3.8a.75.75 0 1 1 1.07-1.052l3.215 3.257 6.965-7.06a.75.75 0 0 1 1.06-.005Z" clip-rule="evenodd" fill-rule="evenodd" />
+			</svg>
+			Early access. Because being a day one is cool.
+		</p>
+	</div>
+	<div class="border-t border-primary-beige/20">
+		<p class="mx-auto max-w-7xl px-6 py-8 text-center text-sm/6 text-primary-beige/70 lg:px-8">&copy; 2026 Buzbo. All rights reserved.</p>
+	</div>
+</footer>
+<div id="toast-container" aria-live="polite" aria-atomic="false"></div>
+<script is:inline>
+	(function () {
+		var container = document.getElementById('toast-container');
+
+		function toast(message, type) {
+			if (!container) return;
+			var el = document.createElement('div');
+			el.className = 'toast toast-' + type;
+			el.setAttribute('role', 'status');
+			el.textContent = message;
+			container.appendChild(el);
+			requestAnimationFrame(function () { el.classList.add('show'); });
+			setTimeout(function () {
+				el.classList.remove('show');
+				setTimeout(function () { el.remove(); }, 300);
+			}, 4500);
+		}
+
+		document.querySelectorAll('[data-waitlist-form]').forEach(function (form) {
+			form.addEventListener('submit', async function (e) {
+				e.preventDefault();
+				var btn = form.querySelector('button[type="submit"]');
+				var data = new FormData(form);
+				var email = String(data.get('email') || '').trim();
+				var name = String(data.get('name') || '').trim();
+
+				if (!name) {
+					toast('Please enter your name.', 'error');
+					return;
+				}
+				if (!email) {
+					toast('Please enter your email address.', 'error');
+					return;
+				}
+
+				var originalText = btn ? btn.textContent : '';
+				if (btn) {
+					btn.disabled = true;
+					btn.textContent = 'Joining…';
+					btn.style.opacity = '0.7';
+				}
+
+				try {
+					var res = await fetch('/api/waitlist', {
+						method: 'POST',
+						headers: { 'content-type': 'application/json' },
+						body: JSON.stringify({ name: name, email: email }),
+					});
+					var result = await res.json().catch(function () { return {}; });
+
+					if (result.status === 'success') {
+						toast(result.message || "You're on the waitlist!", 'success');
+						form.reset();
+					} else if (result.status === 'exists') {
+						toast(result.message || 'This email is already registered.', 'info');
+					} else {
+						toast(result.message || 'Something went wrong. Please try again.', 'error');
+					}
+				} catch (err) {
+					toast('Network error. Please check your connection and try again.', 'error');
+				} finally {
+					if (btn) {
+						btn.disabled = false;
+						btn.textContent = originalText;
+						btn.style.opacity = '';
+					}
+				}
+			});
+		});
+	})();
+</script>

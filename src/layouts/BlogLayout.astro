@@ -1,0 +1,88 @@
+---
+import FaviconLinks from '../components/FaviconLinks.astro';
+import GoogleAnalytics from '../components/GoogleAnalytics.astro';
+import Seo from '../components/Seo.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import { PAGE_SEO, SITE_NAME } from '../lib/seo';
+import '../styles/global.css';
+
+interface Props {
+	title: string;
+	description: string;
+	keywords?: string;
+	canonical?: string;
+	image?: string;
+	type?: 'website' | 'article';
+	publishedTime?: string;
+	modifiedTime?: string;
+	author?: string;
+	footerWaitlistAnchor?: boolean;
+}
+
+const {
+	title,
+	description,
+	keywords = PAGE_SEO.blog.keywords,
+	canonical,
+	image = PAGE_SEO.blog.image,
+	type = 'website',
+	publishedTime,
+	modifiedTime,
+	author,
+	footerWaitlistAnchor = true,
+} = Astro.props;
+
+const fullTitle = `${title} · Buzbo Blog`;
+const imageUrl = image.startsWith('http') ? image : new URL(image, Astro.url.origin).href;
+const jsonLd =
+	type === 'article'
+		? {
+				'@context': 'https://schema.org',
+				'@type': 'Article',
+				headline: title,
+				description,
+				image: imageUrl,
+				datePublished: publishedTime || undefined,
+				dateModified: modifiedTime || publishedTime || undefined,
+				author: author ? { '@type': 'Person', name: author } : { '@type': 'Organization', name: SITE_NAME },
+				publisher: {
+					'@type': 'Organization',
+					name: SITE_NAME,
+					logo: { '@type': 'ImageObject', url: new URL('/brand/logo-full-crimson.png', Astro.url.origin).href },
+				},
+				mainEntityOfPage: canonical || undefined,
+			}
+		: null;
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<FaviconLinks />
+		<GoogleAnalytics />
+		<meta name="viewport" content="width=device-width" />
+		<Seo
+			title={fullTitle}
+			description={description}
+			keywords={keywords}
+			canonical={canonical}
+			image={image}
+			imageAlt={title}
+			type={type}
+			author={author}
+			publishedTime={publishedTime}
+			modifiedTime={modifiedTime}
+			jsonLd={jsonLd}
+		/>
+	</head>
+	<body class="bg-primary-beige font-sans antialiased text-gray-900">
+		<SiteHeader />
+		<main>
+			<slot />
+		</main>
+		<SiteFooter waitlistAnchor={footerWaitlistAnchor} />
+	</body>
+</html>

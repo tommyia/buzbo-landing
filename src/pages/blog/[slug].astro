@@ -1,0 +1,92 @@
+---
+import BlogLayout from '../../layouts/BlogLayout.astro';
+import ShareButtons from '../../components/ShareButtons.astro';
+import { getPublicSupabase, isSupabaseConfigured } from '../../lib/supabase';
+import { PAGE_SEO } from '../../lib/seo';
+
+export const prerender = false;
+
+const { slug } = Astro.params;
+if (!slug) {
+	return Astro.redirect('/blog');
+}
+
+let article = null;
+
+if (isSupabaseConfigured()) {
+	const supabase = getPublicSupabase();
+	const { data } = await supabase
+		.from('buzbo_landing_article')
+		.select('*')
+		.eq('slug', slug)
+		.eq('status', 'published')
+		.maybeSingle();
+	article = data;
+}
+
+if (!article) {
+	return new Response(null, { status: 404, statusText: 'Not Found' });
+}
+
+const origin = Astro.url.origin;
+const canonical = new URL(`/blog/${article.slug}`, origin).href;
+const pageTitle = article.seo_title || article.title;
+const pageDescription = article.seo_description || article.excerpt || '';
+const coverImage = article.cover_image_url
+	? article.cover_image_url.startsWith('http')
+		? article.cover_image_url
+		: new URL(article.cover_image_url, origin).href
+	: new URL('/blog-banner.png', origin).href;
+
+function formatDate(value: string | null) {
+	if (!value) return '';
+	return new Date(value).toLocaleDateString(undefined, {
+		year: 'numeric',
+		month: 'long',
+		day: 'numeric',
+	});
+}
+---
+
+<BlogLayout
+	title={pageTitle}
+	description={pageDescription}
+	canonical={canonical}
+	image={coverImage}
+	keywords={PAGE_SEO.blog.keywords}
+	type="article"
+	publishedTime={article.published_at ?? undefined}
+	modifiedTime={article.updated_at ?? undefined}
+	author={article.author_name ?? undefined}
+>
+	<article class="mx-auto max-w-3xl px-6 pt-36 pb-16 lg:px-8 lg:pt-44">
+		<a href="/blog" class="text-sm font-semibold text-primary-crimson hover:underline">← Back to blog</a>
+		<header class="mt-6 mb-8">
+			<h1 class="font-serif text-4xl text-primary-crimson sm:text-5xl">{article.title}</h1>
+			<div class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-600">
+				{article.author_name ? (
+					<span class="font-semibold text-gray-800">{article.author_name}</span>
+				) : null}
+				{article.published_at ? <time datetime={article.published_at}>{formatDate(article.published_at)}</time> : null}
+				{article.reading_duration_minutes ? (
+					<span>{article.reading_duration_minutes} min read</span>
+				) : null}
+			</div>
+			{article.excerpt ? <p class="mt-4 text-lg text-gray-700">{article.excerpt}</p> : null}
+			<div class="mt-6">
+				<ShareButtons url={canonical} title={article.title} />
+			</div>
+		</header>
+		{article.cover_image_url ? (
+			<img
+				src={article.cover_image_url}
+				alt={article.title}
+				class="mb-10 aspect-[16/9] w-full rounded-2xl object-cover"
+			/>
+		) : null}
+		<div class="blog-prose" set:html={article.content_html ?? ''} />
+		<div class="mt-12 border-t border-primary-crimson/10 pt-8">
+			<ShareButtons url={canonical} title={article.title} />
+		</div>
+	</article>
+</BlogLayout>

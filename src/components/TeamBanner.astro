@@ -1,0 +1,21 @@
+---
+interface Props {
+	class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<section aria-labelledby="we-are-buzbo-heading" class:list={['bg-primary-beige', className]}>
+	<div class="relative">
+		<img src="/team.png" alt="The Buzbo team" class="h-auto w-full" />
+		<div class="pointer-events-none absolute inset-0 bg-[#c9601f]/20 mix-blend-multiply"></div>
+		<div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-primary-crimson/15 to-transparent"></div>
+	</div>
+	<div class="mx-auto max-w-7xl px-6 lg:px-8">
+		<div class="mx-auto max-w-2xl pt-16 text-center sm:pt-24">
+			<h2 id="we-are-buzbo-heading" class="text-3xl font-extrabold tracking-tight text-primary-crimson sm:text-4xl font-sans">We are Buzbo!</h2>
+			<p class="mx-auto mt-6 max-w-xl text-base/7 text-gray-800">We built Buzbo because we were tired of watching good people get filtered out by a piece of paper. A CV can't show you someone's energy, how they think, what they'd actually be like on your team. So we built something that can. Buzbo is being built in public by an ambitious team with one goal: making networking easy, human and genuinely useful again.</p>
+		</div>
+	</div>
+</section>

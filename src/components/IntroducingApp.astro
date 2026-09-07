@@ -1,0 +1,38 @@
+---
+interface Props {
+	class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div id="join-waitlist" class:list={['scroll-mt-32 grid grid-cols-1 items-center gap-x-12 gap-y-16 lg:grid-cols-2', className]}>
+	<div>
+		<h3 class="text-3xl font-extrabold tracking-tight text-primary-crimson sm:text-4xl font-sans">Introducing the Buzbo app</h3>
+		<div class="mt-6 space-y-4 text-base/7 text-gray-800">
+			<p>Forget the four-bullet-points-and-a-headshot routine. Open the app, pick what you're actually into — running, cooking, gaming, whatever it is — and build a profile that looks like you.</p>
+			<p>Add your skills. Add your proudest moments, the stuff you'd actually want to talk about in an interview. Show people how you work, not just what your job title says.</p>
+			<p>Then Buzbo does the rest — we surface people worth connecting with each week, and you message them directly. No cold outreach, no guessing if it's worth your time.</p>
+		</div>
+		<form data-waitlist-form class="mt-10">
+			<div class="flex flex-col gap-4 sm:flex-row">
+				<label for="waitlist-name" class="sr-only">Name</label>
+				<input id="waitlist-name" name="name" type="text" required placeholder="Name" class="w-full rounded-xl bg-white px-5 py-3 text-base text-gray-900 shadow-sm outline outline-1 outline-black/5 placeholder:text-gray-400 focus:outline-2 focus:outline-primary-crimson" />
+				<label for="waitlist-mail" class="sr-only">Mail</label>
+				<input id="waitlist-mail" name="email" type="email" required placeholder="Mail" class="w-full rounded-xl bg-white px-5 py-3 text-base text-gray-900 shadow-sm outline outline-1 outline-black/5 placeholder:text-gray-400 focus:outline-2 focus:outline-primary-crimson" />
+			</div>
+			<button type="submit" class="mt-6 inline-flex rounded-full bg-primary-crimson px-8 py-2.5 text-lg font-semibold text-white transition hover:bg-primary-crimson/90">Join the waitlist</button>
+		</form>
+		<p class="mt-6 flex items-center gap-2 text-sm font-semibold text-primary-crimson">
+			<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-5">
+				<path d="M16.704 5.29a.75.75 0 0 1 .006 1.06l-7.5 7.6a.75.75 0 0 1-1.07 0l-3.75-3.8a.75.75 0 1 1 1.07-1.052l3.215 3.257 6.965-7.06a.75.75 0 0 1 1.06-.005Z" clip-rule="evenodd" fill-rule="evenodd" />
+			</svg>
+			Early access. Because being a day one is cool.
+		</p>
+	</div>
+	<div class="flex justify-center lg:justify-end">
+		<div class="relative flex aspect-square w-full max-w-md items-center justify-center">
+			<img src="/app-view.png" alt="" class="" />
+		</div>
+	</div>
+</div>

@@ -1,5 +1,8 @@
 ---
 import FaviconLinks from '../../components/FaviconLinks.astro';
+import GoogleAnalytics from '../../components/GoogleAnalytics.astro';
+import Seo from '../../components/Seo.astro';
+import { PAGE_SEO } from '../../lib/seo';
 import '../../styles/global.css';
 ---
 
@@ -7,9 +10,14 @@ import '../../styles/global.css';
 	<head>
 		<meta charset="utf-8" />
 		<FaviconLinks />
+		<GoogleAnalytics />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="robots" content="noindex" />
-		<title>Privacy Policy — Buzbo</title>
+		<Seo
+			title={PAGE_SEO.privacy.title}
+			description={PAGE_SEO.privacy.description}
+			keywords={PAGE_SEO.privacy.keywords}
+			robots="noindex"
+		/>
 	</head>
 	<body class="font-sans antialiased text-gray-900">
 		<main class="mx-auto max-w-xl px-5 py-8 sm:px-6 sm:py-10">

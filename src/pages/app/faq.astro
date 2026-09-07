@@ -1,0 +1,122 @@
+---
+import FaviconLinks from '../../components/FaviconLinks.astro';
+import GoogleAnalytics from '../../components/GoogleAnalytics.astro';
+import Seo from '../../components/Seo.astro';
+import { PAGE_SEO } from '../../lib/seo';
+import '../../styles/global.css';
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<FaviconLinks />
+		<GoogleAnalytics />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<Seo
+			title={PAGE_SEO.faq.title}
+			description={PAGE_SEO.faq.description}
+			keywords={PAGE_SEO.faq.keywords}
+			robots="noindex"
+		/>
+		<style>
+			details summary::-webkit-details-marker {
+				display: none;
+			}
+		</style>
+	</head>
+	<body class="font-sans antialiased text-gray-900">
+		<main class="mx-auto max-w-xl px-5 py-8 sm:px-6 sm:py-10">
+			<h1 class="text-3xl leading-tight text-primary-crimson sm:text-4xl">FAQ</h1>
+			<p class="mt-3 text-base leading-relaxed text-gray-700">
+				Common questions about Buzbo.
+			</p>
+
+			<div class="mt-8 space-y-3">
+				<details class="group rounded-2xl bg-[#fbf5ea] px-5 py-4" open>
+					<summary class="flex cursor-pointer list-none items-center justify-between gap-3 text-base font-semibold leading-snug text-gray-900">
+						What is Buzbo?
+						<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true" class="size-5 shrink-0 text-gray-600 transition group-open:rotate-180">
+							<path d="M6 8l4 4 4-4" stroke-linecap="round" stroke-linejoin="round" />
+						</svg>
+					</summary>
+					<div class="mt-3 space-y-3 text-base leading-relaxed text-gray-700">
+						<p>Buzbo is a platform that helps professionals and business managers discover new business people and new opportunities.</p>
+						<p>Build a profile that reflects who you are, share what drives you and connect with people who can help shape your next step — whether that's a new role, a new client, a new hire or a new idea.</p>
+					</div>
+				</details>
+
+				<details class="group rounded-2xl bg-[#fbf5ea] px-5 py-4">
+					<summary class="flex cursor-pointer list-none items-center justify-between gap-3 text-base font-semibold leading-snug text-gray-900">
+						How does the matching work?
+						<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true" class="size-5 shrink-0 text-gray-600 transition group-open:rotate-180">
+							<path d="M6 8l4 4 4-4" stroke-linecap="round" stroke-linejoin="round" />
+						</svg>
+					</summary>
+					<div class="mt-3 space-y-3 text-base leading-relaxed text-gray-700">
+						<p>Create your profile by sharing your interests, skills, ambitions and the things that matter to you.</p>
+						<p>Every week, Buzbo introduces you to people who align with your goals, your way of working and what you're currently focused on.</p>
+						<p>Whether you're looking for your next challenge, growing a business or expanding your network, Buzbo helps the right people find each other.</p>
+					</div>
+				</details>
+
+				<details class="group rounded-2xl bg-[#fbf5ea] px-5 py-4">
+					<summary class="flex cursor-pointer list-none items-center justify-between gap-3 text-base font-semibold leading-snug text-gray-900">
+						Is it free?
+						<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true" class="size-5 shrink-0 text-gray-600 transition group-open:rotate-180">
+							<path d="M6 8l4 4 4-4" stroke-linecap="round" stroke-linejoin="round" />
+						</svg>
+					</summary>
+					<div class="mt-3 space-y-3 text-base leading-relaxed text-gray-700">
+						<p>Yes! Buzbo is free to download and use with our freemium plan, which includes all the core features you need to get started.</p>
+						<p>For users who want additional features, enhanced profile customisation and more match opportunities, we'll offer a premium version.</p>
+						<p>Our Buzbo events are available for a small fee, giving people the opportunity to connect through curated networking experiences.</p>
+					</div>
+				</details>
+
+				<details class="group rounded-2xl bg-[#fbf5ea] px-5 py-4">
+					<summary class="flex cursor-pointer list-none items-center justify-between gap-3 text-base font-semibold leading-snug text-gray-900">
+						Who is it for?
+						<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true" class="size-5 shrink-0 text-gray-600 transition group-open:rotate-180">
+							<path d="M6 8l4 4 4-4" stroke-linecap="round" stroke-linejoin="round" />
+						</svg>
+					</summary>
+					<p class="mt-3 text-base leading-relaxed text-gray-700">
+						Buzbo is for professionals who want to be seen for who they are, not just their job history — and for businesses who want to hire people that are the right fit, not just the right paper. Whether you're looking for your next role or your next hire, Buzbo shows the person behind the profile.
+					</p>
+				</details>
+
+				<details class="group rounded-2xl bg-[#fbf5ea] px-5 py-4">
+					<summary class="flex cursor-pointer list-none items-center justify-between gap-3 text-base font-semibold leading-snug text-gray-900">
+						When does it launch?
+						<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true" class="size-5 shrink-0 text-gray-600 transition group-open:rotate-180">
+							<path d="M6 8l4 4 4-4" stroke-linecap="round" stroke-linejoin="round" />
+						</svg>
+					</summary>
+					<div class="mt-3 space-y-3 text-base leading-relaxed text-gray-700">
+						<p>We're working hard to build the best possible version of Buzbo and are aiming to launch in September.</p>
+						<p>Join the waitlist to be among the first to get access and become part of the Buzbo community from day one.</p>
+					</div>
+				</details>
+
+				<details class="group rounded-2xl bg-[#fbf5ea] px-5 py-4">
+					<summary class="flex cursor-pointer list-none items-center justify-between gap-3 text-base font-semibold leading-snug text-gray-900">
+						Is it available outside the Netherlands?
+						<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true" class="size-5 shrink-0 text-gray-600 transition group-open:rotate-180">
+							<path d="M6 8l4 4 4-4" stroke-linecap="round" stroke-linejoin="round" />
+						</svg>
+					</summary>
+					<div class="mt-3 space-y-3 text-base leading-relaxed text-gray-700">
+						<p>Buzbo is being built in the Netherlands and will launch there first, but our vision is much bigger than that.</p>
+						<p>As we grow, we plan to expand internationally, making it easier for people around the world to build meaningful professional connections.</p>
+					</div>
+				</details>
+			</div>
+
+			<p class="mt-10 border-t border-primary-mauve/20 pt-6 text-sm leading-relaxed text-gray-600">
+				More: <a href="/app/tnc" class="font-medium text-primary-crimson underline underline-offset-2">Terms</a>
+				·
+				<a href="/app/pp" class="font-medium text-primary-crimson underline underline-offset-2">Privacy</a>
+			</p>
+		</main>
+	</body>
+</html>

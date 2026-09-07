@@ -1,0 +1,81 @@
+---
+import { SITE_NAME } from '../lib/seo';
+
+interface Props {
+	title: string;
+	description: string;
+	keywords?: string;
+	canonical?: string;
+	image?: string;
+	imageAlt?: string;
+	type?: 'website' | 'article';
+	robots?: string;
+	author?: string;
+	publishedTime?: string;
+	modifiedTime?: string;
+	jsonLd?: Record<string, unknown> | null;
+}
+
+const {
+	title,
+	description,
+	keywords,
+	canonical,
+	image,
+	imageAlt,
+	type = 'website',
+	robots,
+	author,
+	publishedTime,
+	modifiedTime,
+	jsonLd,
+} = Astro.props;
+
+const origin = Astro.url.origin;
+const canonicalUrl = canonical ?? new URL(Astro.url.pathname, origin).href;
+const imageUrl = image
+	? image.startsWith('http')
+		? image
+		: new URL(image, origin).href
+	: undefined;
+const imageAltText = imageAlt || title;
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+{keywords ? <meta name="keywords" content={keywords} /> : null}
+{author ? <meta name="author" content={author} /> : null}
+{robots ? <meta name="robots" content={robots} /> : null}
+<link rel="canonical" href={canonicalUrl} />
+
+<meta property="og:site_name" content={SITE_NAME} />
+<meta property="og:locale" content="en_US" />
+<meta property="og:type" content={type} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalUrl} />
+{imageUrl ? (
+	<>
+		<meta property="og:image" content={imageUrl} />
+		<meta property="og:image:alt" content={imageAltText} />
+	</>
+) : null}
+{type === 'article' && publishedTime ? (
+	<meta property="article:published_time" content={publishedTime} />
+) : null}
+{type === 'article' && modifiedTime ? (
+	<meta property="article:modified_time" content={modifiedTime} />
+) : null}
+{type === 'article' && author ? <meta property="article:author" content={author} /> : null}
+
+<meta name="twitter:card" content={imageUrl ? 'summary_large_image' : 'summary'} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+{imageUrl ? (
+	<>
+		<meta name="twitter:image" content={imageUrl} />
+		<meta name="twitter:image:alt" content={imageAltText} />
+	</>
+) : null}
+
+{jsonLd ? <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} /> : null}

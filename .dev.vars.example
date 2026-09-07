@@ -1,0 +1,14 @@
+# Copy this file to `.dev.vars` (gitignored) to run the Cloudflare Workers
+# runtime env locally, matching production. Not required if you use `.env`.
+#
+# BREVO_LIST_ID lives in wrangler.json ("vars") and ships automatically.
+# Only the API key must be provided as a secret.
+
+# Waitlist (Brevo)
+BREVO_API_KEY=your-brevo-api-key
+
+# Supabase — read-only, RLS-enforced. The /blog pages read published articles with the
+# publishable key only. Articles are authored in buzbo-event, so this app needs no
+# service-role key and no admin password.
+PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-supabase-anon-key

@@ -54,6 +54,45 @@ npm run preview
 
 `preview` serves the built output so you can check it before deploying.
 
+## Blog
+
+This app **renders** blog articles; it does not author them. Writing, previewing and
+publishing all happen in the `buzbo-event` admin dashboard under **Landing Page →
+Articles**, which writes to the same Supabase project with a service-role key.
+
+This app only ever reads, through RLS, so a published article appears at `/blog` and
+`/blog/[slug]` the moment it is published there.
+
+### 1. Run the Supabase migrations
+
+Apply, in order, from `supabase/migrations/`:
+
+- `001_buzbo_landing_article.sql` — creates `buzbo_landing_article` with RLS so anonymous
+  users can only read published posts.
+- `002_buzbo_landing_article_author.sql` — adds the `author_name` byline column.
+
+### 2. Set environment variables
+
+Copy `.dev.vars.example` to `.dev.vars` (or add the same keys to `.env` for local Astro dev):
+
+| Variable | Description |
+| --- | --- |
+| `PUBLIC_SUPABASE_URL` | Supabase project URL |
+| `PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase anon key (public read of published articles) |
+
+For production:
+
+```bash
+npx wrangler secret put PUBLIC_SUPABASE_URL
+npx wrangler secret put PUBLIC_SUPABASE_PUBLISHABLE_KEY
+```
+
+Public `PUBLIC_*` vars can also be set in the Cloudflare dashboard under Workers → Settings → Variables.
+
+> This app no longer needs `SUPABASE_SERVICE_ROLE_KEY`, `ADMIN_PASSWORD`, or any
+> `IMAGE_KIT_*` secret. If they are still set in production, remove them — the landing site
+> should not hold a service-role key.
+
 ## Available scripts
 
 | Command | Description |

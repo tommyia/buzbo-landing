@@ -6,14 +6,14 @@ interface Props {
 const { home = false } = Astro.props;
 const hash = (id: string) => (home ? `#${id}` : `/#${id}`);
 const logoHref = home ? '#' : '/';
-const waitlistHref = '#join-waitlist';
+const downloadHref = '#download';
 ---
 
 <header class="fixed inset-x-0 top-0 z-50">
-	<div id="announcement-bar" class="relative flex items-center gap-x-6 bg-primary-mauve px-6 py-2.5 after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-primary-beige/20 sm:px-3.5 sm:before:flex-1">
+	<div id="announcement-bar" class="relative flex items-center gap-x-6 bg-burgundy px-6 py-2.5 after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-cream/20 sm:px-3.5 sm:before:flex-1">
 		<p class="text-sm/6 text-white">
-			<a href={waitlistHref}>
-				<strong class="font-semibold">✨ The Buzbo app is launching soon! ✨</strong><svg viewBox="0 0 2 2" aria-hidden="true" class="mx-2 inline size-0.5 fill-current"></svg>→ Join the waitlist&nbsp;<span aria-hidden="true"></span>
+			<a href={downloadHref}>
+				<strong class="font-semibold">✨ The Buzbo app is live! ✨</strong><svg viewBox="0 0 2 2" aria-hidden="true" class="mx-2 inline size-0.5 fill-current"></svg>→ Download now&nbsp;<span aria-hidden="true"></span>
 			</a>
 		</p>
 		<div class="flex flex-1 justify-end">
@@ -26,7 +26,7 @@ const waitlistHref = '#join-waitlist';
 		</div>
 	</div>
 
-	<nav aria-label="Global" class="w-full bg-primary-beige/80 px-6 shadow-md shadow-primary-crimson/10 backdrop-blur-md lg:px-8">
+	<nav aria-label="Global" class="w-full bg-beige/95 px-6 shadow-md shadow-ink/10 backdrop-blur-md lg:px-8">
 		<div class="flex items-center justify-between mx-auto max-w-7xl lg:px-8">
 			<div class="flex flex-1 items-center">
 				<div class="flex lg:hidden">
@@ -115,7 +115,7 @@ const waitlistHref = '#join-waitlist';
 				</a>
 			</nav>
 			<div class="mt-auto pt-8">
-				<a href={waitlistHref} data-menu-link class="flex w-full items-center justify-center rounded-full bg-primary-crimson px-7 py-3 text-lg font-semibold text-white transition hover:bg-primary-crimson/90">Join the waitlist</a>
+				<a href={downloadHref} data-menu-link class="flex w-full items-center justify-center rounded-full bg-primary-crimson px-7 py-3 text-lg font-semibold text-white transition hover:bg-primary-crimson/90">Download the app</a>
 			</div>
 		</div>
 	</dialog>

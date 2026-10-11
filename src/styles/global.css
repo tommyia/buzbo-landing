@@ -2,11 +2,30 @@
 @import "tailwindcss";
 
 @theme {
-	--color-primary-crimson: #841b2b;
-	--color-primary-beige: #ffecd2;
-	--color-primary-mauve: #7C4A55;
-	--color-step-card: #f3dbbe;
-	--color-step-line: #c9956a;
+	/* Brand: 50% cream, 30% beige + white, 20% burgundy */
+	--color-cream: #f7f3e9;
+	--color-beige: #ede4d5;
+	--color-burgundy: #801c29;
+	--color-ink: #1e1a17;
+	--color-muted: #6c6561;
+	--color-line: #e9e0d0;
+	--color-tint: #f6e6e4;
+	--color-disabled: #99918b;
+	--color-success: #2f7a4a;
+	--color-warning: #9a5b00;
+	--color-error: #c2410c;
+	--color-info: #3b5f8a;
+
+	--color-primary-crimson: #801c29;
+	--color-primary-beige: #f7f3e9;
+	--color-primary-mauve: #ede4d5;
+	--color-step-card: #ede4d5;
+	--color-step-line: #e9e0d0;
+
+	--color-gray-600: #6c6561;
+	--color-gray-700: #6c6561;
+	--color-gray-800: #1e1a17;
+	--color-gray-900: #1e1a17;
 	--font-sans: "Archivo", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 	--font-serif: "DM Serif Display", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
 }
@@ -29,7 +48,8 @@
 }
 
 body {
-	background-color: var(--color-primary-beige);
+	background-color: var(--color-cream);
+	color: var(--color-ink);
 	font-family: var(--font-sans);
 }
 
@@ -66,7 +86,7 @@ body {
 }
 
 .mobile-menu::backdrop {
-	background: rgba(28, 10, 14, 0.45);
+	background: rgba(30, 26, 23, 0.55);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -89,7 +109,7 @@ body {
 	}
 
 	.mobile-menu::backdrop {
-		background: rgba(28, 10, 14, 0);
+		background: rgba(30, 26, 23, 0);
 		transition:
 			background 0.35s ease,
 			display 0.35s allow-discrete,
@@ -97,12 +117,12 @@ body {
 	}
 
 	.mobile-menu[open]::backdrop {
-		background: rgba(28, 10, 14, 0.45);
+		background: rgba(30, 26, 23, 0.55);
 	}
 
 	@starting-style {
 		.mobile-menu[open]::backdrop {
-			background: rgba(28, 10, 14, 0);
+			background: rgba(30, 26, 23, 0);
 		}
 	}
 }
@@ -146,15 +166,15 @@ body {
 }
 
 .toast-success {
-	background-color: #1a7f4b;
+	background-color: var(--color-success);
 }
 
 .toast-info {
-	background-color: var(--color-primary-mauve);
+	background-color: var(--color-info);
 }
 
 .toast-error {
-	background-color: var(--color-primary-crimson);
+	background-color: var(--color-error);
 }
 
 /* ------------------------------------------------------------------
@@ -165,7 +185,7 @@ body {
    ------------------------------------------------------------------ */
 
 .blog-prose {
-	color: #374151;
+	color: var(--color-ink);
 	line-height: 1.75;
 }
 
@@ -198,15 +218,15 @@ body {
 }
 
 .blog-prose blockquote {
-	border-left: 3px solid var(--color-primary-mauve);
+	border-left: 3px solid var(--color-burgundy);
 	padding-left: 1rem;
-	color: #4b5563;
+	color: var(--color-muted);
 	font-style: italic;
 }
 
 .blog-prose pre {
-	background: #1f2937;
-	color: #f9fafb;
+	background: var(--color-ink);
+	color: var(--color-cream);
 	border-radius: 0.75rem;
 	padding: 1rem;
 	overflow-x: auto;

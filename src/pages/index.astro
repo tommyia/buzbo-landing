@@ -1,7 +1,10 @@
 ---
 import FaviconLinks from '../components/FaviconLinks.astro';
 import GoogleAnalytics from '../components/GoogleAnalytics.astro';
+import MetaPixel from '../components/MetaPixel.astro';
 import IntroducingApp from '../components/IntroducingApp.astro';
+import AppPhones from '../components/AppPhones.astro';
+import StoreBadges from '../components/StoreBadges.astro';
 import Seo from '../components/Seo.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
@@ -33,6 +36,7 @@ const jsonLd = {
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<FaviconLinks />
 		<GoogleAnalytics />
+		<MetaPixel />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<Seo
@@ -50,27 +54,16 @@ const jsonLd = {
 			<div class="bg-primary-beige">
 				<SiteHeader home />
 
-				<div class="relative isolate pt-14 min-h-screen">
+				<div class="relative isolate overflow-x-clip pt-14 min-h-screen">
 					<img src="/hero-bg.png" alt="" aria-hidden="true" class="absolute inset-0 -z-20 size-full object-cover" />
 					<div class="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:flex lg:items-center lg:gap-x-12 xl:gap-x-16 lg:px-8 lg:py-40">
 						<div class="mx-auto max-w-2xl lg:mx-0 lg:w-1/2 lg:flex-none">
 							<h1 class="mt-10 text-pretty text-5xl font-extrabold tracking-tight text-primary-beige sm:text-7xl font-sans">Showcase who you <span class="italic font-normal font-serif">really are.</span></h1>
-							<p class="mt-8 text-pretty text-lg font-normal text-primary-beige sm:text-xl/8">Your CV says what you've done. It doesn't say who you are. Buzbo is a networking platform that lets you show what actually matters: your skills, what you're into, the work you're proud of. Companies looking for real fit find you here, not just people who tick boxes. Drop your name and email below and you're in when we launch.</p>
-							<form data-waitlist-form class="mt-10 flex gap-x-6 flex-col">
-								<div class="grid grid-cols-2 max-w-md gap-x-2">
-									<label for="hero-name" class="sr-only">Name</label>
-									<input id="hero-name" name="name" type="text" required placeholder="Name" class="bg-gray-100 border-2 border-primary-crimson rounded-lg py-2 px-4 text-primary-crimson text-lg">
-									<label for="hero-email" class="sr-only">Email</label>
-									<input id="hero-email" name="email" type="email" required placeholder="Email" class="bg-gray-100 border-2 border-primary-crimson rounded-lg py-2 px-4 text-primary-crimson text-lg">
-								</div>
-								<div class="mt-4">
-									<button type="submit" class="font-semibold bg-primary-beige py-2 px-7 rounded-full text-primary-crimson text-lg">Join the waitlist</button>
-								</div>
-								<p class="text-sm text-primary-beige mt-4">Early access. Because being a day one is cool.</p>
-							</form>
+							<p class="mt-8 text-pretty text-lg font-normal text-primary-beige sm:text-xl/8">Your CV says what you've done. It doesn't say who you are. Buzbo is a networking platform that lets you show what actually matters: your skills, what you're into, the work you're proud of. Companies looking for real fit find you here, not just people who tick boxes. Download the app and start building your profile today.</p>
+							<StoreBadges class="mt-10" />
 						</div>
 					</div>
-					<a href="#learn-more" class="absolute inset-x-0 bottom-20 z-10 mx-auto hidden w-fit animate-bounce flex-col items-center gap-2 text-primary-beige lg:flex">
+					<a href="#learn-more" class="absolute inset-x-0 bottom-20 z-10 mx-auto hidden w-fit flex-col items-center gap-2 text-primary-beige lg:flex">
 						<span class="text-lg font-medium">Learn more</span>
 						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="size-6">
 							<path d="M12 4.5v15m0 0l-6-6m6 6l6-6" stroke-linecap="round" stroke-linejoin="round" />
@@ -95,29 +88,7 @@ const jsonLd = {
 								</div>
 							</div>
 							<div class="flex justify-center lg:justify-end">
-								<div class="w-full max-w-md rotate-[4.7deg]">
-									<!-- Profile card -->
-									<div class="flex overflow-hidden rounded-[1.75rem] bg-primary-crimson shadow-xl">
-										<div class="flex flex-1 flex-col p-6">
-											<h4 class="font-sans text-5xl font-extrabold uppercase tracking-tight text-white">Claire</h4>
-											<p class="mt-1 text-sm font-semibold text-white/80">@CLAIRE · LONDON · 34</p>
-											<p class="mt-4 text-sm/6 font-medium text-white/90">Tech sales by day, weekend runner and serial list-maker. Always up for a long lunch.</p>
-										</div>
-										<img src="https://images.unsplash.com/photo-1546961329-78bef0414d7c?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Claire" class="w-2/5 shrink-0 object-cover" />
-									</div>
-									<!-- People to connect pill -->
-									<div class="mt-4 flex items-center gap-4 rounded-[1.5rem] bg-white p-4 shadow-lg">
-										<div class="flex -space-x-3">
-											<img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" class="inline-block size-9 rounded-full object-cover ring-2 ring-white" />
-											<img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" class="inline-block size-9 rounded-full object-cover ring-2 ring-white" />
-											<img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" class="inline-block size-9 rounded-full object-cover ring-2 ring-white" />
-										</div>
-										<p class="flex-1 text-sm/5 font-medium text-gray-700">3 people to connect with this week</p>
-										<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-5 shrink-0 text-primary-crimson">
-											<path d="M7.21 14.77a.75.75 0 0 1 .02-1.06L11.168 10 7.23 6.29a.75.75 0 1 1 1.04-1.08l4.5 4.25a.75.75 0 0 1 0 1.08l-4.5 4.25a.75.75 0 0 1-1.06-.02Z" clip-rule="evenodd" fill-rule="evenodd" />
-										</svg>
-									</div>
-								</div>
+								<AppPhones iosSrc="/app-screen-ios.webp" androidSrc="/app-screen-android.webp" />
 							</div>
 						</div>
 
@@ -126,28 +97,28 @@ const jsonLd = {
 							<div class="order-2 flex justify-center lg:order-1 lg:justify-start">
 								<div class="relative w-full max-w-sm space-y-4 rotate-[-4.95deg]">
 									<!-- Prompt card -->
-									<div class="relative  rounded-[1.5rem] bg-primary-crimson px-8 py-6 shadow-xl">
-										<p class="text-[0.7rem] font-semibold uppercase tracking-[0.15em] text-white/70">Tell us about you</p>
-										<p class="mt-1 text-3xl font-extrabold uppercase tracking-tight text-white">What are you into?</p>
+									<div class="relative rounded-[1.5rem] bg-white px-8 py-6 shadow-xl ring-1 ring-line">
+										<p class="text-[0.7rem] font-semibold uppercase tracking-[0.15em] text-muted">Tell us about you</p>
+										<p class="mt-1 text-3xl font-extrabold uppercase tracking-tight text-burgundy">What are you into?</p>
 									</div>
 									<!-- TV / Movies card -->
-									<div class="relative    rounded-[1.5rem] bg-primary-mauve px-8 py-5 shadow-xl">
-										<p class="text-2xl font-extrabold uppercase tracking-tight text-white">TV / Movies</p>
+									<div class="relative rounded-[1.5rem] bg-beige px-8 py-5 shadow-xl ring-1 ring-line">
+										<p class="text-2xl font-extrabold uppercase tracking-tight text-burgundy">TV / Movies</p>
 									</div>
 									<!-- Sport card with interest pills -->
-									<div class="relative   overflow-hidden rounded-[1.5rem] shadow-xl">
-										<div class="bg-[#454f2b] px-8 py-4">
-											<p class="text-2xl font-extrabold uppercase tracking-tight text-white">Sport</p>
+									<div class="relative overflow-hidden rounded-[1.5rem] bg-white shadow-xl ring-1 ring-line">
+										<div class="bg-beige px-8 py-4">
+											<p class="text-2xl font-extrabold uppercase tracking-tight text-burgundy">Sport</p>
 										</div>
-										<div class="bg-[#fdf6ec] px-6 pb-6 pt-5">
+										<div class="bg-white px-6 pb-6 pt-5">
 											<div class="flex flex-wrap gap-2.5">
-												<span class="rounded-full bg-[#454f2b] px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-white">Running</span>
-												<span class="rounded-full bg-[#454f2b] px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-white">Cycling</span>
-												<span class="rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-[#454f2b] ring-1 ring-[#454f2b]/30">Tennis</span>
-												<span class="rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-[#454f2b] ring-1 ring-[#454f2b]/30">Football</span>
-												<span class="rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-[#454f2b] ring-1 ring-[#454f2b]/30">Yoga</span>
-												<span class="rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-[#454f2b] ring-1 ring-[#454f2b]/30">Climbing</span>
-												<span class="rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-[#454f2b] ring-1 ring-[#454f2b]/30">Swimming</span>
+												<span class="rounded-full bg-cream px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-ink ring-1 ring-burgundy">Running</span>
+												<span class="rounded-full bg-cream px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-ink ring-1 ring-burgundy">Cycling</span>
+												<span class="rounded-full bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-ink ring-1 ring-line">Tennis</span>
+												<span class="rounded-full bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-ink ring-1 ring-line">Football</span>
+												<span class="rounded-full bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-ink ring-1 ring-line">Yoga</span>
+												<span class="rounded-full bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-ink ring-1 ring-line">Climbing</span>
+												<span class="rounded-full bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-ink ring-1 ring-line">Swimming</span>
 											</div>
 										</div>
 									</div>
@@ -185,23 +156,23 @@ const jsonLd = {
 					</div>
 				</section>
 
-				<section aria-label="Founder quotes" class="reveal bg-primary-mauve py-20 sm:py-28">
+				<section aria-label="Founder quotes" class="reveal bg-beige py-20 sm:py-28">
 						<div class="mx-auto max-w-5xl px-6 lg:px-8">
 							<!-- Quote 1: text and avatar on the right -->
 							<figure class="flex items-center justify-end gap-6">
 								<blockquote class="max-w-lg text-right">
-									<span class="font-serif text-xl italic leading-snug text-primary-beige sm:text-2xl">“We want to make networking easy and human again &amp; give people the opportunity to get hired for who they are.”</span>
-									<cite class="whitespace-nowrap text-sm font-bold uppercase not-italic tracking-wide text-primary-beige"> – Anouk, Co-Founder</cite>
+									<span class="font-serif text-xl italic leading-snug text-burgundy sm:text-2xl">“We want to make networking easy and human again &amp; give people the opportunity to get hired for who they are.”</span>
+									<cite class="whitespace-nowrap text-sm font-bold uppercase not-italic tracking-wide text-muted"> – Anouk, Co-Founder</cite>
 								</blockquote>
-								<img src="/person-2.png" alt="Anouk, co-founder" class="size-20 shrink-0 rounded-full object-cover ring-2 ring-primary-beige/70 ring-offset-2 ring-offset-primary-mauve sm:size-24" />
+								<img src="/person-2.png" alt="Anouk, co-founder" class="size-20 shrink-0 rounded-full object-cover ring-2 ring-white ring-offset-2 ring-offset-beige sm:size-24" />
 							</figure>
 
 							<!-- Quote 2: avatar on the left -->
 							<figure class="mt-14 flex items-center gap-6">
-								<img src="/person-1.png" alt="Shinead, co-founder" class="size-20 shrink-0 rounded-full object-cover ring-2 ring-primary-beige/70 ring-offset-2 ring-offset-primary-mauve sm:size-24" />
+								<img src="/person-1.png" alt="Shinead, co-founder" class="size-20 shrink-0 rounded-full object-cover ring-2 ring-white ring-offset-2 ring-offset-beige sm:size-24" />
 								<blockquote class="max-w-lg">
-									<span class="font-serif text-xl italic leading-snug text-primary-beige sm:text-2xl">“A CV tells you what someone did. It never tells you who they are. We built Buzbo to fix that.”</span>
-									<cite class="whitespace-nowrap text-sm font-bold uppercase not-italic tracking-wide text-primary-beige"> – Shinead, Co-Founder</cite>
+									<span class="font-serif text-xl italic leading-snug text-burgundy sm:text-2xl">“A CV tells you what someone did. It never tells you who they are. We built Buzbo to fix that.”</span>
+									<cite class="whitespace-nowrap text-sm font-bold uppercase not-italic tracking-wide text-muted"> – Shinead, Co-Founder</cite>
 								</blockquote>
 							</figure>
 						</div>
@@ -229,7 +200,7 @@ const jsonLd = {
 
 							<!-- FAQ accordion -->
 							<div class="mx-auto mt-20 max-w-3xl space-y-4">
-								<details class="group rounded-2xl bg-[#fbf5ea] px-6 py-5" open>
+								<details class="group rounded-2xl bg-white ring-1 ring-line px-6 py-5" open>
 									<summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold text-gray-900">
 										What is Buzbo?
 										<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true" class="size-5 shrink-0 text-gray-600 transition group-open:rotate-180">
@@ -242,7 +213,7 @@ const jsonLd = {
 									</div>
 								</details>
 
-								<details class="group rounded-2xl bg-[#fbf5ea] px-6 py-5">
+								<details class="group rounded-2xl bg-white ring-1 ring-line px-6 py-5">
 									<summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold text-gray-900">
 										How does the matching work?
 										<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true" class="size-5 shrink-0 text-gray-600 transition group-open:rotate-180">
@@ -256,7 +227,7 @@ const jsonLd = {
 									</div>
 								</details>
 
-								<details class="group rounded-2xl bg-[#fbf5ea] px-6 py-5">
+								<details class="group rounded-2xl bg-white ring-1 ring-line px-6 py-5">
 									<summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold text-gray-900">
 										Is it free?
 										<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true" class="size-5 shrink-0 text-gray-600 transition group-open:rotate-180">
@@ -270,7 +241,7 @@ const jsonLd = {
 									</div>
 								</details>
 
-								<details class="group rounded-2xl bg-[#fbf5ea] px-6 py-5">
+								<details class="group rounded-2xl bg-white ring-1 ring-line px-6 py-5">
 									<summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold text-gray-900">
 										Who is it for?
 										<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true" class="size-5 shrink-0 text-gray-600 transition group-open:rotate-180">
@@ -280,7 +251,7 @@ const jsonLd = {
 									<p class="mt-4 text-base/7 text-gray-700">Buzbo is for professionals who want to be seen for who they are, not just their job history — and for businesses who want to hire people that are the right fit, not just the right paper. Whether you're looking for your next role or your next hire, Buzbo shows the person behind the profile.</p>
 								</details>
 
-								<details class="group rounded-2xl bg-[#fbf5ea] px-6 py-5">
+								<details class="group rounded-2xl bg-white ring-1 ring-line px-6 py-5">
 									<summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold text-gray-900">
 										When does it launch?
 										<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true" class="size-5 shrink-0 text-gray-600 transition group-open:rotate-180">
@@ -288,12 +259,12 @@ const jsonLd = {
 										</svg>
 									</summary>
 									<div class="mt-4 space-y-3 text-base/7 text-gray-700">
-										<p>We're working hard to build the best possible version of Buzbo and are aiming to launch in September.</p>
-										<p>Join the waitlist to be among the first to get access and become part of the Buzbo community from day one.</p>
+										<p>Buzbo launches on 1 October 2026.</p>
+										<p>Download the app and be part of the Buzbo community from day one.</p>
 									</div>
 								</details>
 
-								<details class="group rounded-2xl bg-[#fbf5ea] px-6 py-5">
+								<details class="group rounded-2xl bg-white ring-1 ring-line px-6 py-5">
 									<summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold text-gray-900">
 										Is it available outside the Netherlands?
 										<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true" class="size-5 shrink-0 text-gray-600 transition group-open:rotate-180">

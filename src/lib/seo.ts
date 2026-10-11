@@ -32,4 +32,10 @@ export const PAGE_SEO = {
 		description: 'Read the Buzbo Terms & Conditions for using the app, website, and related services.',
 		keywords: 'Buzbo, terms and conditions, terms of use',
 	},
+	childSafety: {
+		title: 'Child Safety Standards — Buzbo',
+		description:
+			'Buzbo\'s published standards against child sexual abuse and exploitation, and how to report a concern.',
+		keywords: 'Buzbo, child safety, CSAE, CSAM, reporting',
+	},
 } as const;

@@ -17,6 +17,13 @@ export const PAGE_SEO = {
 		keywords: `${DEFAULT_KEYWORDS}, blog, career advice, professional insights`,
 		image: '/blog-banner.png',
 	},
+	events: {
+		title: 'Events',
+		description:
+			'Buzbo networking evenings across the Netherlands. Three introductions matched in advance, so you meet the people you should meet.',
+		keywords: `${DEFAULT_KEYWORDS}, events, networking events, meetups`,
+		image: '/blog-banner.png',
+	},
 	faq: {
 		title: 'FAQ — Buzbo',
 		description: 'Common questions about Buzbo, the skills-based professional networking platform.',

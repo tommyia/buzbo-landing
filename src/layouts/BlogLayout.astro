@@ -19,6 +19,10 @@ interface Props {
 	modifiedTime?: string;
 	author?: string;
 	footerWaitlistAnchor?: boolean;
+	/** After the "·" in the page title. Event pages are not the blog. */
+	titleSuffix?: string;
+	/** Structured data for a page that is not an article. Overrides the Article block. */
+	jsonLd?: Record<string, unknown>;
 }
 
 const {
@@ -32,11 +36,13 @@ const {
 	modifiedTime,
 	author,
 	footerWaitlistAnchor = true,
+	titleSuffix = 'Buzbo Blog',
+	jsonLd: pageJsonLd,
 } = Astro.props;
 
-const fullTitle = `${title} · Buzbo Blog`;
+const fullTitle = `${title} · ${titleSuffix}`;
 const imageUrl = image.startsWith('http') ? image : new URL(image, Astro.url.origin).href;
-const jsonLd =
+const articleJsonLd =
 	type === 'article'
 		? {
 				'@context': 'https://schema.org',
@@ -77,7 +83,7 @@ const jsonLd =
 			author={author}
 			publishedTime={publishedTime}
 			modifiedTime={modifiedTime}
-			jsonLd={jsonLd}
+			jsonLd={pageJsonLd ?? articleJsonLd}
 		/>
 	</head>
 	<body class="bg-primary-beige font-sans antialiased text-gray-900">

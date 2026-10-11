@@ -7,12 +7,24 @@ import type { TicketPrice } from './types.ts';
 
 type Parts = Partial<Record<Intl.DateTimeFormatPartTypes, string>>;
 
+/** Where an event is shown when its own timezone cannot be used. */
+const FALLBACK_TIME_ZONE = 'Europe/Amsterdam';
+
+function formatterFor(timeZone: string, options: Intl.DateTimeFormatOptions): Intl.DateTimeFormat {
+  try {
+    return new Intl.DateTimeFormat('en-GB', { timeZone: timeZone || FALLBACK_TIME_ZONE, ...options });
+  } catch {
+    // An unknown zone is a RangeError. The editor only stores valid ones, but the column
+    // is free text, and one bad row must not turn the whole list into an error page.
+    return new Intl.DateTimeFormat('en-GB', { timeZone: FALLBACK_TIME_ZONE, ...options });
+  }
+}
+
 function partsOf(iso: string, timeZone: string, options: Intl.DateTimeFormatOptions): Parts {
   const parts: Parts = {};
-  const formatted = new Intl.DateTimeFormat('en-GB', { timeZone, ...options }).formatToParts(
-    new Date(iso),
-  );
-  for (const part of formatted) parts[part.type] = part.value;
+  for (const part of formatterFor(timeZone, options).formatToParts(new Date(iso))) {
+    parts[part.type] = part.value;
+  }
   return parts;
 }
 

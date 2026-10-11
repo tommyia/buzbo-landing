@@ -174,3 +174,17 @@ describe('safeHttpUrl', () => {
     }
   });
 });
+
+describe('a timezone the runtime does not know', () => {
+  // The editor only stores valid zones, but the column is free text. One bad row must
+  // not take the whole list down with a RangeError.
+  it('is shown in Amsterdam time instead of throwing', () => {
+    assert.equal(formatTime(START, 'Europe/Amsterdamn'), '17:00');
+    assert.equal(formatDayLong(START, ''), 'Thursday, 15 October 2026');
+    assert.equal(formatUtcOffset(START, 'nonsense'), 'GMT+2');
+    assert.deepEqual(
+      groupByDay([{ starts_at: START, timezone: 'nonsense' }]).map((g) => g.key),
+      ['2026-10-15'],
+    );
+  });
+});

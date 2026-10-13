@@ -1,0 +1,82 @@
+---
+import BlogLayout from '../../../layouts/BlogLayout.astro';
+import { formatDayLong, formatTimeRange, formatUtcOffset } from '../../../lib/events/format';
+import { fetchOrder, nextRefresh } from '../../../lib/events/order';
+import { checkoutApiUrl, eventsHref } from '../../../lib/events/paths';
+import { qrSvg } from '../../../lib/events/qr';
+
+export const prerender = false;
+
+// One person's ticket. Nothing here may be cached or indexed.
+Astro.response.headers.set('Cache-Control', 'no-store');
+Astro.response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+
+const api = checkoutApiUrl();
+const order = api && Astro.params.token ? await fetchOrder(api, Astro.params.token) : null;
+
+if (!order) {
+	return new Response(null, { status: 404, statusText: 'Not Found' });
+}
+
+const { event, ticket } = order;
+const zone = event.timezone;
+const when = `${formatDayLong(event.starts_at, zone)} · ${formatTimeRange(event.starts_at, event.ends_at, zone)} · ${formatUtcOffset(event.starts_at, zone)}`;
+const where = [event.venue_name, event.venue_address ?? event.city].filter(Boolean).join(', ');
+const eventHref = eventsHref(`/${event.slug}`);
+
+// The ticket to show, when there is one and it has not been voided.
+const valid = order.status === 'paid' && ticket?.status === 'valid' ? ticket : null;
+const voided = order.status === 'paid' && ticket?.status === 'void';
+
+// While the payment settles the page reloads itself, with no script: a meta refresh that
+// counts its own attempts in the address.
+const attempt = Number(Astro.url.searchParams.get('n') ?? '0');
+const next = order.status === 'pending' ? nextRefresh(attempt) : null;
+---
+
+<BlogLayout
+	title={valid ? `Your ticket for ${event.title}` : event.title}
+	description="Your Buzbo event ticket."
+	titleSuffix="Buzbo Events"
+	robots="noindex, nofollow"
+	canonical={new URL(eventHref, Astro.url.origin).href}
+>
+	{next !== null ? <meta slot="head" http-equiv="refresh" content={`3;url=?n=${next}`} /> : null}
+	<article class="mx-auto max-w-xl px-6 pt-36 pb-20 lg:pt-44">
+		<h1 class="font-sans text-3xl font-extrabold tracking-tight text-burgundy">{event.title}</h1>
+		<p class="mt-3 font-semibold text-ink">{when}</p>
+		{where ? <p class="mt-1 text-muted">{where}</p> : null}
+
+		{valid ? (
+			<section aria-labelledby="ticket-heading" class="mt-8 rounded-2xl bg-white p-6 text-center shadow-sm ring-1 ring-line">
+				<h2 id="ticket-heading" class="text-xs font-semibold uppercase tracking-wide text-muted">Your ticket</h2>
+				<div class="mx-auto mt-4 w-56 max-w-full" role="img" aria-label="Ticket QR code" set:html={qrSvg(valid.code)} />
+				<p class="mt-4 text-lg font-bold text-ink">{order.buyer_name}</p>
+				{valid.type_name ? <p class="text-sm text-muted">{valid.type_name}</p> : null}
+				<p class="mt-4 text-sm text-muted">Show this code at the door. We also sent this page to your email.</p>
+			</section>
+		) : voided ? (
+			<p class="mt-8 rounded-2xl bg-white px-6 py-8 text-center font-semibold text-muted ring-1 ring-line">This ticket has been cancelled.</p>
+		) : order.status === 'pending' ? (
+			<section class="mt-8 rounded-2xl bg-white px-6 py-8 text-center ring-1 ring-line" aria-live="polite">
+				{next !== null ? (
+					<>
+						<p class="font-semibold text-ink">Confirming your payment…</p>
+						<p class="mt-2 text-sm text-muted">This page refreshes by itself. It usually takes a few seconds.</p>
+					</>
+				) : (
+					<>
+						<p class="font-semibold text-ink">We have not seen your payment yet.</p>
+						<p class="mt-2 text-sm text-muted">If you paid, your ticket will arrive by email as soon as the payment is confirmed. If you did not finish paying, nothing was charged.</p>
+					</>
+				)}
+			</section>
+		) : (
+			<p class="mt-8 rounded-2xl bg-white px-6 py-8 text-center font-semibold text-muted ring-1 ring-line">This order was cancelled. Nothing was charged.</p>
+		)}
+
+		<p class="mt-8 text-center">
+			<a href={eventHref} class="text-sm font-semibold text-primary-crimson hover:underline">← Back to the event</a>
+		</p>
+	</article>
+</BlogLayout>

@@ -23,6 +23,8 @@ interface Props {
 	titleSuffix?: string;
 	/** Structured data for a page that is not an article. Overrides the Article block. */
 	jsonLd?: Record<string, unknown>;
+	/** e.g. "noindex" for a page that is one person's. */
+	robots?: string;
 }
 
 const {
@@ -38,6 +40,7 @@ const {
 	footerWaitlistAnchor = true,
 	titleSuffix = 'Buzbo Blog',
 	jsonLd: pageJsonLd,
+	robots,
 } = Astro.props;
 
 const fullTitle = `${title} · ${titleSuffix}`;
@@ -84,7 +87,9 @@ const articleJsonLd =
 			publishedTime={publishedTime}
 			modifiedTime={modifiedTime}
 			jsonLd={pageJsonLd ?? articleJsonLd}
+			robots={robots}
 		/>
+		<slot name="head" />
 	</head>
 	<body class="bg-primary-beige font-sans antialiased text-gray-900">
 		<SiteHeader />

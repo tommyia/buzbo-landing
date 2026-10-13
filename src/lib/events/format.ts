@@ -177,3 +177,21 @@ export function safeHttpUrl(value: string | null | undefined): string | null {
     return null;
   }
 }
+
+/** The address of a Google map to put in an iframe, or null when there is too little to
+ *  find the place by. Built from the venue and its address: the pasted maps link cannot be
+ *  framed, Google refuses it. A venue name alone is not enough — "The Social Hub" is in
+ *  six cities.
+ *
+ *  This is the keyless `output=embed` form. It works, and it is not a documented API; if
+ *  it stops, the official replacement is the Maps Embed API with a key. */
+export function mapEmbedUrl(place: {
+  venue_name: string | null;
+  venue_address: string | null;
+  city: string | null;
+}): string | null {
+  const where = place.venue_address?.trim() || place.city?.trim();
+  if (!where) return null;
+  const query = [place.venue_name?.trim(), where].filter(Boolean).join(', ');
+  return `https://www.google.com/maps?q=${encodeURIComponent(query)}&output=embed`;
+}

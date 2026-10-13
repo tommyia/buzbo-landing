@@ -13,6 +13,7 @@ import {
   formatWeekday,
   groupByDay,
   isPast,
+  mapEmbedUrl,
   priceLabel,
   safeHttpUrl,
   splitByTime,
@@ -186,5 +187,31 @@ describe('a timezone the runtime does not know', () => {
       groupByDay([{ starts_at: START, timezone: 'nonsense' }]).map((g) => g.key),
       ['2026-10-15'],
     );
+  });
+});
+
+describe('mapEmbedUrl', () => {
+  const at = (venue_name: string | null, venue_address: string | null, city: string | null) =>
+    mapEmbedUrl({ venue_name, venue_address, city });
+
+  it('finds the place by venue and address', () => {
+    assert.equal(
+      at('Hubbs', 'Koningstraat 34, 6811 DG Arnhem', 'Arnhem'),
+      'https://www.google.com/maps?q=Hubbs%2C%20Koningstraat%2034%2C%206811%20DG%20Arnhem&output=embed',
+    );
+  });
+
+  it('falls back to the city, and works without a venue name', () => {
+    assert.equal(at('Hubbs', null, 'Arnhem'), 'https://www.google.com/maps?q=Hubbs%2C%20Arnhem&output=embed');
+    assert.equal(at(null, 'Koningstraat 34', null), 'https://www.google.com/maps?q=Koningstraat%2034&output=embed');
+  });
+
+  it('gives null when a venue name is all there is, or nothing', () => {
+    assert.equal(at('Hubbs', null, null), null);
+    assert.equal(at(null, '  ', ''), null);
+  });
+
+  it('escapes what comes out of the database', () => {
+    assert.equal(at(null, 'A&B "x" <y>', null), 'https://www.google.com/maps?q=A%26B%20%22x%22%20%3Cy%3E&output=embed');
   });
 });

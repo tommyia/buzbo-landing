@@ -15,27 +15,35 @@ const answering = (status: number, body: unknown) => async () =>
 describe('fetchOrder', () => {
   it('returns the order', async () => {
     const calls: string[] = [];
-    const order = await fetchOrder('https://api.buzbo.com', TOK, async (url) => {
+    const result = await fetchOrder('https://api.buzbo.com', TOK, async (url) => {
       calls.push(String(url));
       return answering(200, { data: VIEW, error: null })();
     });
-    assert.deepEqual(order, VIEW);
+    assert.deepEqual(result, { kind: 'found', order: VIEW });
     assert.deepEqual(calls, [`https://api.buzbo.com/api/payments/orders/${TOK}`]);
   });
 
-  it('is null for an unknown order, a failing server and a server that does not answer', async () => {
-    assert.equal(await fetchOrder('https://api.buzbo.com', TOK, answering(404, { data: null, error: {} })), null);
-    assert.equal(await fetchOrder('https://api.buzbo.com', TOK, answering(500, { data: null, error: {} })), null);
-    assert.equal(await fetchOrder('https://api.buzbo.com', TOK, async () => { throw new Error('offline'); }), null);
+  it('is unknown only when the server says there is no such order', async () => {
+    assert.deepEqual(await fetchOrder('https://api.buzbo.com', TOK, answering(404, { data: null, error: {} })), { kind: 'unknown' });
+  });
+
+  // Somebody who has just paid must not be shown "not found" because the server was
+  // restarting or busy: that is "try again", not "no such order".
+  it('is unavailable when the server fails, is busy, or does not answer', async () => {
+    for (const status of [429, 500, 502, 503]) {
+      assert.deepEqual(await fetchOrder('https://api.buzbo.com', TOK, answering(status, { data: null, error: {} })), { kind: 'unavailable' });
+    }
+    assert.deepEqual(await fetchOrder('https://api.buzbo.com', TOK, async () => { throw new Error('offline'); }), { kind: 'unavailable' });
+    assert.deepEqual(await fetchOrder('https://api.buzbo.com', TOK, answering(200, { data: null, error: null })), { kind: 'unavailable' });
   });
 
   it('never puts a token with a slash or a dot-dot into a path', async () => {
     let called = false;
-    const order = await fetchOrder('https://api.buzbo.com', '../admin', async () => {
+    const result = await fetchOrder('https://api.buzbo.com', '../admin', async () => {
       called = true;
       return answering(200, { data: VIEW, error: null })();
     });
-    assert.equal(order, null);
+    assert.deepEqual(result, { kind: 'unknown' });
     assert.equal(called, false);
   });
 });

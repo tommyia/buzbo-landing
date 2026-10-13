@@ -17,13 +17,17 @@ export function checkoutLabel(priceCents: number): 'Buy ticket' | 'Register' {
   return priceCents > 0 ? 'Buy ticket' : 'Register';
 }
 
-/** The order page must be on the site the buyer is on: the address comes from a server
- *  answer and ends up in `location.href`. */
-function sameSiteUrl(value: string | undefined, here: string): string {
+/** The order page's address ON THE SITE THE BUYER IS ON. buzbo-be builds the link from
+ *  its own idea of the site's address; the buyer may be on www, or on a preview. So only
+ *  the path is taken from the answer — which also means the answer cannot send anyone to
+ *  another site, whatever it says. */
+function orderPageUrl(value: string | undefined, here: string): string {
   try {
     const url = new URL(value ?? '');
-    if (url.protocol === 'https:' || url.protocol === 'http:') {
-      if (url.origin === new URL(here).origin) return url.href;
+    const isWeb = url.protocol === 'https:' || url.protocol === 'http:';
+    // A path of "//host/…" would be read as another site when joined to an origin.
+    if (isWeb && url.pathname.length > 1 && !url.pathname.startsWith('//')) {
+      return `${new URL(here).origin}${url.pathname}`;
     }
   } catch {
     // falls through
@@ -32,7 +36,7 @@ function sameSiteUrl(value: string | undefined, here: string): string {
 }
 
 export function nextStep(data: CheckoutAnswer, here: string): NextStep {
-  const orderUrl = sameSiteUrl(data.order_url, here);
+  const orderUrl = orderPageUrl(data.order_url, here);
   if (!data.intent_id || !data.client_secret || !data.currency || !data.env) {
     return { kind: 'redirect', url: orderUrl };
   }

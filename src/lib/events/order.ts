@@ -23,21 +23,29 @@ const TOKEN = /^[A-Za-z0-9_-]{32,64}$/;
 /** How many times the pending page reloads itself: 20 × 3 s is a minute. */
 const MAX_REFRESHES = 20;
 
-/** Null for anything that is not an order we can show: unknown, refused, or no answer. */
+/** `unknown` is the server saying there is no such order. `unavailable` is everything
+ *  that is not an answer — busy, restarting, unreachable — and must never be shown as
+ *  "not found" to somebody who has just paid. */
+export type OrderResult =
+  | { kind: 'found'; order: OrderView }
+  | { kind: 'unknown' }
+  | { kind: 'unavailable' };
+
 export async function fetchOrder(
   api: string,
   token: string,
   fetchImpl: typeof fetch = fetch,
-): Promise<OrderView | null> {
-  if (!TOKEN.test(token)) return null;
+): Promise<OrderResult> {
+  if (!TOKEN.test(token)) return { kind: 'unknown' };
   try {
     const response = await fetchImpl(`${api}/api/payments/orders/${token}`);
-    if (!response.ok) return null;
+    if (response.status === 404) return { kind: 'unknown' };
+    if (!response.ok) return { kind: 'unavailable' };
     const body = (await response.json()) as { data: OrderView | null };
-    return body.data ?? null;
+    return body.data ? { kind: 'found', order: body.data } : { kind: 'unavailable' };
   } catch (error) {
     console.error('events: could not read order', error);
-    return null;
+    return { kind: 'unavailable' };
   }
 }
 

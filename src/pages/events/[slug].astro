@@ -278,6 +278,14 @@ const tile = 'flex size-11 shrink-0 flex-col items-center justify-center overflo
 			});
 		}
 
+		// Back from Airwallex restores this page as it was left: button disabled, "One
+		// moment…". Put it back so the buyer can try again.
+		window.addEventListener('pageshow', (event) => {
+			if (!event.persisted) return;
+			submit.disabled = false;
+			submit.textContent = submitLabel;
+		});
+
 		emailInput.addEventListener('input', () => {
 			emailEcho.textContent = emailInput.value.trim() || 'this address';
 		});
@@ -305,6 +313,10 @@ const tile = 'flex size-11 shrink-0 flex-col items-center justify-center overflo
 					data: CheckoutAnswer | null;
 					error: { message?: string } | null;
 				} | null;
+				if (response.status === 400) {
+					// buzbo-be's own wording here is "Request validation failed".
+					throw new Error('Check your name and email address. A name cannot contain a web address.');
+				}
 				if (!response.ok || !body?.data) {
 					throw new Error(body?.error?.message ?? 'Something went wrong. Nothing was charged; try again in a moment.');
 				}

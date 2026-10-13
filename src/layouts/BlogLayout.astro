@@ -25,6 +25,9 @@ interface Props {
 	jsonLd?: Record<string, unknown>;
 	/** e.g. "noindex" for a page that is one person's. */
 	robots?: string;
+	/** False on a page whose address is a secret: Google Analytics and the Meta Pixel
+	 *  both report the full address of the page they load on. */
+	analytics?: boolean;
 }
 
 const {
@@ -41,6 +44,7 @@ const {
 	titleSuffix = 'Buzbo Blog',
 	jsonLd: pageJsonLd,
 	robots,
+	analytics = true,
 } = Astro.props;
 
 const fullTitle = `${title} · ${titleSuffix}`;
@@ -72,8 +76,8 @@ const articleJsonLd =
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<FaviconLinks />
-		<GoogleAnalytics />
-		<MetaPixel />
+		{analytics ? <GoogleAnalytics /> : null}
+		{analytics ? <MetaPixel /> : null}
 		<meta name="viewport" content="width=device-width" />
 		<Seo
 			title={fullTitle}

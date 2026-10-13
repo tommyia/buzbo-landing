@@ -2,6 +2,7 @@
 import EventCard from '../../components/events/EventCard.astro';
 import BlogLayout from '../../layouts/BlogLayout.astro';
 import { formatDayShort, formatWeekday, groupByDay, splitByTime } from '../../lib/events/format';
+import { eventsHref } from '../../lib/events/paths';
 import { listPublishedEvents } from '../../lib/events/queries';
 import { PAGE_SEO } from '../../lib/seo';
 
@@ -20,6 +21,7 @@ const tabOff = 'text-muted hover:text-ink';
 	title={PAGE_SEO.events.title}
 	description={PAGE_SEO.events.description}
 	keywords={PAGE_SEO.events.keywords}
+	canonical={new URL(eventsHref(), Astro.url.origin).href}
 	image={PAGE_SEO.events.image}
 	titleSuffix="Buzbo"
 >
@@ -32,8 +34,8 @@ const tabOff = 'text-muted hover:text-ink';
 				</p>
 			</div>
 			<nav aria-label="Which events" class="inline-flex rounded-full bg-beige p-1 text-sm font-semibold">
-				<a href="/events" aria-current={period === 'upcoming' ? 'page' : undefined} class:list={[tab, period === 'upcoming' ? tabOn : tabOff]}>Upcoming</a>
-				<a href="/events?period=past" aria-current={period === 'past' ? 'page' : undefined} class:list={[tab, period === 'past' ? tabOn : tabOff]}>Past</a>
+				<a href={eventsHref()} aria-current={period === 'upcoming' ? 'page' : undefined} class:list={[tab, period === 'upcoming' ? tabOn : tabOff]}>Upcoming</a>
+				<a href={eventsHref('?period=past')} aria-current={period === 'past' ? 'page' : undefined} class:list={[tab, period === 'past' ? tabOn : tabOff]}>Past</a>
 			</nav>
 		</div>
 

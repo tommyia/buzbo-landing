@@ -1,5 +1,6 @@
 ---
 import { formatTime, priceLabel, safeHttpUrl } from '../../lib/events/format';
+import { eventsHref } from '../../lib/events/paths';
 import type { EventSummary } from '../../lib/events/types';
 
 interface Props {
@@ -13,7 +14,7 @@ const cover = safeHttpUrl(event.cover_image_url);
 ---
 
 <a
-	href={`/events/${event.slug}`}
+	href={eventsHref(`/${event.slug}`)}
 	class="group flex items-start gap-4 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-line transition hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-burgundy sm:p-5"
 >
 	<div class="min-w-0 flex-1">

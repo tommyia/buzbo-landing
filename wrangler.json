@@ -11,7 +11,9 @@
 		"binding": "ASSETS"
 	},
 	"vars": {
-		"BREVO_LIST_ID": "11"
+		"BREVO_LIST_ID": "11",
+		"EVENTS_PATH": "/e-6b36024259cdeef0",
+		"PUBLIC_BUZBO_BE_URL": "https://api.buzbo.com"
 	},
 	"observability": {
 		"enabled": true

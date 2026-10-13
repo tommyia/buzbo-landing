@@ -17,6 +17,13 @@ export const PAGE_SEO = {
 		keywords: `${DEFAULT_KEYWORDS}, blog, career advice, professional insights`,
 		image: '/blog-banner.png',
 	},
+	events: {
+		title: 'Events',
+		description:
+			'Buzbo networking evenings across the Netherlands. Three introductions matched in advance, so you meet the people you should meet.',
+		keywords: `${DEFAULT_KEYWORDS}, events, networking events, meetups`,
+		image: '/blog-banner.png',
+	},
 	faq: {
 		title: 'FAQ — Buzbo',
 		description: 'Common questions about Buzbo, the skills-based professional networking platform.',
@@ -31,5 +38,11 @@ export const PAGE_SEO = {
 		title: 'Terms & Conditions — Buzbo',
 		description: 'Read the Buzbo Terms & Conditions for using the app, website, and related services.',
 		keywords: 'Buzbo, terms and conditions, terms of use',
+	},
+	childSafety: {
+		title: 'Child Safety Standards — Buzbo',
+		description:
+			'Buzbo\'s published standards against child sexual abuse and exploitation, and how to report a concern.',
+		keywords: 'Buzbo, child safety, CSAE, CSAM, reporting',
 	},
 } as const;

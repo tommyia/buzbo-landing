@@ -1,0 +1,65 @@
+---
+import EventCard from '../../components/events/EventCard.astro';
+import BlogLayout from '../../layouts/BlogLayout.astro';
+import { formatDayShort, formatWeekday, groupByDay, splitByTime } from '../../lib/events/format';
+import { eventsHref } from '../../lib/events/paths';
+import { listPublishedEvents } from '../../lib/events/queries';
+import { PAGE_SEO } from '../../lib/seo';
+
+export const prerender = false;
+
+const period = Astro.url.searchParams.get('period') === 'past' ? 'past' : 'upcoming';
+const { upcoming, past } = splitByTime(await listPublishedEvents(), new Date());
+const days = groupByDay(period === 'past' ? past : upcoming);
+
+const tab = 'rounded-full px-4 py-1.5 transition';
+const tabOn = 'bg-white text-ink shadow-sm';
+const tabOff = 'text-muted hover:text-ink';
+---
+
+<BlogLayout
+	title={PAGE_SEO.events.title}
+	description={PAGE_SEO.events.description}
+	keywords={PAGE_SEO.events.keywords}
+	canonical={new URL(eventsHref(), Astro.url.origin).href}
+	image={PAGE_SEO.events.image}
+	titleSuffix="Buzbo"
+>
+	<section class="mx-auto max-w-4xl px-6 pt-36 pb-20 lg:px-8 lg:pt-44">
+		<div class="flex flex-wrap items-end justify-between gap-4">
+			<div>
+				<h1 class="font-sans text-4xl font-extrabold tracking-tight text-burgundy sm:text-5xl">Events</h1>
+				<p class="mt-3 max-w-xl text-base/7 text-muted">
+					Evenings where the introductions are made before you arrive. Valuable connections, not random small talk.
+				</p>
+			</div>
+			<nav aria-label="Which events" class="inline-flex rounded-full bg-beige p-1 text-sm font-semibold">
+				<a href={eventsHref()} aria-current={period === 'upcoming' ? 'page' : undefined} class:list={[tab, period === 'upcoming' ? tabOn : tabOff]}>Upcoming</a>
+				<a href={eventsHref('?period=past')} aria-current={period === 'past' ? 'page' : undefined} class:list={[tab, period === 'past' ? tabOn : tabOff]}>Past</a>
+			</nav>
+		</div>
+
+		{days.length === 0 ? (
+			<p class="mt-12 rounded-2xl bg-white px-6 py-12 text-center text-muted ring-1 ring-line">
+				{period === 'past' ? 'No past events yet.' : 'No upcoming events right now.'}
+			</p>
+		) : (
+			<ol class="mt-12">
+				{days.map((day) => (
+					<li class="grid gap-x-6 sm:grid-cols-[7.5rem_1fr]">
+						<div class="pb-3 sm:pb-0 sm:pt-1">
+							<p class="font-semibold text-ink">{formatDayShort(day.events[0].starts_at, day.events[0].timezone)}</p>
+							<p class="text-sm text-muted">{formatWeekday(day.events[0].starts_at, day.events[0].timezone)}</p>
+						</div>
+						<div class="relative min-w-0 border-l border-dashed border-line pb-10 pl-6">
+							<span class="absolute -left-[5px] top-2 size-2.5 rounded-full bg-burgundy/40" aria-hidden="true"></span>
+							<div class="flex flex-col gap-4">
+								{day.events.map((event) => <EventCard event={event} />)}
+							</div>
+						</div>
+					</li>
+				))}
+			</ol>
+		)}
+	</section>
+</BlogLayout>

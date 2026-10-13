@@ -1,6 +1,7 @@
 ---
 import FaviconLinks from '../components/FaviconLinks.astro';
 import GoogleAnalytics from '../components/GoogleAnalytics.astro';
+import MetaPixel from '../components/MetaPixel.astro';
 import Seo from '../components/Seo.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
@@ -18,6 +19,10 @@ interface Props {
 	modifiedTime?: string;
 	author?: string;
 	footerWaitlistAnchor?: boolean;
+	/** After the "·" in the page title. Event pages are not the blog. */
+	titleSuffix?: string;
+	/** Structured data for a page that is not an article. Overrides the Article block. */
+	jsonLd?: Record<string, unknown>;
 }
 
 const {
@@ -31,11 +36,13 @@ const {
 	modifiedTime,
 	author,
 	footerWaitlistAnchor = true,
+	titleSuffix = 'Buzbo Blog',
+	jsonLd: pageJsonLd,
 } = Astro.props;
 
-const fullTitle = `${title} · Buzbo Blog`;
+const fullTitle = `${title} · ${titleSuffix}`;
 const imageUrl = image.startsWith('http') ? image : new URL(image, Astro.url.origin).href;
-const jsonLd =
+const articleJsonLd =
 	type === 'article'
 		? {
 				'@context': 'https://schema.org',
@@ -63,6 +70,7 @@ const jsonLd =
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<FaviconLinks />
 		<GoogleAnalytics />
+		<MetaPixel />
 		<meta name="viewport" content="width=device-width" />
 		<Seo
 			title={fullTitle}
@@ -75,7 +83,7 @@ const jsonLd =
 			author={author}
 			publishedTime={publishedTime}
 			modifiedTime={modifiedTime}
-			jsonLd={jsonLd}
+			jsonLd={pageJsonLd ?? articleJsonLd}
 		/>
 	</head>
 	<body class="bg-primary-beige font-sans antialiased text-gray-900">

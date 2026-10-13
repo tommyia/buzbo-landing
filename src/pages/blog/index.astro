@@ -45,7 +45,7 @@ function formatDate(value: string | null) {
 			aria-hidden="true"
 			class="absolute inset-0 size-full object-cover object-[70%_center]"
 		/>
-		<div class="absolute inset-0 bg-black/50" aria-hidden="true"></div>
+		<div class="absolute inset-0 bg-ink/55" aria-hidden="true"></div>
 		<div class="relative mx-auto max-w-7xl px-6 pt-36 pb-16 sm:pb-20 lg:px-8 lg:pt-44 lg:pb-24">
 			<div class="max-w-2xl text-left">
 				<h1 class="text-pretty text-4xl font-extrabold tracking-tight text-primary-beige sm:text-6xl lg:text-7xl font-sans">
@@ -53,7 +53,7 @@ function formatDate(value: string | null) {
 					<span class="italic font-normal font-serif">thinking about.</span>
 				</h1>
 				<p class="mt-6 text-pretty text-base font-normal text-primary-beige sm:text-lg/8">
-					Your CV says what you've done. It doesn't say who you are. Buzbo is a skills-based networking platform that actually shows that: your skills, what you're into, the work you're proud of. Companies looking for real fit find you here, not just people who tick boxes. Drop your name and email below and you're in when we launch.
+					This is where we think out loud while building Buzbo. What we're learning. What we're questioning. What we're figuring out along the way. We're on a mission to showcase people for who they are, not just what they've done. To make that happen, we talk to people every day: professors, business managers, entrepreneurs, professionals, Buzbo'ers, recruiters, hiring managers and career coaches. These conversations challenge our thinking, shape our ideas, and ultimately influence what we build next. This is where we share what we discover along the way.
 				</p>
 			</div>
 		</div>
@@ -69,7 +69,7 @@ function formatDate(value: string | null) {
 			{articles.map((article) => (
 				<a
 					href={`/blog/${article.slug}`}
-					class="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-primary-crimson/10 transition hover:-translate-y-1 hover:shadow-md"
+					class="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-line transition hover:-translate-y-1 hover:shadow-md"
 				>
 					{article.cover_image_url ? (
 						<img
@@ -85,7 +85,7 @@ function formatDate(value: string | null) {
 						{article.excerpt ? (
 							<p class="mt-3 line-clamp-3 text-sm/6 text-gray-700">{article.excerpt}</p>
 						) : null}
-						<div class="mt-auto flex flex-wrap items-center gap-x-2 pt-4 text-xs font-medium tracking-wide text-primary-mauve">
+						<div class="mt-auto flex flex-wrap items-center gap-x-2 pt-4 text-xs font-medium tracking-wide text-muted">
 							{article.published_at ? (
 								<time datetime={article.published_at}>{formatDate(article.published_at)}</time>
 							) : null}

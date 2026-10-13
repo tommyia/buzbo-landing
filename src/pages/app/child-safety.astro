@@ -1,0 +1,100 @@
+---
+import FaviconLinks from '../../components/FaviconLinks.astro';
+import GoogleAnalytics from '../../components/GoogleAnalytics.astro';
+import Seo from '../../components/Seo.astro';
+import { PAGE_SEO } from '../../lib/seo';
+import '../../styles/global.css';
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<FaviconLinks />
+		<GoogleAnalytics />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<Seo
+			title={PAGE_SEO.childSafety.title}
+			description={PAGE_SEO.childSafety.description}
+			keywords={PAGE_SEO.childSafety.keywords}
+		/>
+	</head>
+	<body class="font-sans antialiased text-gray-900">
+		<main class="mx-auto max-w-xl px-5 py-8 sm:px-6 sm:py-10">
+			<h1 class="text-3xl leading-tight text-primary-crimson sm:text-4xl">Buzbo Child Safety Standards</h1>
+			<p class="mt-3 text-sm leading-relaxed text-gray-600">Last updated: 16 September 2026</p>
+			<p class="mt-2 text-sm leading-relaxed text-gray-600">
+				Operated by AH Limited B.V., registered in the Netherlands, KVK 92705987.
+				Child safety contact: <a href="mailto:hello@buzbo.com" class="font-medium text-primary-crimson underline underline-offset-2">hello@buzbo.com</a>.
+			</p>
+
+			<article class="legal mt-8 space-y-8 text-base leading-relaxed text-gray-800">
+				<p class="mt-3">Buzbo has zero tolerance for child sexual abuse and exploitation (CSAE). This page sets out the standards we hold ourselves to, what we do to prevent this content and behaviour on Buzbo, and how anyone can report a concern to us.</p>
+
+				<section>
+					<h2 class="text-xl leading-snug text-primary-crimson">1. Buzbo is an adults-only service</h2>
+					<p class="mt-3">Buzbo is a professional networking service for working adults. Our Terms &amp; Conditions require every account holder to be <strong>18 years or older</strong>. We do not knowingly allow anyone under 18 to create an account or use the service.</p>
+					<p class="mt-3">If we learn that an account belongs to someone under 18, we close it and delete the associated data.</p>
+				</section>
+
+				<section>
+					<h2 class="text-xl leading-snug text-primary-crimson">2. What is prohibited</h2>
+					<p class="mt-3">The following are prohibited on Buzbo without exception, and are grounds for immediate and permanent removal:</p>
+					<ul class="mt-3 list-disc space-y-2 pl-5">
+						<li>child sexual abuse material (CSAM) in any form, including images, video, text, drawings and generated content;</li>
+						<li>sexualising a minor in a profile, a message, or any other content;</li>
+						<li>grooming, solicitation, or any attempt to contact a minor for a sexual purpose;</li>
+						<li>trafficking, advertising, soliciting or trading in the sexual exploitation of a minor; and</li>
+						<li>using Buzbo to link to, promote, or direct anyone towards any of the above elsewhere.</li>
+					</ul>
+					<p class="mt-3">This applies whether the content was created by the person posting it, found elsewhere, or produced by a generative tool.</p>
+				</section>
+
+				<section>
+					<h2 class="text-xl leading-snug text-primary-crimson">3. How we prevent it</h2>
+					<p class="mt-3"><strong>Adults only, by design.</strong> Buzbo is built for professional connections between working adults. There is no public feed, no open discovery by strangers, and no way to browse or contact someone who has not chosen to connect with you.</p>
+					<p class="mt-3"><strong>Contact requires mutual consent.</strong> Nobody can send you a message unless you have both chosen to connect. A person cannot open a conversation with someone who has not agreed to it, which removes the most common route for unsolicited contact.</p>
+					<p class="mt-3"><strong>Text is filtered before it is published.</strong> Profile text and chat messages are checked against a blocklist before they are saved or delivered. Content that matches is refused rather than published and reviewed afterwards.</p>
+					<p class="mt-3"><strong>Reporting and blocking are always available.</strong> Every profile and every conversation carries a report and a block control. Blocking is immediate and closes the conversation for both people.</p>
+				</section>
+
+				<section id="report">
+					<h2 class="text-xl leading-snug text-primary-crimson">4. How to report a concern</h2>
+					<p class="mt-3"><strong>From inside the app.</strong> Open the menu in the top right of any profile or conversation and choose Report. Select a reason and add any detail that helps us act. Reports reach us directly.</p>
+					<p class="mt-3"><strong>By email, including if you do not use Buzbo.</strong> Write to <a href="mailto:hello@buzbo.com" class="font-medium text-primary-crimson underline underline-offset-2">hello@buzbo.com</a>. You do not need an account to report something to us. Tell us what you saw and where, and we will act on it.</p>
+					<p class="mt-3">Reports concerning child safety are treated as the highest priority and are reviewed ahead of everything else in the queue.</p>
+				</section>
+
+				<section>
+					<h2 class="text-xl leading-snug text-primary-crimson">5. What we do when we receive a report</h2>
+					<ul class="mt-3 list-disc space-y-2 pl-5">
+						<li>We review the report as a priority and preserve the evidence, including the account and its content, so that it is not lost if the person tries to delete it.</li>
+						<li>Where the report is substantiated, we remove the content and permanently ban the account and the person behind it.</li>
+						<li>We report apparent child sexual abuse material to the competent authorities and to the relevant national reporting body, in line with the law that applies to us.</li>
+						<li>In the Netherlands, where Buzbo is operated, this means reporting to the police and to the national hotline for child sexual abuse material (Meldpunt Kinderporno / EOKM). Where a report concerns another jurisdiction, we report to the body competent there.</li>
+						<li>We cooperate with lawful requests from law enforcement investigating child sexual abuse and exploitation.</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2 class="text-xl leading-snug text-primary-crimson">6. Point of contact</h2>
+					<p class="mt-3">Our designated point of contact for child safety matters, including questions from regulators, platforms and law enforcement, is reachable at <a href="mailto:hello@buzbo.com" class="font-medium text-primary-crimson underline underline-offset-2">hello@buzbo.com</a>. This address is monitored, and child safety correspondence is escalated immediately.</p>
+				</section>
+
+				<section>
+					<h2 class="text-xl leading-snug text-primary-crimson">7. Compliance</h2>
+					<p class="mt-3">These standards are published to meet Google Play's Child Safety Standards policy and Apple's App Review Guidelines, and to comply with the child safety laws that apply to us in the Netherlands and the European Union.</p>
+					<p class="mt-3">We review these standards at least annually, and whenever our product or the law changes in a way that affects them.</p>
+				</section>
+
+				<section>
+					<h2 class="text-xl leading-snug text-primary-crimson">8. Related</h2>
+					<p class="mt-3">
+						<a href="/app/tnc/" class="font-medium text-primary-crimson underline underline-offset-2">Terms &amp; Conditions</a>
+						&nbsp;·&nbsp;
+						<a href="/app/pp/" class="font-medium text-primary-crimson underline underline-offset-2">Privacy Policy</a>
+					</p>
+				</section>
+			</article>
+		</main>
+	</body>
+</html>

@@ -36,8 +36,6 @@ export interface EventDetail extends Omit<EventSummary, 'ticket_types'> {
   description_html: string | null;
   venue_address: string | null;
   map_url: string | null;
-  /** Where Register goes while Buzbo does not sell the ticket itself. */
-  external_url: string | null;
   seo_title: string | null;
   seo_description: string | null;
   updated_at: string;

@@ -9,6 +9,7 @@ import Seo from '../components/Seo.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import TeamBanner from '../components/TeamBanner.astro';
+import { eventsArePublic, LUMA_EVENTS_URL } from '../lib/events/paths';
 import { PAGE_SEO, SITE_NAME } from '../lib/seo';
 import '../styles/global.css';
 
@@ -27,6 +28,11 @@ const jsonLd = {
 		'https://www.tiktok.com/@joinbuzbo',
 	],
 };
+
+// Luma until the event pages are public — the same switch as the header.
+const eventsLink = eventsArePublic()
+	? { href: '/events' }
+	: { href: LUMA_EVENTS_URL, target: '_blank', rel: 'noopener' };
 ---
 
 <html lang="en">
@@ -194,7 +200,7 @@ const jsonLd = {
 								</div>
 								<div class="flex flex-col items-center justify-center gap-8 rounded-[2rem] bg-step-card px-8 py-12 text-center">
 									<p class="font-serif text-2xl italic text-gray-900">Join events, meet people, and be part of something that's actually being built.</p>
-									<a href="https://luma.com/user/usr-7Sakk30HvU6AeaI" target="_blank" rel="noopener" class="inline-flex rounded-full px-7 py-3 text-base font-semibold text-primary-crimson ring-2 ring-primary-crimson transition hover:bg-primary-crimson hover:text-white">See upcoming events →</a>
+									<a {...eventsLink} class="inline-flex rounded-full px-7 py-3 text-base font-semibold text-primary-crimson ring-2 ring-primary-crimson transition hover:bg-primary-crimson hover:text-white">See upcoming events →</a>
 								</div>
 							</div>
 

@@ -1,0 +1,46 @@
+---
+import OrderTicket from '../../../components/events/OrderTicket.astro';
+import BlogLayout from '../../../layouts/BlogLayout.astro';
+import { fetchOrder, nextRefresh } from '../../../lib/events/order';
+import { checkoutApiUrl } from '../../../lib/events/paths';
+
+export const prerender = false;
+
+// One person's ticket. Nothing here may be cached or indexed.
+Astro.response.headers.set('Cache-Control', 'no-store');
+Astro.response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+
+const api = checkoutApiUrl();
+const result = api && Astro.params.token ? await fetchOrder(api, Astro.params.token) : { kind: 'unknown' as const };
+
+if (result.kind === 'unknown') {
+	return new Response(null, { status: 404, statusText: 'Not Found' });
+}
+
+// While the payment settles — or while buzbo-be cannot be reached — the page reloads
+// itself, with no script: a meta refresh that counts its own attempts in the address.
+const attempt = Number(Astro.url.searchParams.get('n') ?? '0');
+
+if (result.kind === 'unavailable') {
+	// Not "not found": this may be somebody who has just paid.
+	Astro.response.status = 503;
+}
+const order = result.kind === 'found' ? result.order : null;
+---
+
+{order === null ? (
+	<BlogLayout title="Your order" description="Your Buzbo event ticket." titleSuffix="Buzbo Events" robots="noindex, nofollow" analytics={false}>
+		<Fragment slot="head">
+			<meta name="referrer" content="no-referrer" />
+			{nextRefresh(attempt) !== null ? <meta http-equiv="refresh" content={`3;url=?n=${nextRefresh(attempt)}`} /> : null}
+		</Fragment>
+		<article class="mx-auto max-w-xl px-6 pt-36 pb-20 lg:pt-44">
+			<section class="rounded-2xl bg-white px-6 py-8 text-center ring-1 ring-line" aria-live="polite">
+				<p class="font-semibold text-ink">We are fetching your order…</p>
+				<p class="mt-2 text-sm text-muted">This page refreshes by itself. If you paid, your ticket is safe and will also arrive by email.</p>
+			</section>
+		</article>
+	</BlogLayout>
+) : (
+	<OrderTicket order={order} attempt={attempt} />
+)}

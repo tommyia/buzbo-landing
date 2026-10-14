@@ -11,8 +11,9 @@ import {
 	mapEmbedUrl,
 	safeHttpUrl,
 } from '../../lib/events/format';
+import { checkoutLabel } from '../../lib/events/checkout';
 import { checkoutApiUrl, eventsHref } from '../../lib/events/paths';
-import { getPublishedEvent } from '../../lib/events/queries';
+import { getPublishedEvent, getSoldOut } from '../../lib/events/queries';
 import { PAGE_SEO, SITE_NAME } from '../../lib/seo';
 
 export const prerender = false;
@@ -29,15 +30,14 @@ const canonical = new URL(eventsHref(`/${event.slug}`), Astro.url.origin).href;
 const ended = isPast(event, new Date());
 
 // Everything below comes out of the database and ends up in an href or a src.
-const registerUrl = safeHttpUrl(event.external_url);
 const mapUrl = safeHttpUrl(event.map_url);
 const mapEmbed = mapEmbedUrl(event);
 const cover = safeHttpUrl(event.cover_image_url);
 
-// Paying goes through buzbo-be, which reads the price itself; this page only names the
-// ticket. No Buy button without it, and none for a free ticket or a finished event.
+// Buying goes through buzbo-be, which decides the price and whether the ticket can
+// still be had; this page only names the ticket and the person.
 const checkoutApi = ended ? null : checkoutApiUrl();
-const paid = Astro.url.searchParams.get('payment') === 'success';
+const soldOut = checkoutApi ? await getSoldOut(event.id) : new Set<string>();
 
 const place = [event.venue_name, event.city].filter(Boolean).join(', ');
 const dayLong = formatDayLong(event.starts_at, zone);
@@ -70,7 +70,8 @@ const jsonLd = {
 		name: ticket.name,
 		price: (ticket.price_cents / 100).toFixed(2),
 		priceCurrency: ticket.currency,
-		url: registerUrl ?? canonical,
+		url: canonical,
+		availability: soldOut.has(ticket.id) ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock',
 	})),
 };
 
@@ -136,51 +137,51 @@ const tile = 'flex size-11 shrink-0 flex-col items-center justify-center overflo
 
 				<section aria-labelledby="tickets-heading" class="mt-8 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-line">
 					<h2 id="tickets-heading" class="text-xs font-semibold uppercase tracking-wide text-muted">Tickets</h2>
-					{paid ? (
-						<p role="status" class="mt-3 rounded-xl bg-tint px-4 py-3 text-sm font-semibold text-burgundy">Payment received. Thank you.</p>
-					) : null}
-					{event.ticket_types.length > 0 ? (
-						<ul class="mt-3 divide-y divide-line">
-							{event.ticket_types.map((ticket) => (
-								<li class="flex items-start justify-between gap-4 py-3">
-									<div class="min-w-0">
-										<p class="font-semibold text-ink">{ticket.name}</p>
-										{ticket.description ? <p class="mt-0.5 text-sm text-muted">{ticket.description}</p> : null}
-									</div>
-									<div class="flex shrink-0 flex-col items-end gap-2">
-										<p class="font-semibold text-ink">{formatPrice(ticket.price_cents, ticket.currency)}</p>
-										{checkoutApi && ticket.price_cents > 0 ? (
-											<button
-												type="button"
-												data-checkout
-												data-ticket-id={ticket.id}
-												class="rounded-full bg-burgundy px-4 py-1.5 text-sm font-semibold text-white transition hover:bg-burgundy/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-burgundy disabled:opacity-60"
-											>
-												Buy ticket
-											</button>
-										) : null}
-									</div>
-								</li>
-							))}
-						</ul>
-					) : null}
-					{checkoutApi ? (
-						<p data-checkout-error data-checkout-api={checkoutApi} role="alert" hidden class="mt-3 rounded-xl bg-beige px-4 py-3 text-sm font-semibold text-primary-crimson"></p>
-					) : null}
+					<ul class="mt-3 divide-y divide-line">
+						{event.ticket_types.map((ticket) => (
+							<li class="flex items-start justify-between gap-4 py-3">
+								<div class="min-w-0">
+									<p class="font-semibold text-ink">{ticket.name}</p>
+									{ticket.description ? <p class="mt-0.5 text-sm text-muted">{ticket.description}</p> : null}
+								</div>
+								<div class="flex shrink-0 flex-col items-end gap-2">
+									<p class="font-semibold text-ink">{formatPrice(ticket.price_cents, ticket.currency)}</p>
+									{!checkoutApi ? null : soldOut.has(ticket.id) ? (
+										<p class="rounded-full bg-beige px-4 py-1.5 text-sm font-semibold text-disabled">Sold out</p>
+									) : (
+										<button
+											type="button"
+											data-checkout-open
+											data-ticket-id={ticket.id}
+											data-ticket-name={ticket.name}
+											data-ticket-label={checkoutLabel(ticket.price_cents)}
+											class="rounded-full bg-burgundy px-4 py-1.5 text-sm font-semibold text-white transition hover:bg-burgundy/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-burgundy"
+										>
+											{checkoutLabel(ticket.price_cents)}
+										</button>
+									)}
+								</div>
+							</li>
+						))}
+					</ul>
+
 					{ended ? (
 						<p class="mt-4 rounded-xl bg-beige px-4 py-3 text-center text-sm font-semibold text-muted">This event has ended.</p>
-					) : registerUrl ? (
-						<a
-							href={registerUrl}
-							target="_blank"
-							rel="noopener"
-							class="mt-4 flex w-full items-center justify-center rounded-full bg-primary-crimson px-7 py-3 text-base font-semibold text-white transition hover:bg-primary-crimson/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-burgundy"
-						>
-							Register
-						</a>
-					) : (
-						<p class="mt-4 rounded-full bg-beige px-7 py-3 text-center text-base font-semibold text-disabled">Tickets coming soon</p>
-					)}
+					) : checkoutApi ? (
+						<form data-checkout-form data-checkout-api={checkoutApi} hidden novalidate class="mt-4 rounded-xl bg-beige p-4">
+							<p class="text-sm font-semibold text-ink">Your ticket: <span data-checkout-ticket></span></p>
+							<input type="hidden" name="ticket_type_id" />
+							<label class="mt-3 block text-sm font-semibold text-ink" for="checkout-name">Name</label>
+							<input id="checkout-name" name="name" type="text" required maxlength="120" autocomplete="name" class="mt-1 w-full rounded-lg border-0 bg-white px-3 py-2 text-base text-ink ring-1 ring-line focus:ring-2 focus:ring-burgundy" />
+							<label class="mt-3 block text-sm font-semibold text-ink" for="checkout-email">Email</label>
+							<input id="checkout-email" name="email" type="email" required maxlength="254" autocomplete="email" class="mt-1 w-full rounded-lg border-0 bg-white px-3 py-2 text-base text-ink ring-1 ring-line focus:ring-2 focus:ring-burgundy" />
+							<p class="mt-2 text-sm text-muted">We send your ticket to <strong data-checkout-email-echo class="text-ink">this address</strong>. Check it before you continue.</p>
+							<p data-checkout-error role="alert" hidden class="mt-3 text-sm font-semibold text-primary-crimson"></p>
+							<button type="submit" class="mt-4 flex w-full items-center justify-center rounded-full bg-primary-crimson px-7 py-3 text-base font-semibold text-white transition hover:bg-primary-crimson/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-burgundy disabled:opacity-60">
+								Continue
+							</button>
+						</form>
+					) : null}
 				</section>
 
 				{event.description_html ? (
@@ -218,14 +219,16 @@ const tile = 'flex size-11 shrink-0 flex-col items-center justify-center overflo
 </BlogLayout>
 
 <script>
-	// Buy ticket: ask buzbo-be for a payment, then hand the buyer to Airwallex's hosted
-	// payment page. Card details are typed there and never touch this site.
+	// The checkout form: gather a name and an email, ask buzbo-be to hold the ticket, then
+	// go where it says — Airwallex's hosted payment page for a paid ticket, the order page
+	// for a free one. Card details are typed at Airwallex and never touch this site.
+	import { nextStep, type CheckoutAnswer } from '../../lib/events/checkout';
+
 	const SDK_URL = 'https://static.airwallex.com/components/sdk/v1/index.js';
 
-	type Checkout = { intent_id: string; client_secret: string; currency: string; env: string };
 	type AirwallexSdk = {
 		init(options: { env: string; enabledElements: string[] }): Promise<{
-			payments: { redirectToCheckout(options: Record<string, unknown>): void };
+			payments: { redirectToCheckout(options: Record<string, string>): void };
 		}>;
 	};
 
@@ -244,54 +247,89 @@ const tile = 'flex size-11 shrink-0 flex-col items-center justify-center overflo
 		return sdk;
 	}
 
-	const errorBox = document.querySelector<HTMLElement>('[data-checkout-error]');
-	const api = errorBox?.dataset.checkoutApi;
+	const form = document.querySelector<HTMLFormElement>('[data-checkout-form]');
+	if (form) {
+		const api = form.dataset.checkoutApi;
+		const ticketInput = form.elements.namedItem('ticket_type_id') as HTMLInputElement;
+		const nameInput = form.elements.namedItem('name') as HTMLInputElement;
+		const emailInput = form.elements.namedItem('email') as HTMLInputElement;
+		const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+		const errorBox = form.querySelector<HTMLElement>('[data-checkout-error]')!;
+		const ticketName = form.querySelector<HTMLElement>('[data-checkout-ticket]')!;
+		const emailEcho = form.querySelector<HTMLElement>('[data-checkout-email-echo]')!;
+		let submitLabel = 'Continue';
 
-	async function startCheckout(ticketTypeId: string): Promise<void> {
-		const response = await fetch(`${api}/api/payments/checkout`, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ ticket_type_id: ticketTypeId }),
-		});
-		const body = (await response.json().catch(() => null)) as {
-			data: Checkout | null;
-			error: { message?: string } | null;
-		} | null;
-		if (!response.ok || !body?.data) {
-			throw new Error(body?.error?.message ?? 'The payment could not be started. Try again in a moment.');
+		const fail = (message: string) => {
+			errorBox.textContent = message;
+			errorBox.hidden = false;
+			submit.disabled = false;
+			submit.textContent = submitLabel;
+		};
+
+		for (const button of document.querySelectorAll<HTMLButtonElement>('[data-checkout-open]')) {
+			button.addEventListener('click', () => {
+				ticketInput.value = button.dataset.ticketId ?? '';
+				ticketName.textContent = button.dataset.ticketName ?? '';
+				submitLabel = button.dataset.ticketLabel === 'Register' ? 'Register' : 'Continue to payment';
+				submit.textContent = submitLabel;
+				errorBox.hidden = true;
+				form.hidden = false;
+				nameInput.focus();
+			});
 		}
 
-		const { payments } = await (await loadSdk()).init({ env: body.data.env, enabledElements: ['payments'] });
-		const here = `${location.origin}${location.pathname}`;
-		payments.redirectToCheckout({
-			env: body.data.env,
-			mode: 'payment',
-			intent_id: body.data.intent_id,
-			client_secret: body.data.client_secret,
-			currency: body.data.currency,
-			country_code: 'NL',
-			successUrl: `${here}?payment=success`,
-			cancelUrl: here,
+		// Back from Airwallex restores this page as it was left: button disabled, "One
+		// moment…". Put it back so the buyer can try again.
+		window.addEventListener('pageshow', (event) => {
+			if (!event.persisted) return;
+			submit.disabled = false;
+			submit.textContent = submitLabel;
 		});
-	}
 
-	for (const button of document.querySelectorAll<HTMLButtonElement>('[data-checkout]')) {
-		const label = button.textContent;
-		button.addEventListener('click', async () => {
-			const ticketTypeId = button.dataset.ticketId;
-			if (!ticketTypeId || !api) return;
-			if (errorBox) errorBox.hidden = true;
-			button.disabled = true;
-			button.textContent = 'Opening payment…';
+		emailInput.addEventListener('input', () => {
+			emailEcho.textContent = emailInput.value.trim() || 'this address';
+		});
+
+		form.addEventListener('submit', async (event) => {
+			event.preventDefault();
+			errorBox.hidden = true;
+			if (!nameInput.value.trim()) return fail('Enter your name.');
+			if (!emailInput.checkValidity() || !emailInput.value.trim()) return fail('Enter a valid email address.');
+
+			// Disabled before the request, so a second click cannot hold a second ticket.
+			submit.disabled = true;
+			submit.textContent = 'One moment…';
 			try {
-				await startCheckout(ticketTypeId);
-			} catch (err) {
-				if (errorBox) {
-					errorBox.textContent = err instanceof Error ? err.message : 'The payment could not be started.';
-					errorBox.hidden = false;
+				const response = await fetch(`${api}/api/payments/checkout`, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						ticket_type_id: ticketInput.value,
+						name: nameInput.value,
+						email: emailInput.value,
+					}),
+				});
+				const body = (await response.json().catch(() => null)) as {
+					data: CheckoutAnswer | null;
+					error: { message?: string } | null;
+				} | null;
+				if (response.status === 400) {
+					// buzbo-be's own wording here is "Request validation failed".
+					throw new Error('Check your name and email address. A name cannot contain a web address.');
 				}
-				button.disabled = false;
-				button.textContent = label;
+				if (!response.ok || !body?.data) {
+					throw new Error(body?.error?.message ?? 'Something went wrong. Nothing was charged; try again in a moment.');
+				}
+
+				const step = nextStep(body.data, `${location.origin}${location.pathname}`);
+				if (step.kind === 'redirect') {
+					location.href = step.url;
+					return;
+				}
+				const { payments } = await (await loadSdk()).init({ env: step.options.env, enabledElements: ['payments'] });
+				payments.redirectToCheckout(step.options);
+			} catch (err) {
+				fail(err instanceof Error ? err.message : 'Something went wrong. Nothing was charged.');
 			}
 		});
 	}

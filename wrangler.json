@@ -12,7 +12,7 @@
 	},
 	"vars": {
 		"BREVO_LIST_ID": "11",
-		"EVENTS_PATH": "/e-6b36024259cdeef0",
+		"EVENTS_PATH": "/events",
 		"PUBLIC_BUZBO_BE_URL": "https://api.buzbo.com"
 	},
 	"observability": {

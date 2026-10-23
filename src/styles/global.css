@@ -28,6 +28,31 @@
 	--color-gray-900: #1e1a17;
 	--font-sans: "Archivo", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 	--font-serif: "DM Serif Display", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+
+	/* Something that just appeared: a list after switching tabs, the checkout form. */
+	--animate-rise: rise 0.3s ease-out both;
+	/* A placeholder while content loads. */
+	--animate-shimmer: shimmer 1.4s linear infinite;
+
+	@keyframes rise {
+		from {
+			opacity: 0;
+			transform: translateY(8px);
+		}
+		to {
+			opacity: 1;
+			transform: none;
+		}
+	}
+
+	@keyframes shimmer {
+		from {
+			background-position: 200% 0;
+		}
+		to {
+			background-position: -200% 0;
+		}
+	}
 }
 
 @layer base {
@@ -254,4 +279,18 @@ body {
 
 .blog-prose ol {
 	list-style: decimal;
+}
+
+/* A loading placeholder: a light band sweeping across beige. */
+.shimmer {
+	background: linear-gradient(90deg, var(--color-beige) 25%, var(--color-cream) 50%, var(--color-beige) 75%);
+	background-size: 200% 100%;
+	animation: var(--animate-shimmer);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.shimmer,
+	.animate-rise {
+		animation: none;
+	}
 }

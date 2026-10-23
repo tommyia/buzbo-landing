@@ -1,9 +1,6 @@
 import { readEnv } from '../env';
 import { normalizeEventsPath, PUBLIC_EVENTS_PATH } from './visibility';
 
-/** Buzbo's profile on Luma, where the header's Events link goes while the pages are hidden. */
-export const LUMA_EVENTS_URL = 'https://luma.com/user/usr-7Sakk30HvU6AeaI';
-
 /** The path the event pages answer on, from EVENTS_PATH in wrangler.json. Null hides them. */
 export function eventsPath(): string | null {
   return normalizeEventsPath(readEnv('EVENTS_PATH'));

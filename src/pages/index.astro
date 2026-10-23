@@ -9,7 +9,7 @@ import Seo from '../components/Seo.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import TeamBanner from '../components/TeamBanner.astro';
-import { eventsArePublic, LUMA_EVENTS_URL } from '../lib/events/paths';
+import { eventsHref } from '../lib/events/paths';
 import { PAGE_SEO, SITE_NAME } from '../lib/seo';
 import '../styles/global.css';
 
@@ -29,10 +29,7 @@ const jsonLd = {
 	],
 };
 
-// Luma until the event pages are public — the same switch as the header.
-const eventsLink = eventsArePublic()
-	? { href: '/events' }
-	: { href: LUMA_EVENTS_URL, target: '_blank', rel: 'noopener' };
+const eventsLink = { href: eventsHref() };
 ---
 
 <html lang="en">
@@ -156,8 +153,8 @@ const eventsLink = eventsArePublic()
 							<h3 class="text-pretty text-3xl tracking-tight sm:text-4xl">
 								<span class="font-sans font-extrabold text-primary-crimson">You're not the only one </span><span class="font-serif italic text-primary-crimson">done with the CV game</span>
 							</h3>
-							<p class="mt-6 text-7xl font-extrabold tracking-tight text-primary-crimson sm:text-8xl">1000 +</p>
-							<p class="mt-4 text-base/7 text-gray-700">members are already on the Buzbo waitlist.<br />From first jobs to founders. From the Netherlands to anywhere.</p>
+							<p class="mt-6 text-7xl font-extrabold tracking-tight text-primary-crimson sm:text-8xl">2000 +</p>
+							<p class="mt-4 text-base/7 text-gray-700">members are already in the Buzbo community.<br />From first jobs to founders.</p>
 						</div>
 					</div>
 				</section>

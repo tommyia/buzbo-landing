@@ -17,6 +17,24 @@ export function checkoutLabel(priceCents: number): 'Buy ticket' | 'Register' {
   return priceCents > 0 ? 'Buy ticket' : 'Register';
 }
 
+/** Why the checkout form cannot be sent yet, or null when it can. `emailValid` is the
+ *  browser's own check of the email field. The confirmation catches a typo before the
+ *  ticket goes to an address nobody reads. */
+export function checkoutRefusal(form: {
+  name: string;
+  email: string;
+  confirmEmail: string;
+  emailValid: boolean;
+}): string | null {
+  if (!form.name.trim()) return 'Enter your name.';
+  const email = form.email.trim().toLowerCase();
+  if (!email || !form.emailValid) return 'Enter a valid email address.';
+  const confirm = form.confirmEmail.trim().toLowerCase();
+  if (!confirm) return 'Type your email address again to confirm it.';
+  if (confirm !== email) return 'The email addresses do not match.';
+  return null;
+}
+
 /** The order page's address ON THE SITE THE BUYER IS ON. buzbo-be builds the link from
  *  its own idea of the site's address; the buyer may be on www, or on a preview. So only
  *  the path is taken from the answer — which also means the answer cannot send anyone to

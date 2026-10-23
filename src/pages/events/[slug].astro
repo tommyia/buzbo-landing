@@ -1,9 +1,8 @@
 ---
 import BlogLayout from '../../layouts/BlogLayout.astro';
+import ShareButtons from '../../components/ShareButtons.astro';
 import {
 	formatDayLong,
-	formatDayOfMonth,
-	formatMonthShort,
 	formatPrice,
 	formatTimeRange,
 	formatUtcOffset,
@@ -64,7 +63,7 @@ const jsonLd = {
 				address: event.venue_address ?? event.city ?? undefined,
 			}
 		: undefined,
-	organizer: { '@type': 'Organization', name: event.host_name ?? SITE_NAME },
+	organizer: { '@type': 'Organization', name: SITE_NAME },
 	offers: event.ticket_types.map((ticket) => ({
 		'@type': 'Offer',
 		name: ticket.name,
@@ -75,7 +74,7 @@ const jsonLd = {
 	})),
 };
 
-const tile = 'flex size-11 shrink-0 flex-col items-center justify-center overflow-hidden rounded-xl bg-white ring-1 ring-line';
+const chip = 'flex items-center gap-3';
 ---
 
 <BlogLayout
@@ -87,67 +86,70 @@ const tile = 'flex size-11 shrink-0 flex-col items-center justify-center overflo
 	titleSuffix="Buzbo Events"
 	jsonLd={jsonLd}
 >
-	<article class="mx-auto max-w-5xl px-6 pt-36 pb-20 lg:px-8 lg:pt-44">
+	<article class="mx-auto max-w-6xl px-6 pt-36 pb-20 lg:px-8 lg:pt-44">
 		<a href={eventsHref()} class="text-sm font-semibold text-primary-crimson hover:underline">← All events</a>
 
-		<div class="mt-6 grid gap-10 lg:grid-cols-[22rem_1fr]">
-			<aside class="lg:sticky lg:top-40 lg:self-start">
-				{cover ? (
-					<img src={cover} alt={event.title} class="aspect-square w-full rounded-2xl object-cover ring-1 ring-line" />
-				) : (
-					<div class="aspect-square w-full rounded-2xl bg-beige ring-1 ring-line" aria-hidden="true"></div>
-				)}
-				{event.host_name ? (
-					<div class="mt-6 border-t border-line pt-4">
-						<p class="text-xs font-semibold uppercase tracking-wide text-muted">Hosted by</p>
-						<p class="mt-1 font-semibold text-ink">{event.host_name}</p>
-					</div>
-				) : null}
-			</aside>
-
-			<div class="min-w-0">
-				<h1 class="font-sans text-3xl font-extrabold tracking-tight text-burgundy sm:text-4xl">{event.title}</h1>
-
-				<div class="mt-6 flex flex-col gap-4">
-					<div class="flex items-center gap-3">
-						<div class={tile} aria-hidden="true">
-							<span class="w-full bg-beige text-center text-[10px] font-semibold uppercase leading-4 text-muted">{formatMonthShort(event.starts_at, zone)}</span>
-							<span class="text-base font-bold leading-6 text-ink">{formatDayOfMonth(event.starts_at, zone)}</span>
-						</div>
-						<div>
-							<p class="font-semibold text-ink"><time datetime={event.starts_at}>{dayLong}</time></p>
-							<p class="text-sm text-muted">{timeRange}</p>
-						</div>
-					</div>
-
+		<header class="mt-6 grid items-center gap-8 rounded-3xl bg-beige p-6 sm:p-8 lg:grid-cols-[1fr_20rem] lg:gap-12 lg:p-10">
+			<div class="order-2 min-w-0 lg:order-1">
+				<p class="text-xs font-semibold uppercase tracking-widest text-primary-crimson">
+					Buzbo event{event.city ? ` · ${event.city}` : ''}
+				</p>
+				<h1 class="mt-3 font-serif text-4xl leading-tight text-burgundy sm:text-5xl">{event.title}</h1>
+				<ul class="mt-6 flex flex-col gap-3 text-base font-semibold text-ink">
+					<li class={chip}>
+						<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-5 shrink-0 text-primary-crimson">
+							<path fill-rule="evenodd" clip-rule="evenodd" d="M5.75 2a.75.75 0 0 1 .75.75V4h7V2.75a.75.75 0 0 1 1.5 0V4h.25A2.75 2.75 0 0 1 18 6.75v8.5A2.75 2.75 0 0 1 15.25 18H4.75A2.75 2.75 0 0 1 2 15.25v-8.5A2.75 2.75 0 0 1 4.75 4H5V2.75A.75.75 0 0 1 5.75 2Zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75Z" />
+						</svg>
+						<time datetime={event.starts_at}>{dayLong}</time>
+					</li>
+					<li class={chip}>
+						<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-5 shrink-0 text-primary-crimson">
+							<path fill-rule="evenodd" clip-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm.75-13a.75.75 0 0 0-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 0 0 0-1.5h-3.25V5Z" />
+						</svg>
+						{timeRange}
+					</li>
 					{place ? (
-						<div class="flex items-center gap-3">
-							<div class={tile} aria-hidden="true">
-								<svg viewBox="0 0 20 20" fill="currentColor" class="size-5 text-muted">
-									<path fill-rule="evenodd" clip-rule="evenodd" d="M9.69 18.933l.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 00.281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 103 9c0 3.492 1.698 5.988 3.355 7.584a13.731 13.731 0 002.273 1.765 11.842 11.842 0 00.976.544l.062.029.018.008.006.003zM10 11.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z" />
-								</svg>
-							</div>
-							<div>
-								<p class="font-semibold text-ink">{event.venue_name ?? event.city}</p>
-								{event.venue_name && event.city ? <p class="text-sm text-muted">{event.city}</p> : null}
-							</div>
-						</div>
+						<li class={chip}>
+							<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-5 shrink-0 text-primary-crimson">
+								<path fill-rule="evenodd" clip-rule="evenodd" d="M9.69 18.933l.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 00.281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 103 9c0 3.492 1.698 5.988 3.355 7.584a13.731 13.731 0 002.273 1.765 11.842 11.842 0 00.976.544l.062.029.018.008.006.003zM10 11.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z" />
+							</svg>
+							{place}
+						</li>
 					) : null}
+				</ul>
+				<div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
+					{ended ? null : (
+						<a href="#tickets" class="inline-flex rounded-full bg-primary-crimson px-7 py-3 text-base font-semibold text-white transition hover:bg-primary-crimson/90">Get your ticket</a>
+					)}
+					<ShareButtons url={canonical} title={event.title} />
 				</div>
+			</div>
+			<div class="order-1 lg:order-2">
+				{cover ? (
+					<img src={cover} alt={event.title} class="aspect-square w-full rounded-2xl object-cover shadow-lg shadow-ink/10" />
+				) : (
+					<div class="aspect-square w-full rounded-2xl bg-cream" aria-hidden="true"></div>
+				)}
+			</div>
+		</header>
 
-				<section aria-labelledby="tickets-heading" class="mt-8 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-line">
-					<h2 id="tickets-heading" class="text-xs font-semibold uppercase tracking-wide text-muted">Tickets</h2>
-					<ul class="mt-3 divide-y divide-line">
-						{event.ticket_types.map((ticket) => (
-							<li class="flex items-start justify-between gap-4 py-3">
-								<div class="min-w-0">
-									<p class="font-semibold text-ink">{ticket.name}</p>
-									{ticket.description ? <p class="mt-0.5 text-sm text-muted">{ticket.description}</p> : null}
-								</div>
-								<div class="flex shrink-0 flex-col items-end gap-2">
-									<p class="font-semibold text-ink">{formatPrice(ticket.price_cents, ticket.currency)}</p>
+		<div class="mt-12 grid gap-10 lg:grid-cols-[1fr_22rem] lg:gap-12">
+			<aside class="lg:order-2 lg:sticky lg:top-40 lg:self-start">
+				<section id="tickets" aria-labelledby="tickets-heading" class="scroll-mt-40 rounded-2xl bg-white p-6 ring-1 ring-line">
+					<h2 id="tickets-heading" class="font-sans text-xs font-semibold uppercase tracking-widest text-muted">Tickets</h2>
+					<div>
+						<ul class="mt-2 divide-y divide-line">
+							{event.ticket_types.map((ticket) => (
+								<li data-ticket-row={ticket.id} class="-mx-3 flex items-center justify-between gap-4 rounded-xl px-3 py-4 transition-colors duration-200 data-selected:bg-tint">
+									<div class="min-w-0">
+										<p class="font-semibold text-ink">{ticket.name}</p>
+										<p class="mt-0.5 text-sm text-muted">
+											{formatPrice(ticket.price_cents, ticket.currency)}
+											{ticket.description ? <span> · {ticket.description}</span> : null}
+										</p>
+									</div>
 									{!checkoutApi ? null : soldOut.has(ticket.id) ? (
-										<p class="rounded-full bg-beige px-4 py-1.5 text-sm font-semibold text-disabled">Sold out</p>
+										<p class="shrink-0 text-sm font-semibold text-disabled">Sold out</p>
 									) : (
 										<button
 											type="button"
@@ -155,38 +157,45 @@ const tile = 'flex size-11 shrink-0 flex-col items-center justify-center overflo
 											data-ticket-id={ticket.id}
 											data-ticket-name={ticket.name}
 											data-ticket-label={checkoutLabel(ticket.price_cents)}
-											class="rounded-full bg-burgundy px-4 py-1.5 text-sm font-semibold text-white transition hover:bg-burgundy/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-burgundy"
+											aria-pressed="false"
+											class="shrink-0 rounded-full bg-burgundy px-4 py-1.5 text-sm font-semibold text-white ring-1 ring-burgundy transition hover:bg-burgundy/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-burgundy aria-pressed:bg-white aria-pressed:text-burgundy"
 										>
-											{checkoutLabel(ticket.price_cents)}
+											<span data-ticket-button-label>{checkoutLabel(ticket.price_cents)}</span>
 										</button>
 									)}
-								</div>
-							</li>
-						))}
-					</ul>
+								</li>
+							))}
+						</ul>
 
-					{ended ? (
-						<p class="mt-4 rounded-xl bg-beige px-4 py-3 text-center text-sm font-semibold text-muted">This event has ended.</p>
-					) : checkoutApi ? (
-						<form data-checkout-form data-checkout-api={checkoutApi} hidden novalidate class="mt-4 rounded-xl bg-beige p-4">
-							<p class="text-sm font-semibold text-ink">Your ticket: <span data-checkout-ticket></span></p>
-							<input type="hidden" name="ticket_type_id" />
-							<label class="mt-3 block text-sm font-semibold text-ink" for="checkout-name">Name</label>
-							<input id="checkout-name" name="name" type="text" required maxlength="120" autocomplete="name" class="mt-1 w-full rounded-lg border-0 bg-white px-3 py-2 text-base text-ink ring-1 ring-line focus:ring-2 focus:ring-burgundy" />
-							<label class="mt-3 block text-sm font-semibold text-ink" for="checkout-email">Email</label>
-							<input id="checkout-email" name="email" type="email" required maxlength="254" autocomplete="email" class="mt-1 w-full rounded-lg border-0 bg-white px-3 py-2 text-base text-ink ring-1 ring-line focus:ring-2 focus:ring-burgundy" />
-							<p class="mt-2 text-sm text-muted">We send your ticket to <strong data-checkout-email-echo class="text-ink">this address</strong>. Check it before you continue.</p>
-							<p data-checkout-error role="alert" hidden class="mt-3 text-sm font-semibold text-primary-crimson"></p>
-							<button type="submit" class="mt-4 flex w-full items-center justify-center rounded-full bg-primary-crimson px-7 py-3 text-base font-semibold text-white transition hover:bg-primary-crimson/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-burgundy disabled:opacity-60">
-								Continue
-							</button>
-						</form>
-					) : null}
+						{ended ? (
+							<p class="mt-2 rounded-xl bg-beige px-4 py-3 text-center text-sm font-semibold text-muted">This event has ended.</p>
+						) : checkoutApi ? (
+							<form data-checkout-form data-checkout-api={checkoutApi} hidden novalidate class="-mx-3 mt-2 scroll-mt-40 rounded-xl bg-beige px-3 py-4">
+								<p class="text-sm text-muted">Your ticket</p>
+								<p data-checkout-ticket class="text-base font-semibold text-ink"></p>
+								<input type="hidden" name="ticket_type_id" />
+								<label class="mt-3 block text-sm font-semibold text-ink" for="checkout-name">Name</label>
+								<input id="checkout-name" name="name" type="text" required maxlength="120" autocomplete="name" class="mt-1 w-full rounded-lg border-0 bg-white px-3 py-2 text-base text-ink ring-1 ring-line focus:ring-2 focus:ring-burgundy" />
+								<label class="mt-3 block text-sm font-semibold text-ink" for="checkout-email">Email</label>
+								<input id="checkout-email" name="email" type="email" required maxlength="254" autocomplete="email" class="mt-1 w-full rounded-lg border-0 bg-white px-3 py-2 text-base text-ink ring-1 ring-line focus:ring-2 focus:ring-burgundy" />
+								<label class="mt-3 block text-sm font-semibold text-ink" for="checkout-email-confirm">Confirm email</label>
+								<input id="checkout-email-confirm" name="email_confirm" type="email" required maxlength="254" autocomplete="off" class="mt-1 w-full rounded-lg border-0 bg-white px-3 py-2 text-base text-ink ring-1 ring-line focus:ring-2 focus:ring-burgundy aria-invalid:ring-2 aria-invalid:ring-primary-crimson" />
+								<p data-confirm-hint hidden class="mt-1 text-sm font-semibold"></p>
+								<p class="mt-2 text-sm text-muted">We send your ticket to <strong data-checkout-email-echo class="text-ink">this address</strong>. Check it before you continue.</p>
+								<p data-checkout-error role="alert" hidden class="mt-3 text-sm font-semibold text-primary-crimson"></p>
+								<button type="submit" class="mt-4 flex w-full items-center justify-center rounded-full bg-primary-crimson px-7 py-3 text-base font-semibold text-white transition hover:bg-primary-crimson/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-burgundy disabled:opacity-60">
+									Continue
+								</button>
+							</form>
+						) : null}
+					</div>
 				</section>
+			</aside>
 
+			<div class="min-w-0 lg:order-1">
 				{event.description_html ? (
-					<section aria-labelledby="about-heading" class="mt-10">
-						<h2 id="about-heading" class="border-b border-line pb-2 text-sm font-semibold text-muted">About this event</h2>
+					<section aria-labelledby="about-heading">
+						<h2 id="about-heading" class="font-serif text-3xl text-burgundy">About this event</h2>
 						{/* Written in buzbo-event's editor, behind the admin password, and trusted
 						    as the blog's article bodies are. */}
 						<div class="blog-prose mt-4" set:html={event.description_html} />
@@ -194,23 +203,29 @@ const tile = 'flex size-11 shrink-0 flex-col items-center justify-center overflo
 				) : null}
 
 				{place || event.venue_address ? (
-					<section aria-labelledby="location-heading" class="mt-10">
-						<h2 id="location-heading" class="border-b border-line pb-2 text-sm font-semibold text-muted">Location</h2>
-						{event.venue_name ? <p class="mt-4 font-semibold text-ink">{event.venue_name}</p> : null}
-						{event.venue_address ? <p class="mt-1 text-muted">{event.venue_address}</p> : null}
-						{!event.venue_address && event.city ? <p class="mt-1 text-muted">{event.city}</p> : null}
-						{mapEmbed ? (
-							<iframe
-								src={mapEmbed}
-								title={`Map of ${event.venue_name ?? event.venue_address ?? event.city}`}
-								loading="lazy"
-								referrerpolicy="no-referrer-when-downgrade"
-								class="mt-4 aspect-video w-full rounded-2xl border-0 ring-1 ring-line"
-							></iframe>
-						) : null}
-						{mapUrl ? (
-							<a href={mapUrl} target="_blank" rel="noopener" class="mt-3 inline-block text-sm font-semibold text-primary-crimson underline underline-offset-2">Open in Maps</a>
-						) : null}
+					<section aria-labelledby="location-heading" class="mt-12">
+						<h2 id="location-heading" class="font-serif text-3xl text-burgundy">Location</h2>
+						<div class="mt-4 overflow-hidden rounded-2xl bg-white ring-1 ring-line">
+							{mapEmbed ? (
+								<iframe
+									src={mapEmbed}
+									title={`Map of ${event.venue_name ?? event.venue_address ?? event.city}`}
+									loading="lazy"
+									referrerpolicy="no-referrer-when-downgrade"
+									class="aspect-video w-full border-0"
+								></iframe>
+							) : null}
+							<div class="flex flex-wrap items-center justify-between gap-3 p-5">
+								<div>
+									{event.venue_name ? <p class="font-semibold text-ink">{event.venue_name}</p> : null}
+									{event.venue_address ? <p class="mt-0.5 text-sm text-muted">{event.venue_address}</p> : null}
+									{!event.venue_address && event.city ? <p class="mt-0.5 text-sm text-muted">{event.city}</p> : null}
+								</div>
+								{mapUrl ? (
+									<a href={mapUrl} target="_blank" rel="noopener" class="rounded-full px-4 py-2 text-sm font-semibold text-primary-crimson ring-1 ring-primary-crimson/30 transition hover:bg-primary-crimson/5">Open in Maps</a>
+								) : null}
+							</div>
+						</div>
 					</section>
 				) : null}
 			</div>
@@ -222,7 +237,7 @@ const tile = 'flex size-11 shrink-0 flex-col items-center justify-center overflo
 	// The checkout form: gather a name and an email, ask buzbo-be to hold the ticket, then
 	// go where it says — Airwallex's hosted payment page for a paid ticket, the order page
 	// for a free one. Card details are typed at Airwallex and never touch this site.
-	import { nextStep, type CheckoutAnswer } from '../../lib/events/checkout';
+	import { checkoutRefusal, nextStep, type CheckoutAnswer } from '../../lib/events/checkout';
 
 	const SDK_URL = 'https://static.airwallex.com/components/sdk/v1/index.js';
 
@@ -253,6 +268,8 @@ const tile = 'flex size-11 shrink-0 flex-col items-center justify-center overflo
 		const ticketInput = form.elements.namedItem('ticket_type_id') as HTMLInputElement;
 		const nameInput = form.elements.namedItem('name') as HTMLInputElement;
 		const emailInput = form.elements.namedItem('email') as HTMLInputElement;
+		const confirmInput = form.elements.namedItem('email_confirm') as HTMLInputElement;
+		const confirmHint = form.querySelector<HTMLElement>('[data-confirm-hint]')!;
 		const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
 		const errorBox = form.querySelector<HTMLElement>('[data-checkout-error]')!;
 		const ticketName = form.querySelector<HTMLElement>('[data-checkout-ticket]')!;
@@ -266,17 +283,60 @@ const tile = 'flex size-11 shrink-0 flex-col items-center justify-center overflo
 			submit.textContent = submitLabel;
 		};
 
-		for (const button of document.querySelectorAll<HTMLButtonElement>('[data-checkout-open]')) {
+		const buttons = [...document.querySelectorAll<HTMLButtonElement>('[data-checkout-open]')];
+
+		// Play an entrance animation again, even on an element that already ran it.
+		const replay = (element: HTMLElement) => {
+			element.classList.remove('animate-rise');
+			void element.offsetWidth;
+			element.classList.add('animate-rise');
+		};
+
+		for (const button of buttons) {
 			button.addEventListener('click', () => {
+				// Mark the chosen ticket, and only that one.
+				for (const other of buttons) {
+					const chosen = other === button;
+					other.setAttribute('aria-pressed', String(chosen));
+					other.querySelector<HTMLElement>('[data-ticket-button-label]')!.textContent = chosen
+						? 'Selected'
+						: (other.dataset.ticketLabel ?? '');
+					other.closest('[data-ticket-row]')?.toggleAttribute('data-selected', chosen);
+				}
 				ticketInput.value = button.dataset.ticketId ?? '';
 				ticketName.textContent = button.dataset.ticketName ?? '';
 				submitLabel = button.dataset.ticketLabel === 'Register' ? 'Register' : 'Continue to payment';
 				submit.textContent = submitLabel;
 				errorBox.hidden = true;
+				const opening = form.hidden;
 				form.hidden = false;
-				nameInput.focus();
+				replay(opening ? form : ticketName);
+				form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+				if (opening) nameInput.focus({ preventScroll: true });
 			});
 		}
+
+		// Tell the buyer as soon as the two addresses differ, not only on submit.
+		const checkConfirm = (final: boolean) => {
+			const email = emailInput.value.trim().toLowerCase();
+			const confirm = confirmInput.value.trim().toLowerCase();
+			if (!confirm || (!final && confirm.length < email.length)) {
+				confirmHint.hidden = true;
+				confirmInput.removeAttribute('aria-invalid');
+				return;
+			}
+			const same = confirm === email;
+			confirmHint.hidden = false;
+			confirmHint.textContent = same ? 'Email addresses match.' : 'The email addresses do not match.';
+			confirmHint.className = `mt-1 text-sm font-semibold ${same ? 'text-success' : 'text-primary-crimson'}`;
+			if (same) confirmInput.removeAttribute('aria-invalid');
+			else confirmInput.setAttribute('aria-invalid', 'true');
+		};
+		confirmInput.addEventListener('input', () => checkConfirm(false));
+		confirmInput.addEventListener('blur', () => checkConfirm(true));
+		emailInput.addEventListener('input', () => {
+			if (confirmInput.value) checkConfirm(false);
+		});
 
 		// Back from Airwallex restores this page as it was left: button disabled, "One
 		// moment…". Put it back so the buyer can try again.
@@ -293,8 +353,19 @@ const tile = 'flex size-11 shrink-0 flex-col items-center justify-center overflo
 		form.addEventListener('submit', async (event) => {
 			event.preventDefault();
 			errorBox.hidden = true;
-			if (!nameInput.value.trim()) return fail('Enter your name.');
-			if (!emailInput.checkValidity() || !emailInput.value.trim()) return fail('Enter a valid email address.');
+			const refusal = checkoutRefusal({
+				name: nameInput.value,
+				email: emailInput.value,
+				confirmEmail: confirmInput.value,
+				emailValid: emailInput.checkValidity(),
+			});
+			if (refusal && confirmInput.value.trim() && refusal.includes('do not match')) {
+				// Already said under the field; point there instead of saying it twice.
+				checkConfirm(true);
+				confirmInput.focus();
+				return;
+			}
+			if (refusal) return fail(refusal);
 
 			// Disabled before the request, so a second click cannot hold a second ticket.
 			submit.disabled = true;
@@ -334,3 +405,4 @@ const tile = 'flex size-11 shrink-0 flex-col items-center justify-center overflo
 		});
 	}
 </script>
+

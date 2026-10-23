@@ -10,11 +10,13 @@ export const prerender = false;
 
 const period = Astro.url.searchParams.get('period') === 'past' ? 'past' : 'upcoming';
 const { upcoming, past } = splitByTime(await listPublishedEvents(), new Date());
-const days = groupByDay(period === 'past' ? past : upcoming);
+const shown = period === 'past' ? past : upcoming;
+const days = groupByDay(shown);
 
-const tab = 'rounded-full px-4 py-1.5 transition';
-const tabOn = 'bg-white text-ink shadow-sm';
-const tabOff = 'text-muted hover:text-ink';
+// The look follows aria-current, so the script only has to move that attribute. With the
+// script running, a sliding pill draws the white background instead (data-thumb on the nav).
+const tab =
+	'relative z-10 rounded-full px-4 py-1.5 text-muted transition-colors duration-300 hover:text-ink aria-[current=page]:bg-white aria-[current=page]:text-ink aria-[current=page]:shadow-sm group-data-thumb/tabs:aria-[current=page]:bg-transparent group-data-thumb/tabs:aria-[current=page]:shadow-none';
 ---
 
 <BlogLayout
@@ -29,16 +31,18 @@ const tabOff = 'text-muted hover:text-ink';
 		<div class="flex flex-wrap items-end justify-between gap-4">
 			<div>
 				<h1 class="font-sans text-4xl font-extrabold tracking-tight text-burgundy sm:text-5xl">Events</h1>
-				<p class="mt-3 max-w-xl text-base/7 text-muted">
-					Evenings where the introductions are made before you arrive. Valuable connections, not random small talk.
+				<p class="mt-3 max-w-2xl text-base/7 text-muted">
+					Show up as the real you and connect on what actually matters. Before the event, we pre-match you with 3 people based on what you’re looking for: a new job, a new hire, a co-founder, an industry expert and beyond. Intentional networking, designed so you leave the room with real opportunities.
 				</p>
 			</div>
-			<nav aria-label="Which events" class="inline-flex rounded-full bg-beige p-1 text-sm font-semibold">
-				<a href={eventsHref()} aria-current={period === 'upcoming' ? 'page' : undefined} class:list={[tab, period === 'upcoming' ? tabOn : tabOff]}>Upcoming</a>
-				<a href={eventsHref('?period=past')} aria-current={period === 'past' ? 'page' : undefined} class:list={[tab, period === 'past' ? tabOn : tabOff]}>Past</a>
+			<nav aria-label="Which events" class="group/tabs relative inline-flex rounded-full bg-beige p-1 text-sm font-semibold">
+				<span data-tab-thumb aria-hidden="true" class="absolute inset-y-1 left-0 hidden rounded-full bg-white shadow-sm group-data-thumb/tabs:block"></span>
+				<a href={eventsHref()} data-period-tab aria-current={period === 'upcoming' ? 'page' : undefined} class={tab}>Upcoming</a>
+				<a href={eventsHref('?period=past')} data-period-tab aria-current={period === 'past' ? 'page' : undefined} class={tab}>Past</a>
 			</nav>
 		</div>
 
+		<div data-events-list aria-live="polite">
 		{days.length === 0 ? (
 			<p class="mt-12 rounded-2xl bg-white px-6 py-12 text-center text-muted ring-1 ring-line">
 				{period === 'past' ? 'No past events yet.' : 'No upcoming events right now.'}
@@ -61,5 +65,153 @@ const tabOff = 'text-muted hover:text-ink';
 				))}
 			</ol>
 		)}
+		</div>
+
+		{/* Shown while the other tab loads. */}
+		<template data-events-skeleton>
+			<div class="mt-12 flex flex-col gap-10" aria-hidden="true">
+				{[0, 1, 2].map(() => (
+					<div class="grid gap-x-6 sm:grid-cols-[7.5rem_1fr]">
+						<div class="flex flex-col gap-2 pb-3 sm:pt-1">
+							<div class="shimmer h-4 w-16 rounded"></div>
+							<div class="shimmer h-3 w-20 rounded"></div>
+						</div>
+						<div class="flex items-start gap-4 rounded-2xl bg-white p-4 ring-1 ring-line sm:p-5">
+							<div class="flex min-w-0 flex-1 flex-col gap-3">
+								<div class="shimmer h-3 w-12 rounded"></div>
+								<div class="shimmer h-5 w-3/4 rounded"></div>
+								<div class="shimmer h-3 w-1/2 rounded"></div>
+								<div class="shimmer h-6 w-32 rounded-full"></div>
+							</div>
+							<div class="shimmer size-24 shrink-0 rounded-xl sm:size-32"></div>
+						</div>
+					</div>
+				))}
+			</div>
+		</template>
 	</section>
 </BlogLayout>
+
+<script>
+	// Upcoming / Past without a page load: show a placeholder, fetch the other tab's page,
+	// and swap in its list. The links still work as plain links without this script.
+	const list = document.querySelector<HTMLElement>('[data-events-list]');
+	const skeleton = document.querySelector<HTMLTemplateElement>('[data-events-skeleton]');
+	const tabs = [...document.querySelectorAll<HTMLAnchorElement>('[data-period-tab]')];
+	const pages = new Map<string, Promise<string | null>>();
+	let latest = '';
+	// The list already on screen is the first entry, so going back to it is instant.
+	if (list) pages.set(new URL(location.href).href, Promise.resolve(list.innerHTML));
+
+	function fetchList(href: string): Promise<string | null> {
+		if (!pages.has(href)) {
+			const page = fetch(href, { headers: { Accept: 'text/html' } })
+				.then((response) => (response.ok ? response.text() : null))
+				.then((html) => {
+					if (!html) return null;
+					return new DOMParser().parseFromString(html, 'text/html').querySelector('[data-events-list]')?.innerHTML ?? null;
+				})
+				.catch(() => null);
+			pages.set(href, page);
+			// A failure is not remembered: the next click tries again.
+			page.then((found) => found === null && pages.delete(href));
+		}
+		return pages.get(href)!;
+	}
+
+	const nav = document.querySelector<HTMLElement>('[data-tab-thumb]')?.parentElement;
+	const thumb = document.querySelector<HTMLElement>('[data-tab-thumb]');
+	const still = matchMedia('(prefers-reduced-motion: reduce)');
+	// Overshoots its target a little and settles back: the bounce.
+	const BOUNCE = 'cubic-bezier(0.34, 1.56, 0.64, 1)';
+
+	function currentTab() {
+		return tabs.find((tab) => tab.getAttribute('aria-current') === 'page');
+	}
+
+	function placeThumb(animate: boolean) {
+		const tab = currentTab();
+		if (!thumb || !tab) return;
+		thumb.style.transition = animate && !still.matches ? `transform 500ms ${BOUNCE}, width 500ms ${BOUNCE}` : 'none';
+		thumb.style.width = `${tab.offsetWidth}px`;
+		thumb.style.transform = `translateX(${tab.offsetLeft}px)`;
+	}
+
+	if (nav && thumb) {
+		nav.dataset.thumb = '';
+		placeThumb(false);
+		addEventListener('resize', () => placeThumb(false));
+		document.fonts?.ready.then(() => placeThumb(false));
+	}
+
+	function markTab(href: string) {
+		const path = new URL(href, location.href);
+		for (const tab of tabs) {
+			const here = new URL(tab.href).search === path.search;
+			if (here) tab.setAttribute('aria-current', 'page');
+			else tab.removeAttribute('aria-current');
+		}
+		placeThumb(true);
+	}
+
+	// dir 1 = moving right (to Past), -1 = moving left (to Upcoming).
+	function slideOut(dir: number) {
+		if (!list || still.matches) return Promise.resolve();
+		return list
+			.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: `translateX(${-dir * 32}px)` }], { duration: 160, easing: 'ease-in', fill: 'forwards' })
+			.finished.then(() => undefined, () => undefined);
+	}
+
+	function slideIn(dir: number) {
+		if (!list) return;
+		list.getAnimations().forEach((animation) => animation.cancel());
+		if (still.matches) return;
+		list.animate([{ opacity: 0, transform: `translateX(${dir * 48}px)` }, { opacity: 1, transform: 'none' }], { duration: 550, easing: BOUNCE });
+	}
+
+	async function show(href: string, push: boolean) {
+		if (!list || !skeleton) return void (location.href = href);
+		latest = href;
+		const from = tabs.indexOf(currentTab()!);
+		markTab(href);
+		const dir = tabs.indexOf(currentTab()!) >= from ? 1 : -1;
+		if (push) history.pushState({ eventsTab: true }, '', href);
+		const pending = fetchList(href);
+		await slideOut(dir);
+		if (latest !== href) return;
+		// A cached tab slides in at once; only a real wait shows the placeholder.
+		const quick = await Promise.race([pending, new Promise((r) => setTimeout(() => r(undefined), 80))]);
+		if (latest !== href) return;
+		if (quick === undefined) {
+			list.replaceChildren(skeleton.content.cloneNode(true));
+			slideIn(dir);
+		}
+		const html = await pending;
+		if (latest !== href) return;
+		if (html === null) return void (location.href = href);
+		list.innerHTML = html;
+		if (quick !== undefined) return slideIn(dir);
+		// The placeholder already slid in; the real list just fades up in its place.
+		list.classList.remove('animate-rise');
+		void list.offsetWidth;
+		list.classList.add('animate-rise');
+	}
+
+	for (const tab of tabs) {
+		tab.addEventListener('click', (event) => {
+			if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+			event.preventDefault();
+			if (tab.getAttribute('aria-current') === 'page') return;
+			void show(tab.href, true);
+		});
+		// Start loading on hover, so the click usually finds it ready.
+		tab.addEventListener('pointerenter', () => void fetchList(tab.href), { once: true });
+	}
+
+	window.addEventListener('popstate', () => {
+		// A change of #hash alone is not a change of tab.
+		const current = currentTab();
+		if (current && new URL(current.href).search === location.search) return;
+		void show(location.href, false);
+	});
+</script>

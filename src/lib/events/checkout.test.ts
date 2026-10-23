@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { checkoutLabel, nextStep } from './checkout.ts';
+import { checkoutLabel, checkoutRefusal, nextStep } from './checkout.ts';
 
 describe('checkoutLabel', () => {
   it('says Buy for a price and Register for free', () => {
@@ -64,5 +64,28 @@ describe('nextStep', () => {
     assert.throws(() => nextStep({ order_url: 'https://buzbo.com//evil.example/x' }, here), /order page/);
     assert.throws(() => nextStep({ order_url: 'https://buzbo.com/' }, here), /order page/);
     assert.throws(() => nextStep({}, here), /order page/);
+  });
+});
+
+describe('checkoutRefusal', () => {
+  const ok = { name: 'Anouk', email: 'anouk@example.com', confirmEmail: 'anouk@example.com', emailValid: true };
+
+  it('lets a complete form through', () => {
+    assert.equal(checkoutRefusal(ok), null);
+  });
+
+  it('asks for a name and a valid email first', () => {
+    assert.equal(checkoutRefusal({ ...ok, name: '  ' }), 'Enter your name.');
+    assert.equal(checkoutRefusal({ ...ok, email: ' ' }), 'Enter a valid email address.');
+    assert.equal(checkoutRefusal({ ...ok, emailValid: false }), 'Enter a valid email address.');
+  });
+
+  it('refuses a confirmation that is empty or different', () => {
+    assert.equal(checkoutRefusal({ ...ok, confirmEmail: '' }), 'Type your email address again to confirm it.');
+    assert.equal(checkoutRefusal({ ...ok, confirmEmail: 'anouk@exmaple.com' }), 'The email addresses do not match.');
+  });
+
+  it('ignores case and spaces around the addresses', () => {
+    assert.equal(checkoutRefusal({ ...ok, confirmEmail: ' Anouk@Example.com ' }), null);
   });
 });

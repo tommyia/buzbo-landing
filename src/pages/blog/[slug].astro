@@ -21,6 +21,8 @@ if (isSupabaseConfigured()) {
 		.select('*')
 		.eq('slug', slug)
 		.eq('status', 'published')
+		// Scheduled articles stay hidden until their date; RLS (migration 003) enforces it too.
+		.lte('published_at', new Date().toISOString())
 		.maybeSingle();
 	article = data;
 }

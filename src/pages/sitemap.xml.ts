@@ -14,6 +14,8 @@ export const GET: APIRoute = async ({ url }) => {
 			.from('buzbo_landing_article')
 			.select('slug, updated_at, published_at')
 			.eq('status', 'published')
+			// Scheduled articles stay hidden until their date; RLS (migration 003) enforces it too.
+			.lte('published_at', new Date().toISOString())
 			.order('published_at', { ascending: false });
 		if (error) console.error('sitemap: could not list articles', error);
 		articles = (data ?? []) as SitemapArticle[];

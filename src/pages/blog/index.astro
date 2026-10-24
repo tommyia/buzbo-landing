@@ -17,6 +17,8 @@ if (isSupabaseConfigured()) {
 			'id, title, slug, excerpt, cover_image_url, author_name, reading_duration_minutes, published_at',
 		)
 		.eq('status', 'published')
+		// Scheduled articles stay hidden until their date; RLS (migration 003) enforces it too.
+		.lte('published_at', new Date().toISOString())
 		.order('published_at', { ascending: false });
 	articles = (data ?? []) as Article[];
 }

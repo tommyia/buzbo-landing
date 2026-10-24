@@ -13,7 +13,8 @@ interface Props {
 	author?: string;
 	publishedTime?: string;
 	modifiedTime?: string;
-	jsonLd?: Record<string, unknown> | null;
+	/** One block, or several (e.g. an Article and its FAQPage), each in its own script tag. */
+	jsonLd?: Record<string, unknown> | (Record<string, unknown> | null)[] | null;
 }
 
 const {
@@ -39,6 +40,7 @@ const imageUrl = image
 		: new URL(image, origin).href
 	: undefined;
 const imageAltText = imageAlt || title;
+const jsonLdBlocks = (Array.isArray(jsonLd) ? jsonLd : [jsonLd]).filter((block) => block != null);
 ---
 
 <title>{title}</title>
@@ -78,4 +80,4 @@ const imageAltText = imageAlt || title;
 	</>
 ) : null}
 
-{jsonLd ? <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} /> : null}
+{jsonLdBlocks.map((block) => <script type="application/ld+json" set:html={JSON.stringify(block)} />)}

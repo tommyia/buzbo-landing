@@ -23,6 +23,8 @@ interface Props {
 	titleSuffix?: string;
 	/** Structured data for a page that is not an article. Overrides the Article block. */
 	jsonLd?: Record<string, unknown>;
+	/** Structured data added next to the Article (or jsonLd) block, e.g. a post's FAQPage. */
+	extraJsonLd?: Record<string, unknown> | null;
 	/** e.g. "noindex" for a page that is one person's. */
 	robots?: string;
 	/** False on a page whose address is a secret: Google Analytics and the Meta Pixel
@@ -43,6 +45,7 @@ const {
 	footerWaitlistAnchor = true,
 	titleSuffix = 'Buzbo Blog',
 	jsonLd: pageJsonLd,
+	extraJsonLd,
 	robots,
 	analytics = true,
 } = Astro.props;
@@ -90,7 +93,7 @@ const articleJsonLd =
 			author={author}
 			publishedTime={publishedTime}
 			modifiedTime={modifiedTime}
-			jsonLd={pageJsonLd ?? articleJsonLd}
+			jsonLd={[pageJsonLd ?? articleJsonLd, extraJsonLd ?? null]}
 			robots={robots}
 		/>
 		<slot name="head" />

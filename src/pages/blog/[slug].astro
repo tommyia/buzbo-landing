@@ -3,6 +3,7 @@ import BlogLayout from '../../layouts/BlogLayout.astro';
 import ShareButtons from '../../components/ShareButtons.astro';
 import { getPublicSupabase, isSupabaseConfigured } from '../../lib/supabase';
 import { PAGE_SEO } from '../../lib/seo';
+import { extractFaq, faqPageJsonLd } from '../../lib/faq';
 
 export const prerender = false;
 
@@ -37,6 +38,8 @@ const coverImage = article.cover_image_url
 		? article.cover_image_url
 		: new URL(article.cover_image_url, origin).href
 	: new URL('/blog-banner.png', origin).href;
+// Only from a real "FAQ" section in the post; null for posts without one.
+const faqJsonLd = faqPageJsonLd(extractFaq(article.content_html ?? ''));
 
 function formatDate(value: string | null) {
 	if (!value) return '';
@@ -58,6 +61,7 @@ function formatDate(value: string | null) {
 	publishedTime={article.published_at ?? undefined}
 	modifiedTime={article.updated_at ?? undefined}
 	author={article.author_name ?? undefined}
+	extraJsonLd={faqJsonLd}
 >
 	<article class="mx-auto max-w-3xl px-6 pt-36 pb-16 lg:px-8 lg:pt-44">
 		<a href="/blog" class="text-sm font-semibold text-primary-crimson hover:underline">← Back to blog</a>

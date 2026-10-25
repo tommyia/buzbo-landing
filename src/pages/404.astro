@@ -1,0 +1,45 @@
+---
+import BlogLayout from '../layouts/BlogLayout.astro';
+import { eventsHref } from '../lib/events/paths';
+---
+
+<BlogLayout
+	title="Page not found"
+	description="The page you're looking for doesn't exist or has moved."
+	titleSuffix="Buzbo"
+	robots="noindex"
+	footerWaitlistAnchor={false}
+>
+	<section class="mx-auto flex min-h-[70vh] max-w-3xl flex-col items-center justify-center px-6 pt-36 pb-20 text-center lg:pt-44">
+		<p class="rounded-full bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-wide text-ink ring-1 ring-line">
+			Error 404
+		</p>
+		<h1 class="mt-6 text-pretty text-4xl font-extrabold tracking-tight text-primary-crimson sm:text-6xl font-sans">
+			Lost your way?<br />
+			<span class="italic font-normal font-serif">It happens.</span>
+		</h1>
+		<p class="mt-6 max-w-xl text-pretty text-base text-gray-700 sm:text-lg/8">
+			The page you're looking for doesn't exist or has moved. Let's get you back to the people and ideas worth meeting.
+		</p>
+		<div class="mt-10 flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row">
+			<a
+				href="/"
+				class="flex w-full items-center justify-center rounded-full bg-primary-crimson px-7 py-3 text-base font-semibold text-white transition hover:bg-primary-crimson/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-burgundy sm:w-auto"
+			>
+				Back to home
+			</a>
+			<a
+				href="/blog"
+				class="flex w-full items-center justify-center rounded-full px-7 py-3 text-base font-semibold text-primary-crimson ring-1 ring-primary-crimson/30 transition hover:bg-primary-crimson/5 sm:w-auto"
+			>
+				Read the blog
+			</a>
+			<a
+				href={eventsHref()}
+				class="flex w-full items-center justify-center rounded-full px-7 py-3 text-base font-semibold text-primary-crimson ring-1 ring-primary-crimson/30 transition hover:bg-primary-crimson/5 sm:w-auto"
+			>
+				See events
+			</a>
+		</div>
+	</section>
+</BlogLayout>

@@ -281,6 +281,71 @@ body {
 	list-style: decimal;
 }
 
+/* Tables from the article editor arrive wrapped in div.tableWrapper, which scrolls
+   sideways on a narrow screen instead of pushing the page wider. */
+.blog-prose .tableWrapper {
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+	border-radius: 1rem;
+	background: white;
+	box-shadow: 0 0 0 1px var(--color-line);
+}
+
+.blog-prose table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.9375rem;
+	line-height: 1.55;
+}
+
+.blog-prose th,
+.blog-prose td {
+	min-width: 8rem;
+	padding: 0.75rem 1rem;
+	text-align: left;
+	vertical-align: top;
+	border-bottom: 1px solid var(--color-line);
+}
+
+.blog-prose th + th,
+.blog-prose td + td,
+.blog-prose th + td,
+.blog-prose td + th {
+	border-left: 1px solid var(--color-line);
+}
+
+.blog-prose tr:last-child > th,
+.blog-prose tr:last-child > td {
+	border-bottom: 0;
+}
+
+.blog-prose th {
+	background: var(--color-cream);
+	color: var(--color-primary-crimson);
+	font-weight: 600;
+}
+
+.blog-prose th > p,
+.blog-prose td > p {
+	margin: 0;
+}
+
+.blog-prose th > p + p,
+.blog-prose td > p + p {
+	margin-top: 0.5em;
+}
+
+@media (max-width: 640px) {
+	.blog-prose table {
+		font-size: 0.875rem;
+	}
+
+	.blog-prose th,
+	.blog-prose td {
+		padding: 0.625rem 0.75rem;
+	}
+}
+
 /* A loading placeholder: a light band sweeping across beige. */
 .shimmer {
 	background: linear-gradient(90deg, var(--color-beige) 25%, var(--color-cream) 50%, var(--color-beige) 75%);

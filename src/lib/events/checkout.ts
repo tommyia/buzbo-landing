@@ -66,8 +66,9 @@ export function nextStep(data: CheckoutAnswer, here: string): NextStep {
       intent_id: data.intent_id,
       client_secret: data.client_secret,
       currency: data.currency,
-      // Events are in the Netherlands; without it Airwallex guesses from the IP.
-      country_code: 'NL',
+      // No country_code: Airwallex then takes the buyer's location, which is what lets
+      // Automatic Currency Conversion offer them their own currency. Sent as 'NL', it
+      // kept every buyer in EUR (found 2026-10-27 from a UK connection).
       successUrl: orderUrl,
       cancelUrl: here,
     },

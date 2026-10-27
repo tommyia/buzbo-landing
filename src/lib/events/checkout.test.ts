@@ -38,7 +38,6 @@ describe('nextStep', () => {
         intent_id: 'int_1',
         client_secret: 'secret',
         currency: 'EUR',
-        country_code: 'NL',
         successUrl: 'https://buzbo.com/e-abc/orders/tok',
         cancelUrl: here,
       },

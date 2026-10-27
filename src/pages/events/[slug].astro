@@ -182,6 +182,7 @@ const chip = 'flex items-center gap-3';
 								<input id="checkout-email-confirm" name="email_confirm" type="email" required maxlength="254" autocomplete="off" class="mt-1 w-full rounded-lg border-0 bg-white px-3 py-2 text-base text-ink ring-1 ring-line focus:ring-2 focus:ring-burgundy aria-invalid:ring-2 aria-invalid:ring-primary-crimson" />
 								<p data-confirm-hint hidden class="mt-1 text-sm font-semibold"></p>
 								<p class="mt-2 text-sm text-muted">We send your ticket to <strong data-checkout-email-echo class="text-ink">this address</strong>. Check it before you continue.</p>
+								<p data-checkout-currency-note hidden class="mt-2 text-sm text-muted">Prices may be shown in your local currency at payment. Your bank may charge additional fees.</p>
 								<p data-checkout-error role="alert" hidden class="mt-3 text-sm font-semibold text-primary-crimson"></p>
 								<button type="submit" class="mt-4 flex w-full items-center justify-center rounded-full bg-primary-crimson px-7 py-3 text-base font-semibold text-white transition hover:bg-primary-crimson/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-burgundy disabled:opacity-60">
 									Continue
@@ -274,6 +275,8 @@ const chip = 'flex items-center gap-3';
 		const errorBox = form.querySelector<HTMLElement>('[data-checkout-error]')!;
 		const ticketName = form.querySelector<HTMLElement>('[data-checkout-ticket]')!;
 		const emailEcho = form.querySelector<HTMLElement>('[data-checkout-email-echo]')!;
+		// Airwallex's payment page may offer the buyer their own currency; a free ticket never reaches it.
+		const currencyNote = form.querySelector<HTMLElement>('[data-checkout-currency-note]')!;
 		let submitLabel = 'Continue';
 
 		const fail = (message: string) => {
@@ -306,6 +309,7 @@ const chip = 'flex items-center gap-3';
 				ticketInput.value = button.dataset.ticketId ?? '';
 				ticketName.textContent = button.dataset.ticketName ?? '';
 				submitLabel = button.dataset.ticketLabel === 'Register' ? 'Register' : 'Continue to payment';
+				currencyNote.hidden = submitLabel === 'Register';
 				submit.textContent = submitLabel;
 				errorBox.hidden = true;
 				const opening = form.hidden;

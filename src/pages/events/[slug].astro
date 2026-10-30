@@ -11,6 +11,7 @@ import {
 	safeHttpUrl,
 } from '../../lib/events/format';
 import { checkoutLabel } from '../../lib/events/checkout';
+import { localPriceEstimate, visitorCountry } from '../../lib/events/local-price';
 import { checkoutApiUrl, eventsHref } from '../../lib/events/paths';
 import { getPublishedEvent, getSoldOut } from '../../lib/events/queries';
 import { PAGE_SEO, SITE_NAME } from '../../lib/seo';
@@ -37,6 +38,11 @@ const cover = safeHttpUrl(event.cover_image_url);
 // still be had; this page only names the ticket and the person.
 const checkoutApi = ended ? null : checkoutApiUrl();
 const soldOut = checkoutApi ? await getSoldOut(event.id) : new Set<string>();
+
+const country = visitorCountry(Astro.request.headers, Astro.url.searchParams);
+const estimateFor = (ticket: { price_cents: number; currency: string }) =>
+	localPriceEstimate(ticket.price_cents, ticket.currency, event.fx_rates, country);
+const hasEstimate = event.ticket_types.some((ticket) => estimateFor(ticket));
 
 const place = [event.venue_name, event.city].filter(Boolean).join(', ');
 const dayLong = formatDayLong(event.starts_at, zone);
@@ -145,6 +151,7 @@ const chip = 'flex items-center gap-3';
 										<p class="font-semibold text-ink">{ticket.name}</p>
 										<p class="mt-0.5 text-sm text-muted">
 											{formatPrice(ticket.price_cents, ticket.currency)}
+											{estimateFor(ticket) ? <span> ({estimateFor(ticket)})</span> : null}
 											{ticket.description ? <span> · {ticket.description}</span> : null}
 										</p>
 									</div>
@@ -166,6 +173,7 @@ const chip = 'flex items-center gap-3';
 								</li>
 							))}
 						</ul>
+						{hasEstimate ? <p class="mt-1 text-xs text-muted">≈ is an estimate. You see the exact amount at payment.</p> : null}
 
 						{ended ? (
 							<p class="mt-2 rounded-xl bg-beige px-4 py-3 text-center text-sm font-semibold text-muted">This event has ended.</p>

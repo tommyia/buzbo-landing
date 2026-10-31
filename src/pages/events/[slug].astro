@@ -164,6 +164,7 @@ const chip = 'flex items-center gap-3';
 											data-ticket-id={ticket.id}
 											data-ticket-name={ticket.name}
 											data-ticket-label={checkoutLabel(ticket.price_cents)}
+											data-ticket-buddies={ticket.max_buddies}
 											aria-pressed="false"
 											class="shrink-0 rounded-full bg-burgundy px-4 py-1.5 text-sm font-semibold text-white ring-1 ring-burgundy transition hover:bg-burgundy/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-burgundy aria-pressed:bg-white aria-pressed:text-burgundy"
 										>
@@ -190,6 +191,26 @@ const chip = 'flex items-center gap-3';
 								<input id="checkout-email-confirm" name="email_confirm" type="email" required maxlength="254" autocomplete="off" class="mt-1 w-full rounded-lg border-0 bg-white px-3 py-2 text-base text-ink ring-1 ring-line focus:ring-2 focus:ring-burgundy aria-invalid:ring-2 aria-invalid:ring-primary-crimson" />
 								<p data-confirm-hint hidden class="mt-1 text-sm font-semibold"></p>
 								<p class="mt-2 text-sm text-muted">We send your ticket to <strong data-checkout-email-echo class="text-ink">this address</strong>. Check it before you continue.</p>
+								<div data-buddy-section hidden class="mt-4">
+									<p class="text-sm font-semibold text-ink">Bring a buddy <span class="font-normal text-muted">(optional)</span></p>
+									<p data-buddy-note class="mt-1 text-sm text-muted"></p>
+									<div data-buddy-rows></div>
+									<button type="button" data-buddy-add class="mt-3 rounded-full px-4 py-1.5 text-sm font-semibold text-burgundy ring-1 ring-burgundy transition hover:bg-burgundy/5">Add a buddy</button>
+								</div>
+								<template data-buddy-template>
+									<fieldset data-buddy-row class="mt-3 rounded-lg bg-white p-3 ring-1 ring-line">
+										<div class="flex items-center justify-between gap-2">
+											<legend data-buddy-title class="text-sm font-semibold text-ink"></legend>
+											<button type="button" data-buddy-remove class="text-sm font-semibold text-primary-crimson hover:underline">Remove</button>
+										</div>
+										<label class="mt-2 block text-sm font-semibold text-ink">Name
+											<input data-buddy-name type="text" maxlength="120" autocomplete="off" class="mt-1 w-full rounded-lg border-0 bg-white px-3 py-2 text-base font-normal text-ink ring-1 ring-line focus:ring-2 focus:ring-burgundy" />
+										</label>
+										<label class="mt-2 block text-sm font-semibold text-ink">Email
+											<input data-buddy-email type="email" maxlength="254" autocomplete="off" class="mt-1 w-full rounded-lg border-0 bg-white px-3 py-2 text-base font-normal text-ink ring-1 ring-line focus:ring-2 focus:ring-burgundy" />
+										</label>
+									</fieldset>
+								</template>
 								<p data-checkout-currency-note hidden class="mt-2 text-sm text-muted">Prices may be shown in your local currency at payment. Your bank may charge additional fees.</p>
 								<p data-checkout-error role="alert" hidden class="mt-3 text-sm font-semibold text-primary-crimson"></p>
 								<button type="submit" class="mt-4 flex w-full items-center justify-center rounded-full bg-primary-crimson px-7 py-3 text-base font-semibold text-white transition hover:bg-primary-crimson/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-burgundy disabled:opacity-60">
@@ -246,7 +267,7 @@ const chip = 'flex items-center gap-3';
 	// The checkout form: gather a name and an email, ask buzbo-be to hold the ticket, then
 	// go where it says — Airwallex's hosted payment page for a paid ticket, the order page
 	// for a free one. Card details are typed at Airwallex and never touch this site.
-	import { checkoutRefusal, nextStep, type CheckoutAnswer } from '../../lib/events/checkout';
+	import { buddyRefusal, checkoutRefusal, nextStep, type CheckoutAnswer } from '../../lib/events/checkout';
 
 	const SDK_URL = 'https://static.airwallex.com/components/sdk/v1/index.js';
 
@@ -285,7 +306,44 @@ const chip = 'flex items-center gap-3';
 		const emailEcho = form.querySelector<HTMLElement>('[data-checkout-email-echo]')!;
 		// Airwallex's payment page may offer the buyer their own currency; a free ticket never reaches it.
 		const currencyNote = form.querySelector<HTMLElement>('[data-checkout-currency-note]')!;
+		const buddySection = form.querySelector<HTMLElement>('[data-buddy-section]')!;
+		const buddyNote = form.querySelector<HTMLElement>('[data-buddy-note]')!;
+		const buddyRows = form.querySelector<HTMLElement>('[data-buddy-rows]')!;
+		const buddyAdd = form.querySelector<HTMLButtonElement>('[data-buddy-add]')!;
+		const buddyTemplate = form.querySelector<HTMLTemplateElement>('[data-buddy-template]')!;
 		let submitLabel = 'Continue';
+		let maxBuddies = 0;
+
+		// Numbered again after every change, and the add button goes at the limit.
+		const refreshBuddies = () => {
+			const rows = [...buddyRows.querySelectorAll<HTMLElement>('[data-buddy-row]')];
+			rows.forEach((row, index) => {
+				row.querySelector<HTMLElement>('[data-buddy-title]')!.textContent = maxBuddies > 1 ? `Buddy ${index + 1}` : 'Your buddy';
+			});
+			buddyAdd.hidden = rows.length >= maxBuddies;
+		};
+
+		// Another ticket may allow fewer: what no longer fits must not be sent.
+		const setBuddyLimit = (limit: number) => {
+			maxBuddies = limit;
+			buddySection.hidden = limit === 0;
+			buddyNote.textContent = `This ticket includes up to ${limit} ${limit === 1 ? 'buddy' : 'buddies'} at no extra cost. Each buddy gets their own ticket by email. You can't add one after checkout.`;
+			const rows = [...buddyRows.querySelectorAll<HTMLElement>('[data-buddy-row]')];
+			rows.slice(limit).forEach((row) => row.remove());
+			refreshBuddies();
+		};
+
+		buddyAdd.addEventListener('click', () => {
+			const row = buddyTemplate.content.firstElementChild!.cloneNode(true) as HTMLElement;
+			row.querySelector('[data-buddy-remove]')!.addEventListener('click', () => {
+				row.remove();
+				refreshBuddies();
+				buddyAdd.focus();
+			});
+			buddyRows.append(row);
+			refreshBuddies();
+			row.querySelector<HTMLInputElement>('[data-buddy-name]')!.focus();
+		});
 
 		const fail = (message: string) => {
 			errorBox.textContent = message;
@@ -316,6 +374,7 @@ const chip = 'flex items-center gap-3';
 				}
 				ticketInput.value = button.dataset.ticketId ?? '';
 				ticketName.textContent = button.dataset.ticketName ?? '';
+				setBuddyLimit(Number(button.dataset.ticketBuddies ?? '0'));
 				submitLabel = button.dataset.ticketLabel === 'Register' ? 'Register' : 'Continue to payment';
 				currencyNote.hidden = submitLabel === 'Register';
 				submit.textContent = submitLabel;
@@ -379,6 +438,17 @@ const chip = 'flex items-center gap-3';
 			}
 			if (refusal) return fail(refusal);
 
+			const buddies = [...buddyRows.querySelectorAll<HTMLElement>('[data-buddy-row]')].map((row) => {
+				const email = row.querySelector<HTMLInputElement>('[data-buddy-email]')!;
+				return {
+					name: row.querySelector<HTMLInputElement>('[data-buddy-name]')!.value,
+					email: email.value,
+					emailValid: email.checkValidity(),
+				};
+			});
+			const buddyProblem = buddyRefusal(buddies, emailInput.value);
+			if (buddyProblem) return fail(buddyProblem);
+
 			// Disabled before the request, so a second click cannot hold a second ticket.
 			submit.disabled = true;
 			submit.textContent = 'One moment…';
@@ -390,6 +460,7 @@ const chip = 'flex items-center gap-3';
 						ticket_type_id: ticketInput.value,
 						name: nameInput.value,
 						email: emailInput.value,
+						buddies: buddies.map(({ name, email }) => ({ name, email })),
 					}),
 				});
 				const body = (await response.json().catch(() => null)) as {
@@ -398,7 +469,7 @@ const chip = 'flex items-center gap-3';
 				} | null;
 				if (response.status === 400) {
 					// buzbo-be's own wording here is "Request validation failed".
-					throw new Error('Check your name and email address. A name cannot contain a web address.');
+					throw new Error('Check the names and email addresses. A name cannot contain a web address.');
 				}
 				if (!response.ok || !body?.data) {
 					throw new Error(body?.error?.message ?? 'Something went wrong. Nothing was charged; try again in a moment.');

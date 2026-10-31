@@ -17,6 +17,23 @@ export function checkoutLabel(priceCents: number): 'Buy ticket' | 'Register' {
   return priceCents > 0 ? 'Buy ticket' : 'Register';
 }
 
+export type BuddyInput = { name: string; email: string; emailValid: boolean };
+
+/** Why these buddies cannot be sent, or null when they can. A row is filled in whole or
+ *  taken away; everyone needs their own address, since one email holds one ticket. */
+export function buddyRefusal(buddies: BuddyInput[], buyerEmail: string): string | null {
+  const seen = new Set([buyerEmail.trim().toLowerCase()]);
+  for (const [index, buddy] of buddies.entries()) {
+    const who = buddies.length > 1 ? `buddy ${index + 1}` : 'your buddy';
+    if (!buddy.name.trim()) return `Enter the name of ${who}, or remove them.`;
+    const email = buddy.email.trim().toLowerCase();
+    if (!email || !buddy.emailValid) return `Enter a valid email address for ${who}.`;
+    if (seen.has(email)) return `Everyone needs their own email address: ${email} is used twice.`;
+    seen.add(email);
+  }
+  return null;
+}
+
 /** Why the checkout form cannot be sent yet, or null when it can. `emailValid` is the
  *  browser's own check of the email field. The confirmation catches a typo before the
  *  ticket goes to an address nobody reads. */

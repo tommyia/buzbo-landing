@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { checkoutLabel, checkoutRefusal, nextStep } from './checkout.ts';
+import { buddyRefusal, checkoutLabel, checkoutRefusal, nextStep } from './checkout.ts';
 
 describe('checkoutLabel', () => {
   it('says Buy for a price and Register for free', () => {
@@ -86,5 +86,24 @@ describe('checkoutRefusal', () => {
 
   it('ignores case and spaces around the addresses', () => {
     assert.equal(checkoutRefusal({ ...ok, confirmEmail: ' Anouk@Example.com ' }), null);
+  });
+});
+
+describe('buddyRefusal', () => {
+  const ben = { name: 'Ben', email: 'ben@example.com', emailValid: true };
+
+  it('lets nobody and a filled-in buddy through', () => {
+    assert.equal(buddyRefusal([], 'anna@example.com'), null);
+    assert.equal(buddyRefusal([ben], 'anna@example.com'), null);
+  });
+
+  it('wants a name and a valid email', () => {
+    assert.match(buddyRefusal([{ ...ben, name: ' ' }], 'anna@example.com')!, /name of your buddy/);
+    assert.match(buddyRefusal([{ ...ben, emailValid: false }], 'anna@example.com')!, /valid email/);
+  });
+
+  it('refuses an address used twice, whatever its case', () => {
+    assert.match(buddyRefusal([{ ...ben, email: 'ANNA@example.com' }], 'anna@example.com')!, /used twice/);
+    assert.match(buddyRefusal([ben, { ...ben, email: 'Ben@Example.com' }], 'anna@example.com')!, /used twice/);
   });
 });

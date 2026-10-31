@@ -11,6 +11,8 @@ export interface TicketType extends TicketPrice {
   id: string;
   name: string;
   description: string | null;
+  /** How many buddies one ticket may bring at the same price. 0 is off. */
+  max_buddies: number;
   position: number;
 }
 

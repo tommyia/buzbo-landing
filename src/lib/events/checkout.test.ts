@@ -90,7 +90,7 @@ describe('checkoutRefusal', () => {
 });
 
 describe('buddyRefusal', () => {
-  const ben = { name: 'Ben', email: 'ben@example.com', emailValid: true };
+  const ben = { name: 'Ben', email: 'ben@example.com', confirmEmail: 'ben@example.com', emailValid: true };
 
   it('lets nobody and a filled-in buddy through', () => {
     assert.equal(buddyRefusal([], 'anna@example.com'), null);
@@ -102,8 +102,14 @@ describe('buddyRefusal', () => {
     assert.match(buddyRefusal([{ ...ben, emailValid: false }], 'anna@example.com')!, /valid email/);
   });
 
+  it('wants the email typed twice, whatever its case', () => {
+    assert.match(buddyRefusal([{ ...ben, confirmEmail: ' ' }], 'anna@example.com')!, /again to confirm/);
+    assert.match(buddyRefusal([{ ...ben, confirmEmail: 'ben@exmaple.com' }], 'anna@example.com')!, /do not match/);
+    assert.equal(buddyRefusal([{ ...ben, confirmEmail: 'BEN@example.com ' }], 'anna@example.com'), null);
+  });
+
   it('refuses an address used twice, whatever its case', () => {
-    assert.match(buddyRefusal([{ ...ben, email: 'ANNA@example.com' }], 'anna@example.com')!, /used twice/);
-    assert.match(buddyRefusal([ben, { ...ben, email: 'Ben@Example.com' }], 'anna@example.com')!, /used twice/);
+    assert.match(buddyRefusal([{ ...ben, email: 'ANNA@example.com', confirmEmail: 'anna@example.com' }], 'anna@example.com')!, /used twice/);
+    assert.match(buddyRefusal([ben, { ...ben, email: 'Ben@Example.com', confirmEmail: 'ben@example.com' }], 'anna@example.com')!, /used twice/);
   });
 });

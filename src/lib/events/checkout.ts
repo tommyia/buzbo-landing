@@ -17,7 +17,7 @@ export function checkoutLabel(priceCents: number): 'Buy ticket' | 'Register' {
   return priceCents > 0 ? 'Buy ticket' : 'Register';
 }
 
-export type BuddyInput = { name: string; email: string; emailValid: boolean };
+export type BuddyInput = { name: string; email: string; confirmEmail: string; emailValid: boolean };
 
 /** Why these buddies cannot be sent, or null when they can. A row is filled in whole or
  *  taken away; everyone needs their own address, since one email holds one ticket. */
@@ -28,6 +28,9 @@ export function buddyRefusal(buddies: BuddyInput[], buyerEmail: string): string 
     if (!buddy.name.trim()) return `Enter the name of ${who}, or remove them.`;
     const email = buddy.email.trim().toLowerCase();
     if (!email || !buddy.emailValid) return `Enter a valid email address for ${who}.`;
+    const confirm = buddy.confirmEmail.trim().toLowerCase();
+    if (!confirm) return `Type the email address of ${who} again to confirm it.`;
+    if (confirm !== email) return `The email addresses of ${who} do not match.`;
     if (seen.has(email)) return `Everyone needs their own email address: ${email} is used twice.`;
     seen.add(email);
   }

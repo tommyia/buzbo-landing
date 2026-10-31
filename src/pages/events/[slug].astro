@@ -201,6 +201,10 @@ const chip = 'flex items-center gap-3';
 										<label class="mt-2 block text-sm font-semibold text-ink">Email
 											<input data-buddy-email type="email" maxlength="254" autocomplete="off" class="mt-1 w-full rounded-lg border-0 bg-white px-3 py-2 text-base font-normal text-ink ring-1 ring-line focus:ring-2 focus:ring-burgundy" />
 										</label>
+										<label class="mt-2 block text-sm font-semibold text-ink">Confirm email
+											<input data-buddy-email-confirm type="email" maxlength="254" autocomplete="off" class="mt-1 w-full rounded-lg border-0 bg-white px-3 py-2 text-base font-normal text-ink ring-1 ring-line focus:ring-2 focus:ring-burgundy aria-invalid:ring-2 aria-invalid:ring-primary-crimson" />
+										</label>
+										<p data-buddy-confirm-hint hidden class="mt-1 text-sm font-semibold"></p>
 									</fieldset>
 								</template>
 								<p data-checkout-currency-note hidden class="mt-2 text-sm text-muted">Prices may be shown in your local currency at payment. Your bank may charge additional fees.</p>
@@ -332,6 +336,11 @@ const chip = 'flex items-center gap-3';
 				refreshBuddies();
 				buddyAdd.focus();
 			});
+			watchConfirm(
+				row.querySelector<HTMLInputElement>('[data-buddy-email]')!,
+				row.querySelector<HTMLInputElement>('[data-buddy-email-confirm]')!,
+				row.querySelector<HTMLElement>('[data-buddy-confirm-hint]')!,
+			);
 			buddyRows.append(row);
 			refreshBuddies();
 			row.querySelector<HTMLInputElement>('[data-buddy-name]')!.focus();
@@ -380,26 +389,29 @@ const chip = 'flex items-center gap-3';
 		}
 
 		// Tell the buyer as soon as the two addresses differ, not only on submit.
-		const checkConfirm = (final: boolean) => {
-			const email = emailInput.value.trim().toLowerCase();
-			const confirm = confirmInput.value.trim().toLowerCase();
-			if (!confirm || (!final && confirm.length < email.length)) {
-				confirmHint.hidden = true;
-				confirmInput.removeAttribute('aria-invalid');
+		const checkMatch = (email: HTMLInputElement, confirm: HTMLInputElement, hint: HTMLElement, final: boolean) => {
+			const address = email.value.trim().toLowerCase();
+			const typed = confirm.value.trim().toLowerCase();
+			if (!typed || (!final && typed.length < address.length)) {
+				hint.hidden = true;
+				confirm.removeAttribute('aria-invalid');
 				return;
 			}
-			const same = confirm === email;
-			confirmHint.hidden = false;
-			confirmHint.textContent = same ? 'Email addresses match.' : 'The email addresses do not match.';
-			confirmHint.className = `mt-1 text-sm font-semibold ${same ? 'text-success' : 'text-primary-crimson'}`;
-			if (same) confirmInput.removeAttribute('aria-invalid');
-			else confirmInput.setAttribute('aria-invalid', 'true');
+			const same = typed === address;
+			hint.hidden = false;
+			hint.textContent = same ? 'Email addresses match.' : 'The email addresses do not match.';
+			hint.className = `mt-1 text-sm font-semibold ${same ? 'text-success' : 'text-primary-crimson'}`;
+			if (same) confirm.removeAttribute('aria-invalid');
+			else confirm.setAttribute('aria-invalid', 'true');
 		};
-		confirmInput.addEventListener('input', () => checkConfirm(false));
-		confirmInput.addEventListener('blur', () => checkConfirm(true));
-		emailInput.addEventListener('input', () => {
-			if (confirmInput.value) checkConfirm(false);
-		});
+		function watchConfirm(email: HTMLInputElement, confirm: HTMLInputElement, hint: HTMLElement) {
+			confirm.addEventListener('input', () => checkMatch(email, confirm, hint, false));
+			confirm.addEventListener('blur', () => checkMatch(email, confirm, hint, true));
+			email.addEventListener('input', () => {
+				if (confirm.value) checkMatch(email, confirm, hint, false);
+			});
+		}
+		watchConfirm(emailInput, confirmInput, confirmHint);
 
 		// Back from Airwallex restores this page as it was left: button disabled, "One
 		// moment…". Put it back so the buyer can try again.
@@ -424,7 +436,7 @@ const chip = 'flex items-center gap-3';
 			});
 			if (refusal && confirmInput.value.trim() && refusal.includes('do not match')) {
 				// Already said under the field; point there instead of saying it twice.
-				checkConfirm(true);
+				checkMatch(emailInput, confirmInput, confirmHint, true);
 				confirmInput.focus();
 				return;
 			}
@@ -435,6 +447,7 @@ const chip = 'flex items-center gap-3';
 				return {
 					name: row.querySelector<HTMLInputElement>('[data-buddy-name]')!.value,
 					email: email.value,
+					confirmEmail: row.querySelector<HTMLInputElement>('[data-buddy-email-confirm]')!.value,
 					emailValid: email.checkValidity(),
 				};
 			});

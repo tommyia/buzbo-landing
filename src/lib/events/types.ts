@@ -40,8 +40,6 @@ export interface EventDetail extends Omit<EventSummary, 'ticket_types'> {
   map_url: string | null;
   seo_title: string | null;
   seo_description: string | null;
-  /** One unit of the ticket's currency in each currency. Display only: never charged. */
-  fx_rates: Record<string, number>;
   updated_at: string;
   ticket_types: TicketType[];
 }

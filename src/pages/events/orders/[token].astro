@@ -1,7 +1,7 @@
 ---
 import OrderTicket from '../../../components/events/OrderTicket.astro';
 import BlogLayout from '../../../layouts/BlogLayout.astro';
-import { fetchOrder, nextRefresh, questionnaireLink } from '../../../lib/events/order';
+import { fetchOrder, nextRefresh, questionnaireLink, withLaterLink } from '../../../lib/events/order';
 import { checkoutApiUrl } from '../../../lib/events/paths';
 
 export const prerender = false;
@@ -31,7 +31,7 @@ const order = result.kind === 'found' ? result.order : null;
 const welcome = Astro.url.searchParams.get('welcome') === '1';
 const questionnaire = order && welcome ? questionnaireLink(order) : null;
 if (questionnaire) {
-	return Astro.redirect(questionnaire, 302);
+	return Astro.redirect(withLaterLink(questionnaire, `${Astro.url.origin}${Astro.url.pathname}`), 302);
 }
 ---
 

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { fetchOrder, nextRefresh, questionnaireLink, type OrderView } from './order.ts';
+import { fetchOrder, nextRefresh, questionnaireLink, withLaterLink, type OrderView } from './order.ts';
 
 const VIEW = {
   status: 'paid',
@@ -80,5 +80,12 @@ describe('questionnaireLink', () => {
 
   it('refuses anything that is not an https address', () => {
     assert.equal(questionnaireLink(order({ questionnaire_url: 'javascript:alert(1)' })), null);
+  });
+});
+
+describe('withLaterLink', () => {
+  it('adds the ticket page to the fragment', () => {
+    assert.equal(withLaterLink('https://form.buzbo.com/e', 'https://buzbo.com/o/t'), 'https://form.buzbo.com/e#later=https%3A%2F%2Fbuzbo.com%2Fo%2Ft');
+    assert.equal(withLaterLink('https://form.buzbo.com/e#email=a', 'https://buzbo.com/o/t'), 'https://form.buzbo.com/e#email=a&later=https%3A%2F%2Fbuzbo.com%2Fo%2Ft');
   });
 });

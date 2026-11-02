@@ -61,6 +61,13 @@ export function questionnaireLink(order: OrderView): string | null {
   }
 }
 
+/** The questionnaire link with the way back to the ticket, for "Do it later". In the
+ *  fragment, like the email: it holds the ticket's token, which must reach no server. */
+export function withLaterLink(questionnaire: string, ticketPage: string): string {
+  const later = `later=${encodeURIComponent(ticketPage)}`;
+  return `${questionnaire}${questionnaire.includes('#') ? '&' : '#'}${later}`;
+}
+
 /** The attempt number to put in the next reload's address, or null to stop reloading. */
 export function nextRefresh(attempt: number): number | null {
   const done = Number.isFinite(attempt) && attempt > 0 ? Math.floor(attempt) : 0;

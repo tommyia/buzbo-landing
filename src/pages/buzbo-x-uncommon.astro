@@ -15,14 +15,4 @@ if (!event) {
 const canonical = new URL(`/${SLUG}`, Astro.url.origin).href;
 ---
 
-<EventDetailPage
-	event={event}
-	canonical={canonical}
-	bare
-	hero={{
-		eyebrow: 'Buzbo x Uncommon',
-		title: 'Your next opportunity could be in this building.',
-		subtitle: 'We’ll make sure you meet it.',
-		note: 'Members only · drinks and bites included',
-	}}
-/>
+<EventDetailPage event={event} canonical={canonical} bare />

@@ -30,6 +30,8 @@ interface Props {
 	/** False on a page whose address is a secret: Google Analytics and the Meta Pixel
 	 *  both report the full address of the page they load on. */
 	analytics?: boolean;
+	/** True on a page that stands alone, without the site navigation. */
+	hideHeader?: boolean;
 }
 
 const {
@@ -48,6 +50,7 @@ const {
 	extraJsonLd,
 	robots,
 	analytics = true,
+	hideHeader = false,
 } = Astro.props;
 
 const fullTitle = `${title} · ${titleSuffix}`;
@@ -99,7 +102,7 @@ const articleJsonLd =
 		<slot name="head" />
 	</head>
 	<body class="bg-primary-beige font-sans antialiased text-gray-900">
-		<SiteHeader />
+		{hideHeader ? null : <SiteHeader />}
 		<main>
 			<slot />
 		</main>

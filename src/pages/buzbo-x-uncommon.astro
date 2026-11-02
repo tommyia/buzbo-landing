@@ -1,0 +1,18 @@
+---
+import EventDetailPage from '../components/events/EventDetailPage.astro';
+import { getPublishedEvent } from '../lib/events/queries';
+
+export const prerender = false;
+
+const SLUG = 'buzbo-x-uncommon';
+const event = await getPublishedEvent(SLUG);
+
+// Answers once the event is published in the dashboard.
+if (!event) {
+	return new Response(null, { status: 404, statusText: 'Not Found' });
+}
+
+const canonical = new URL(`/${SLUG}`, Astro.url.origin).href;
+---
+
+<EventDetailPage event={event} canonical={canonical} bare />

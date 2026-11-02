@@ -15,7 +15,7 @@ describe('nextStep', () => {
   it('sends a free order straight to its page', () => {
     assert.deepEqual(nextStep({ order_url: 'https://buzbo.com/e-abc/orders/tok' }, here), {
       kind: 'redirect',
-      url: 'https://buzbo.com/e-abc/orders/tok',
+      url: 'https://buzbo.com/e-abc/orders/tok?welcome=1',
     });
   });
 
@@ -38,7 +38,7 @@ describe('nextStep', () => {
         intent_id: 'int_1',
         client_secret: 'secret',
         currency: 'EUR',
-        successUrl: 'https://buzbo.com/e-abc/orders/tok',
+        successUrl: 'https://buzbo.com/e-abc/orders/tok?welcome=1',
         cancelUrl: here,
       },
     });
@@ -50,11 +50,11 @@ describe('nextStep', () => {
   it('goes to the order path on the site the buyer is on', () => {
     assert.deepEqual(nextStep({ order_url: 'https://buzbo.com/e-abc/orders/tok' }, 'https://www.buzbo.com/e-abc/arnhem'), {
       kind: 'redirect',
-      url: 'https://www.buzbo.com/e-abc/orders/tok',
+      url: 'https://www.buzbo.com/e-abc/orders/tok?welcome=1',
     });
     assert.deepEqual(nextStep({ order_url: 'https://evil.example/e-abc/orders/tok?x=1#y' }, here), {
       kind: 'redirect',
-      url: 'https://buzbo.com/e-abc/orders/tok',
+      url: 'https://buzbo.com/e-abc/orders/tok?welcome=1',
     });
   });
 

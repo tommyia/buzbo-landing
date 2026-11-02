@@ -1,7 +1,7 @@
 ---
 import BlogLayout from '../../layouts/BlogLayout.astro';
 import { formatDayLong, formatTimeRange, formatUtcOffset } from '../../lib/events/format';
-import { nextRefresh, type OrderView } from '../../lib/events/order';
+import { nextRefresh, questionnaireLink, type OrderView } from '../../lib/events/order';
 import { eventsHref } from '../../lib/events/paths';
 import { qrSvg } from '../../lib/events/qr';
 
@@ -11,9 +11,11 @@ interface Props {
 	order: OrderView;
 	/** How many times the page has reloaded itself so far. */
 	attempt: number;
+	/** Arrived straight from checkout: kept across reloads, so the questionnaire still follows. */
+	welcome?: boolean;
 }
 
-const { order, attempt } = Astro.props;
+const { order, attempt, welcome = false } = Astro.props;
 const { event, ticket } = order;
 const zone = event.timezone;
 const when = `${formatDayLong(event.starts_at, zone)} · ${formatTimeRange(event.starts_at, event.ends_at, zone)} · ${formatUtcOffset(event.starts_at, zone)}`;
@@ -25,6 +27,7 @@ const valid = order.status === 'paid' && ticket?.status === 'valid' ? ticket : n
 const voided = order.status === 'paid' && ticket?.status === 'void';
 
 const next = order.status === 'pending' ? nextRefresh(attempt) : null;
+const questionnaire = questionnaireLink(order);
 ---
 
 <BlogLayout
@@ -40,12 +43,20 @@ const next = order.status === 'pending' ? nextRefresh(attempt) : null;
 	<Fragment slot="head">
 		{/* The address of this page is the ticket. Do not hand it on in a Referer header. */}
 		<meta name="referrer" content="no-referrer" />
-		{next !== null ? <meta http-equiv="refresh" content={`3;url=?n=${next}`} /> : null}
+		{next !== null ? <meta http-equiv="refresh" content={`3;url=?n=${next}${welcome ? '&welcome=1' : ''}`} /> : null}
 	</Fragment>
-	<article class="mx-auto max-w-xl px-6 pt-36 pb-20 lg:pt-44">
+	<article class="event-flow mx-auto max-w-xl px-6 pt-36 pb-20 lg:pt-44">
 		<h1 class="font-sans text-3xl font-extrabold tracking-tight text-burgundy">{event.title}</h1>
 		<p class="mt-3 font-semibold text-ink">{when}</p>
 		{where ? <p class="mt-1 text-muted">{where}</p> : null}
+
+		{questionnaire ? (
+			<section aria-labelledby="questionnaire-heading" class="mt-8 rounded-2xl bg-white p-6 text-center shadow-sm ring-1 ring-line">
+				<h2 id="questionnaire-heading" class="text-xs font-semibold uppercase tracking-wide text-primary-crimson">One more step</h2>
+				<p class="mt-3 text-sm text-muted">Fill in the short questionnaire so we can introduce you to the right people.</p>
+				<a href={questionnaire} class="mt-4 inline-flex rounded-full bg-primary-crimson px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-primary-crimson/90">Fill in the questionnaire</a>
+			</section>
+		) : null}
 
 		{valid ? (
 			<section aria-labelledby="ticket-heading" class="mt-8 rounded-2xl bg-white p-6 text-center shadow-sm ring-1 ring-line">

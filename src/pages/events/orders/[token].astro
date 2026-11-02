@@ -1,7 +1,7 @@
 ---
 import OrderTicket from '../../../components/events/OrderTicket.astro';
 import BlogLayout from '../../../layouts/BlogLayout.astro';
-import { fetchOrder, nextRefresh } from '../../../lib/events/order';
+import { fetchOrder, nextRefresh, questionnaireLink } from '../../../lib/events/order';
 import { checkoutApiUrl } from '../../../lib/events/paths';
 
 export const prerender = false;
@@ -26,13 +26,20 @@ if (result.kind === 'unavailable') {
 	Astro.response.status = 503;
 }
 const order = result.kind === 'found' ? result.order : null;
+
+// Straight from checkout: on to the questionnaire as soon as the ticket exists.
+const welcome = Astro.url.searchParams.get('welcome') === '1';
+const questionnaire = order && welcome ? questionnaireLink(order) : null;
+if (questionnaire) {
+	return Astro.redirect(questionnaire, 302);
+}
 ---
 
 {order === null ? (
 	<BlogLayout title="Your order" description="Your Buzbo event ticket." titleSuffix="Buzbo Events" robots="noindex, nofollow" analytics={false}>
 		<Fragment slot="head">
 			<meta name="referrer" content="no-referrer" />
-			{nextRefresh(attempt) !== null ? <meta http-equiv="refresh" content={`3;url=?n=${nextRefresh(attempt)}`} /> : null}
+			{nextRefresh(attempt) !== null ? <meta http-equiv="refresh" content={`3;url=?n=${nextRefresh(attempt)}${welcome ? '&welcome=1' : ''}`} /> : null}
 		</Fragment>
 		<article class="mx-auto max-w-xl px-6 pt-36 pb-20 lg:pt-44">
 			<section class="rounded-2xl bg-white px-6 py-8 text-center ring-1 ring-line" aria-live="polite">
@@ -42,5 +49,5 @@ const order = result.kind === 'found' ? result.order : null;
 		</article>
 	</BlogLayout>
 ) : (
-	<OrderTicket order={order} attempt={attempt} />
+	<OrderTicket order={order} attempt={attempt} welcome={welcome} />
 )}

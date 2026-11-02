@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { fetchOrder, nextRefresh } from './order.ts';
+import { fetchOrder, nextRefresh, questionnaireLink, type OrderView } from './order.ts';
 
 const VIEW = {
   status: 'paid',
@@ -55,5 +55,30 @@ describe('nextRefresh', () => {
     assert.equal(nextRefresh(20), null);
     assert.equal(nextRefresh(Number.NaN), 1);
     assert.equal(nextRefresh(-5), 1);
+  });
+});
+
+describe('questionnaireLink', () => {
+  const order = (over: Partial<OrderView>): OrderView => ({
+    status: 'paid',
+    buyer_name: 'Anna',
+    event: { title: 'E', slug: 'e', starts_at: '', ends_at: null, timezone: 'UTC', venue_name: null, venue_address: null, city: null },
+    ticket: { code: 'c', status: 'valid', type_name: null },
+    questionnaire_url: 'https://form.buzbo.com/e',
+    ...over,
+  });
+
+  it('gives the form for a valid ticket', () => {
+    assert.equal(questionnaireLink(order({})), 'https://form.buzbo.com/e');
+  });
+
+  it('gives nothing without a valid paid ticket or a form still to fill in', () => {
+    assert.equal(questionnaireLink(order({ status: 'pending' })), null);
+    assert.equal(questionnaireLink(order({ ticket: { code: 'c', status: 'void', type_name: null } })), null);
+    assert.equal(questionnaireLink(order({ questionnaire_url: null })), null);
+  });
+
+  it('refuses anything that is not an https address', () => {
+    assert.equal(questionnaireLink(order({ questionnaire_url: 'javascript:alert(1)' })), null);
   });
 });

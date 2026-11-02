@@ -359,3 +359,9 @@ body {
 		animation: none;
 	}
 }
+
+/* The event pages, from listing to ticket, are Archivo throughout: the base rule above
+   makes every heading serif, and an event's description can hold headings of its own. */
+.event-flow :is(h1, h2, h3, h4, h5, h6) {
+	font-family: var(--font-sans);
+}

@@ -74,7 +74,9 @@ function orderPageUrl(value: string | undefined, here: string): string {
 }
 
 export function nextStep(data: CheckoutAnswer, here: string): NextStep {
-  const orderUrl = orderPageUrl(data.order_url, here);
+  // Marks the arrival straight from checkout: only that one goes on to the questionnaire.
+  // The link in the ticket email has no mark, so it always opens the ticket.
+  const orderUrl = `${orderPageUrl(data.order_url, here)}?welcome=1`;
   if (!data.intent_id || !data.client_secret || !data.currency || !data.env) {
     return { kind: 'redirect', url: orderUrl };
   }

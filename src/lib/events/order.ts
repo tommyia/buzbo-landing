@@ -15,6 +15,8 @@ export interface OrderView {
     city: string | null;
   };
   ticket: { code: string; status: 'valid' | 'void'; type_name: string | null } | null;
+  /** The event's questionnaire, while this ticket's holder has yet to fill it in. */
+  questionnaire_url?: string | null;
 }
 
 /** The same shape buzbo-be accepts. Anything else is not an order and is not sent. */
@@ -46,6 +48,16 @@ export async function fetchOrder(
   } catch (error) {
     console.error('events: could not read order', error);
     return { kind: 'unavailable' };
+  }
+}
+
+/** The questionnaire address to send this order on to, when it is an https one. */
+export function questionnaireLink(order: OrderView): string | null {
+  if (order.status !== 'paid' || order.ticket?.status !== 'valid' || !order.questionnaire_url) return null;
+  try {
+    return new URL(order.questionnaire_url).protocol === 'https:' ? order.questionnaire_url : null;
+  } catch {
+    return null;
   }
 }
 

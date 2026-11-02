@@ -87,7 +87,7 @@ const chip = 'flex items-center gap-3';
 	jsonLd={jsonLd}
 	hideHeader={bare}
 >
-	<article class={`mx-auto max-w-6xl px-6 pb-20 lg:px-8 ${bare ? 'pt-6 lg:pt-8' : 'pt-36 lg:pt-44'}`}>
+	<article class={`event-flow mx-auto max-w-6xl px-6 pb-20 lg:px-8 ${bare ? 'pt-6 lg:pt-8' : 'pt-36 lg:pt-44'}`}>
 		{bare ? null : (
 			<a href={eventsHref()} class="text-sm font-semibold text-primary-crimson hover:underline">← All events</a>
 		)}
@@ -97,7 +97,7 @@ const chip = 'flex items-center gap-3';
 				<p class="text-xs font-semibold uppercase tracking-widest text-primary-crimson">
 					Buzbo event{event.city ? ` · ${event.city}` : ''}
 				</p>
-				<h1 class="mt-3 font-serif text-4xl leading-tight text-burgundy sm:text-5xl">{event.title}</h1>
+				<h1 class="mt-3 font-sans font-extrabold tracking-tight text-4xl leading-tight text-burgundy sm:text-5xl">{event.title}</h1>
 				<ul class="mt-6 flex flex-col gap-3 text-base font-semibold text-ink">
 					<li class={chip}>
 						<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-5 shrink-0 text-primary-crimson">
@@ -224,7 +224,7 @@ const chip = 'flex items-center gap-3';
 			<div class="min-w-0 lg:order-1">
 				{event.description_html ? (
 					<section aria-labelledby="about-heading">
-						<h2 id="about-heading" class="font-serif text-3xl text-burgundy">About this event</h2>
+						<h2 id="about-heading" class="font-sans font-extrabold tracking-tight text-3xl text-burgundy">About this event</h2>
 						{/* Written in buzbo-event's editor, behind the admin password, and trusted
 						    as the blog's article bodies are. */}
 						<div class="blog-prose mt-4" set:html={event.description_html} />
@@ -233,7 +233,7 @@ const chip = 'flex items-center gap-3';
 
 				{place || event.venue_address ? (
 					<section aria-labelledby="location-heading" class="mt-12">
-						<h2 id="location-heading" class="font-serif text-3xl text-burgundy">Location</h2>
+						<h2 id="location-heading" class="font-sans font-extrabold tracking-tight text-3xl text-burgundy">Location</h2>
 						<div class="mt-4 overflow-hidden rounded-2xl bg-white ring-1 ring-line">
 							{mapEmbed ? (
 								<iframe

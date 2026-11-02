@@ -1,0 +1,114 @@
+---
+import FaviconLinks from '../../components/FaviconLinks.astro';
+import '../../styles/global.css';
+
+export const prerender = true;
+
+const email = 'hello@buzbo.com';
+const link = 'font-medium text-primary-crimson underline underline-offset-2';
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<FaviconLinks />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="robots" content="noindex" />
+		<title>Buzbo x Uncommon: event terms and privacy notice</title>
+	</head>
+	<body class="font-sans antialiased text-gray-900">
+		<main class="event-flow mx-auto max-w-xl px-5 py-8 sm:px-6 sm:py-10">
+			<h1 class="text-3xl font-extrabold leading-tight text-primary-crimson sm:text-4xl">Buzbo x Uncommon: event terms and privacy notice</h1>
+			<p class="mt-3 text-sm leading-relaxed text-gray-600">Last updated: 2 November 2026</p>
+			<p class="mt-2 text-sm leading-relaxed text-gray-600">
+				Buzbo x Uncommon, 26 November 2026, 17:30 to 21:00, Uncommon Liverpool Street, London EC2M 7PP.
+			</p>
+
+			<article class="mt-8 space-y-8 text-base leading-relaxed text-gray-800">
+				<section>
+					<h2 class="text-xl font-bold text-ink">1. Who we are</h2>
+					<p class="mt-3">This event is run by Buzbo B.V., registered in the Netherlands, KVK 42172719 ("Buzbo", "we"). Buzbo decides how your data is used for this event and is the data controller. Contact us at <a href={`mailto:${email}`} class={link}>{email}</a>.</p>
+					<p class="mt-3">These terms apply to this event together with our <a href="/app/tnc" class={link}>Terms &amp; Conditions</a> and <a href="/app/pp" class={link}>Privacy Policy</a>. If they differ on this event, this page applies.</p>
+				</section>
+
+				<section>
+					<h2 class="text-xl font-bold text-ink">2. The event</h2>
+					<ul class="mt-3 list-disc space-y-2 pl-5">
+						<li>The event is free and for Uncommon members aged 18 or over.</li>
+						<li>Your ticket is personal. Show its QR code at the door.</li>
+						<li>We match you with other guests before the night. Your badge shows your matches. We cannot promise any particular match or outcome.</li>
+						<li>Follow Uncommon's building rules and treat other guests with respect. We or Uncommon may ask anyone who does not to leave.</li>
+						<li>If your plans change, tell us at <a href={`mailto:${email}`} class={link}>{email}</a> so someone else can take your place. We may change or cancel the event if we have to, and will email you if we do.</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2 class="text-xl font-bold text-ink">3. The data we collect</h2>
+					<ul class="mt-3 list-disc space-y-2 pl-5">
+						<li><strong>Registration:</strong> your name, email address and ticket. If a friend registers you as their buddy, they give us your name and email.</li>
+						<li><strong>Questionnaire:</strong> your name and email, your field of work, what you want from the night, what you can offer others, the topics you enjoy, and something people would never guess about you.</li>
+						<li><strong>Your choices:</strong> that you accepted these terms, and whether you want to hear about future events.</li>
+						<li><strong>On the night:</strong> whether you checked in, and photos or video that may show you.</li>
+						<li><strong>Buzbo app:</strong> if you have an account on the same email, we may show its photo and profession to your matches and other guests, unless your account is incognito.</li>
+					</ul>
+					<p class="mt-3">Please do not write health, religious, political or other sensitive details in your free-text answer. It is printed on your name tag.</p>
+				</section>
+
+				<section>
+					<h2 class="text-xl font-bold text-ink">4. Why we use it, and our legal basis</h2>
+					<ul class="mt-3 list-disc space-y-2 pl-5">
+						<li><strong>To perform our agreement with you:</strong> issuing your ticket, sending event emails, matching you with guests, printing your badge and checking you in.</li>
+						<li><strong>Our legitimate interests:</strong> running a safe event, giving Uncommon what it needs to admit guests, and taking photos and video to show what Buzbo does. You can object at any time (section 8).</li>
+						<li><strong>Your consent:</strong> emails about future Buzbo events, only if you tick that box. Leaving it unticked does not affect your place. Every email has an unsubscribe link.</li>
+					</ul>
+					<p class="mt-3">The questionnaire is needed for matching. Without it we cannot match you, but you can still attend.</p>
+				</section>
+
+				<section>
+					<h2 class="text-xl font-bold text-ink">5. How matching works</h2>
+					<p class="mt-3">The Buzbo team chooses your matches from your questionnaire answers and may use an AI tool to suggest them. A match has no legal or similarly significant effect on you. Your "something people would never guess" answer is not used for matching.</p>
+				</section>
+
+				<section>
+					<h2 class="text-xl font-bold text-ink">6. Who sees your data</h2>
+					<ul class="mt-3 list-disc space-y-2 pl-5">
+						<li><strong>Other guests:</strong> your name, your matches and your name tag answer at the event. In the Buzbo app, guests can see your first name, profession and check-in status. Your matches can also see your company.</li>
+						<li><strong>Uncommon:</strong> your name and whether you are attending or attended, so it can manage access to its building. Uncommon does not receive your email address or questionnaire answers from us, and uses this data under its own privacy notice.</li>
+						<li><strong>Service providers working for us:</strong> Supabase (database), Hostinger (server), Cloudflare (websites), AWS SES (email), Anthropic (AI suggestions) and Google (web fonts, which receive your IP address).</li>
+					</ul>
+					<p class="mt-3">We do not sell your data.</p>
+				</section>
+
+				<section>
+					<h2 class="text-xl font-bold text-ink">7. International transfers and how long we keep data</h2>
+					<p class="mt-3">Some providers operate outside the UK and EU/EEA, including in the United States and Singapore. Where no adequacy decision covers a transfer, we rely on safeguards such as the European Commission's Standard Contractual Clauses and the UK Addendum. Email us for a copy.</p>
+					<ul class="mt-3 list-disc space-y-2 pl-5">
+						<li><strong>Registration, questionnaire, matches and check-in:</strong> deleted by 26 May 2027, six months after the event.</li>
+						<li><strong>Future event emails:</strong> until you unsubscribe. We then keep your address only as a record not to email you.</li>
+						<li><strong>Photos and video:</strong> for as long as we actively use them. We stop using images of you in new material if you object.</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2 class="text-xl font-bold text-ink">8. Your rights, and how to delete your data</h2>
+					<p class="mt-3">You can ask for access to your data, a copy in a portable format, correction, deletion or restriction. You can object to processing based on legitimate interests and withdraw consent at any time.</p>
+					<p class="mt-3"><strong>To delete your data,</strong> email <a href={`mailto:${email}?subject=Delete%20my%20Buzbo%20x%20Uncommon%20data`} class={link}>{email}</a> from the address you registered with, or tell us which address it was. We may ask you to confirm it is yours. We reply within one month.</p>
+					<ul class="mt-3 list-disc space-y-2 pl-5">
+						<li>We delete your registration, questionnaire answers, matches and check-in, and tell Uncommon to delete what it received from us.</li>
+						<li>If you ask before the event, your ticket is cancelled and you will not be matched.</li>
+						<li>We keep your address only if needed to make sure we do not email you again.</li>
+						<li>A Buzbo app account is separate. Tell us if you want that deleted too.</li>
+						<li>We cannot recall images already published by others, but we will remove images of you from our own channels on request.</li>
+					</ul>
+					<p class="mt-3"><strong>Photos and video:</strong> if you would rather not appear, email us before the event or tell the Buzbo team on the night.</p>
+					<p class="mt-3"><strong>Complaints:</strong> please contact us first. You can also complain to the UK <a href="https://ico.org.uk/make-a-complaint/" class={link}>Information Commissioner's Office</a> or the Dutch <a href="https://autoriteitpersoonsgegevens.nl" class={link}>Autoriteit Persoonsgegevens</a>.</p>
+				</section>
+
+				<section>
+					<h2 class="text-xl font-bold text-ink">9. Legal</h2>
+					<p class="mt-3">Nothing here limits liability that cannot be limited by law, or your rights as a consumer where you live. Dutch law applies, without taking away the mandatory protections of the country where you live. We may update this page and will email you about any material change before the event.</p>
+				</section>
+			</article>
+		</main>
+	</body>
+</html>

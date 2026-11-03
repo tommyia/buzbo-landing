@@ -32,6 +32,10 @@ interface Props {
 	analytics?: boolean;
 	/** True on a page that stands alone, without the site navigation. */
 	hideHeader?: boolean;
+	/** Shows a waiting list link in the footer in place of the app store buttons. */
+	footerWaitlistUrl?: string | null;
+	/** Shows Buzbo's social media links in the footer. */
+	footerSocials?: boolean;
 }
 
 const {
@@ -51,6 +55,8 @@ const {
 	robots,
 	analytics = true,
 	hideHeader = false,
+	footerWaitlistUrl = null,
+	footerSocials = false,
 } = Astro.props;
 
 const fullTitle = `${title} · ${titleSuffix}`;
@@ -106,6 +112,6 @@ const articleJsonLd =
 		<main>
 			<slot />
 		</main>
-		<SiteFooter waitlistAnchor={footerWaitlistAnchor} />
+		<SiteFooter waitlistAnchor={footerWaitlistAnchor} waitlistUrl={footerWaitlistUrl} socials={footerSocials} />
 	</body>
 </html>

@@ -11,6 +11,7 @@ import {
 	safeHttpUrl,
 } from '../../lib/events/format';
 import { checkoutLabel } from '../../lib/events/checkout';
+import { eventWaitlistUrl } from '../../lib/events/unlisted';
 import { checkoutApiUrl, eventsHref } from '../../lib/events/paths';
 import { getSoldOut } from '../../lib/events/queries';
 import type { EventDetail } from '../../lib/events/types';
@@ -86,6 +87,8 @@ const chip = 'flex items-center gap-3';
 	titleSuffix="Buzbo Events"
 	jsonLd={jsonLd}
 	hideHeader={bare}
+	footerWaitlistUrl={eventWaitlistUrl(event.slug)}
+	footerSocials={bare}
 >
 	<article class={`event-flow mx-auto max-w-6xl px-6 pb-20 lg:px-8 ${bare ? 'pt-6 lg:pt-8' : 'pt-36 lg:pt-44'}`}>
 		{bare ? null : (

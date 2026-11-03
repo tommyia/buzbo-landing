@@ -1,24 +1,36 @@
 ---
+import SocialLinks from './SocialLinks.astro';
 import StoreBadges from './StoreBadges.astro';
 
 interface Props {
 	waitlistAnchor?: boolean;
+	/** Shows a waiting list link in place of the app store buttons. */
+	waitlistUrl?: string | null;
+	/** Shows Buzbo's social media links under the call to action. */
+	socials?: boolean;
 }
 
-const { waitlistAnchor = false } = Astro.props;
+const { waitlistAnchor = false, waitlistUrl = null, socials = false } = Astro.props;
 ---
 
 <footer id={waitlistAnchor ? 'download' : undefined} class:list={['reveal bg-beige', waitlistAnchor && 'scroll-mt-32']}>
 	<div class="mx-auto max-w-2xl px-6 py-24 text-center sm:py-32">
-		<h2 class="text-4xl font-extrabold tracking-tight text-burgundy sm:text-5xl font-sans">Start showing who you really are.</h2>
+		<h2 class="text-4xl font-extrabold tracking-tight text-burgundy sm:text-5xl font-sans">Start showcasing who you really are.</h2>
 		<p class="mt-4 text-base/7 text-muted">Your next opportunity starts here.</p>
-		<StoreBadges class="mt-10 justify-center" />
-		<p class="mt-6 flex items-center justify-center gap-2 text-sm font-semibold text-burgundy">
-			<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-5">
-				<path d="M16.704 5.29a.75.75 0 0 1 .006 1.06l-7.5 7.6a.75.75 0 0 1-1.07 0l-3.75-3.8a.75.75 0 1 1 1.07-1.052l3.215 3.257 6.965-7.06a.75.75 0 0 1 1.06-.005Z" clip-rule="evenodd" fill-rule="evenodd" />
-			</svg>
-			Free to download on iOS and Android.
-		</p>
+		{waitlistUrl ? (
+			<a href={waitlistUrl} class="mt-10 inline-flex rounded-full bg-primary-crimson px-7 py-3 text-base font-semibold text-white transition hover:bg-primary-crimson/90">Join the London waitlist</a>
+		) : (
+			<>
+				<StoreBadges class="mt-10 justify-center" />
+				<p class="mt-6 flex items-center justify-center gap-2 text-sm font-semibold text-burgundy">
+					<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-5">
+						<path d="M16.704 5.29a.75.75 0 0 1 .006 1.06l-7.5 7.6a.75.75 0 0 1-1.07 0l-3.75-3.8a.75.75 0 1 1 1.07-1.052l3.215 3.257 6.965-7.06a.75.75 0 0 1 1.06-.005Z" clip-rule="evenodd" fill-rule="evenodd" />
+					</svg>
+					Free to download on iOS and Android.
+				</p>
+			</>
+		)}
+		{socials && <SocialLinks class="mt-10" />}
 	</div>
 	<div class="border-t border-line">
 		<p class="mx-auto max-w-7xl px-6 py-8 text-center text-sm/6 text-muted lg:px-8">&copy; 2026 Buzbo. All rights reserved.</p>

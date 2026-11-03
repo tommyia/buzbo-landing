@@ -4,6 +4,7 @@ import { formatDayLong, formatTimeRange, formatUtcOffset } from '../../lib/event
 import { nextRefresh, questionnaireLink, type OrderView } from '../../lib/events/order';
 import { eventsHref } from '../../lib/events/paths';
 import { qrSvg } from '../../lib/events/qr';
+import { eventWaitlistUrl } from '../../lib/events/unlisted';
 
 // One order, in whichever state it is: a ticket, a payment still settling, or cancelled.
 // The page that renders this has already set no-store and noindex.
@@ -36,6 +37,7 @@ const questionnaire = questionnaireLink(order);
 	titleSuffix="Buzbo Events"
 	robots="noindex, nofollow"
 	analytics={false}
+	footerWaitlistUrl={eventWaitlistUrl(event.slug)}
 	canonical={new URL(eventHref, Astro.url.origin).href}
 >
 	{/* One fragment for the slot: an element and an expression that each name the same

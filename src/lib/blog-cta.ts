@@ -125,14 +125,14 @@ export function ctaCardHtml(input: {
 		.map((store) => badgeHtml(store, links[store]))
 		.join('');
 	const qr = input.device === 'ios' || input.device === 'android' ? '' : qrHtml(input.slug);
-	return `<aside class="blog-cta not-prose my-10 flex items-center gap-6 rounded-2xl bg-tint p-6 ring-1 ring-burgundy/15" data-cta-placement="${input.placement}"><div class="min-w-0 flex-1"><p class="font-serif text-2xl leading-tight text-primary-crimson">${escapeHtml(input.heading)}</p><p class="mt-2 text-gray-700">${escapeHtml(input.text)}</p><div class="mt-4 flex flex-wrap gap-3">${badges}</div></div>${qr}</aside>`;
+	return `<aside class="blog-cta not-prose my-10 flex items-center gap-6 rounded-2xl bg-white p-6 ring-1 ring-burgundy/15" data-cta-placement="${input.placement}"><div class="min-w-0 flex-1"><p class="font-serif text-2xl leading-tight text-primary-crimson">${escapeHtml(input.heading)}</p><p class="mt-2 text-gray-700">${escapeHtml(input.text)}</p><div class="mt-4 flex flex-wrap gap-3">${badges}</div></div>${qr}</aside>`;
 }
 
 /** The bar on a phone: one line and the one badge it can use. */
 export function ctaStickyHtml(input: { slug: string; device: GoDevice }): string {
 	const links = ctaStoreLinks(input.slug, 'sticky');
 	const store = ctaStores(input.device)[0]!;
-	return `<div class="blog-cta-sticky fixed inset-x-3 bottom-3 z-40 flex translate-y-[150%] items-center gap-3 rounded-2xl bg-cream p-3 shadow-lg ring-1 ring-burgundy/20 transition-transform duration-300 md:hidden" data-cta-placement="sticky" hidden><p class="min-w-0 flex-1 text-sm leading-snug text-ink">Meet professionals near you. <span class="font-semibold">Free app.</span></p>${badgeHtml(store, links[store], true)}<button type="button" data-cta-dismiss class="shrink-0 rounded-full p-1.5 text-muted hover:bg-tint" aria-label="Close"><svg viewBox="0 0 24 24" class="size-4" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>`;
+	return `<div class="blog-cta-sticky fixed inset-x-3 bottom-3 z-40 flex translate-y-[150%] items-center gap-3 rounded-2xl bg-cream p-3 shadow-lg ring-1 ring-burgundy/20 transition-transform duration-300 md:hidden" data-cta-placement="sticky" hidden><p class="min-w-0 flex-1 text-sm leading-snug text-ink">Meet professionals near you. <span class="font-semibold">Free app.</span></p>${badgeHtml(store, links[store], true)}<button type="button" data-cta-dismiss class="shrink-0 rounded-full p-1.5 text-muted hover:bg-burgundy/5" aria-label="Close"><svg viewBox="0 0 24 24" class="size-4" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>`;
 }
 
 const MARKER = /<div\b(?=[^>]*\bdata-buzbo-cta\b)([^>]*)>\s*<\/div>/gi;
@@ -140,6 +140,15 @@ const MARKER = /<div\b(?=[^>]*\bdata-buzbo-cta\b)([^>]*)>\s*<\/div>/gi;
 function attribute(attrs: string, name: string): string {
 	const found = new RegExp(`\\b${name}="([^"]*)"`, 'i').exec(attrs);
 	return found ? decodeAttribute(found[1]!).trim() : '';
+}
+
+/**
+ * Whether the writer placed a block in the article. When they did, the page leaves
+ * out the end card: the writer chose where the call to action goes, and two cards a
+ * short FAQ apart read as one too many.
+ */
+export function hasInlineCta(html: string): boolean {
+	return new RegExp(MARKER.source, 'i').test(html);
 }
 
 /**

@@ -2,7 +2,7 @@
 import BlogLayout from '../../layouts/BlogLayout.astro';
 import ShareButtons from '../../components/ShareButtons.astro';
 import BlogCtaTracking from '../../components/BlogCtaTracking.astro';
-import { CTA_DEFAULT, ctaCardHtml, ctaStickyHtml, renderInlineCtas } from '../../lib/blog-cta';
+import { CTA_DEFAULT, ctaCardHtml, ctaStickyHtml, hasInlineCta, renderInlineCtas } from '../../lib/blog-cta';
 import { deviceOf } from '../../lib/go';
 import { getPublicSupabase, isSupabaseConfigured } from '../../lib/supabase';
 import { PAGE_SEO } from '../../lib/seo';
@@ -47,7 +47,10 @@ const coverImage = article.cover_image_url
 // code on a computer. See lib/blog-cta.ts.
 const device = deviceOf(Astro.request.headers.get('user-agent') ?? '');
 const contentHtml = renderInlineCtas(article.content_html ?? '', { slug: article.slug, device });
-const endCta = ctaCardHtml({ ...CTA_DEFAULT, slug: article.slug, placement: 'end', device });
+// The writer's own block replaces the end card, so a page never shows two.
+const endCta = hasInlineCta(article.content_html ?? '')
+	? ''
+	: ctaCardHtml({ ...CTA_DEFAULT, slug: article.slug, placement: 'end', device });
 const stickyCta = device === 'ios' || device === 'android' ? ctaStickyHtml({ slug: article.slug, device }) : '';
 // Only from a real "FAQ" section in the post; null for posts without one.
 const faqJsonLd = faqPageJsonLd(extractFaq(article.content_html ?? ''));

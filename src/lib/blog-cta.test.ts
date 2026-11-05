@@ -6,6 +6,7 @@ import {
 	ctaStoreLinks,
 	ctaStores,
 	getAppDestination,
+	hasInlineCta,
 	renderInlineCtas,
 } from './blog-cta.ts';
 
@@ -94,6 +95,17 @@ describe('renderInlineCtas', () => {
 
 	it('leaves an article without a marker as it is', () => {
 		assert.equal(renderInlineCtas('<p>Plain</p>', ctx), '<p>Plain</p>');
+	});
+});
+
+describe('hasInlineCta', () => {
+	it('sees the block the writer placed, so the end card is left out', () => {
+		assert.equal(hasInlineCta('<p>a</p><div data-buzbo-cta="" data-heading="" data-text=""></div>'), true);
+	});
+
+	it('is false for an article without one, which keeps the end card', () => {
+		assert.equal(hasInlineCta('<p>Plain</p>'), false);
+		assert.equal(hasInlineCta(''), false);
 	});
 });
 

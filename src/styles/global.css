@@ -370,7 +370,7 @@ body {
    are underlined crimson; the badges keep their own look. */
 .blog-prose .blog-cta a,
 .blog-cta-sticky a {
-	color: var(--color-cream);
+	color: var(--color-burgundy);
 	text-decoration: none;
 }
 

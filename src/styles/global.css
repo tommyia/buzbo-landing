@@ -365,3 +365,20 @@ body {
 .event-flow :is(h1, h2, h3, h4, h5, h6) {
 	font-family: var(--font-sans);
 }
+
+/* The blog's call to action (lib/blog-cta.ts). Inside .blog-prose, where links
+   are underlined crimson; the badges keep their own look. */
+.blog-prose .blog-cta a,
+.blog-cta-sticky a {
+	color: var(--color-cream);
+	text-decoration: none;
+}
+
+.blog-cta [data-cta-qr] {
+	width: 100%;
+	height: 100%;
+}
+
+.blog-cta-sticky.is-shown {
+	transform: translateY(0);
+}

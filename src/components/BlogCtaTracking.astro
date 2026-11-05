@@ -1,0 +1,104 @@
+---
+/**
+ * Measures the blog's call to action (lib/blog-cta.ts) in GA4 and Meta:
+ *  - blog_cta_view_<placement> once per page when half the card is on screen,
+ *  - blog_cta_click_<placement>_<ios|android> on a badge tap, plus app_download_click
+ *    so the site-wide download count includes it,
+ *  - blog_cta_dismiss_sticky when the phone bar is closed.
+ * Also shows the phone bar once half the article is read, and hides it while another
+ * call to action is on screen.
+ */
+interface Props {
+	slug: string;
+}
+const { slug } = Astro.props;
+---
+
+<div data-blog-cta-slug={slug} hidden></div>
+<script>
+	type Gtag = (command: 'event', name: string, params: Record<string, string>) => void;
+	type Fbq = (command: 'track', name: string, params: Record<string, string>) => void;
+	const w = window as unknown as { gtag?: Gtag; fbq?: Fbq };
+	const slug = document.querySelector<HTMLElement>('[data-blog-cta-slug]')?.dataset.blogCtaSlug ?? '';
+	const send = (name: string, params: Record<string, string>) => {
+		if (typeof w.gtag === 'function') w.gtag('event', name, { article: slug, ...params });
+	};
+
+	const cards = [...document.querySelectorAll<HTMLElement>('[data-cta-placement]')];
+	const seen = new Set<string>();
+	const onScreen = new Set<HTMLElement>();
+	const sticky = document.querySelector<HTMLElement>('.blog-cta-sticky');
+	const article = document.querySelector<HTMLElement>('.blog-prose');
+	let dismissed = sessionStorage.getItem('blog-cta-dismissed') === '1';
+	let halfRead = false;
+
+	function updateSticky() {
+		if (!sticky) return;
+		const otherVisible = [...onScreen].some((el) => el !== sticky);
+		const show = halfRead && !dismissed && !otherVisible;
+		if (show) sticky.hidden = false;
+		sticky.classList.toggle('is-shown', show);
+	}
+
+	const observer = new IntersectionObserver(
+		(entries) => {
+			for (const entry of entries) {
+				const el = entry.target as HTMLElement;
+				const placement = el.dataset.ctaPlacement ?? '';
+				if (entry.isIntersecting) {
+					onScreen.add(el);
+					if (!seen.has(placement)) {
+						seen.add(placement);
+						send(`blog_cta_view_${placement}`, { placement });
+					}
+				} else {
+					onScreen.delete(el);
+				}
+			}
+			updateSticky();
+		},
+		{ threshold: 0.5 },
+	);
+	for (const card of cards) if (card !== sticky) observer.observe(card);
+
+	// The bar counts as seen when it slides in.
+	if (sticky) {
+		sticky.addEventListener('transitionend', () => {
+			if (sticky.classList.contains('is-shown') && !seen.has('sticky')) {
+				seen.add('sticky');
+				send('blog_cta_view_sticky', { placement: 'sticky' });
+			}
+		});
+		sticky.querySelector('[data-cta-dismiss]')?.addEventListener('click', () => {
+			dismissed = true;
+			sessionStorage.setItem('blog-cta-dismissed', '1');
+			send('blog_cta_dismiss_sticky', { placement: 'sticky' });
+			updateSticky();
+		});
+	}
+
+	if (article) {
+		const onScroll = () => {
+			const rect = article.getBoundingClientRect();
+			const read = (window.innerHeight - rect.top) / Math.max(1, rect.height);
+			if (read >= 0.5 && !halfRead) {
+				halfRead = true;
+				updateSticky();
+				window.removeEventListener('scroll', onScroll);
+			}
+		};
+		window.addEventListener('scroll', onScroll, { passive: true });
+	}
+
+	for (const card of cards) {
+		const placement = card.dataset.ctaPlacement ?? '';
+		card.querySelectorAll<HTMLAnchorElement>('[data-cta-store]').forEach((link) => {
+			link.addEventListener('click', () => {
+				const store = link.dataset.ctaStore ?? '';
+				send(`blog_cta_click_${placement}_${store === 'app_store' ? 'ios' : 'android'}`, { placement, store });
+				send('app_download_click', { store, placement });
+				if (typeof w.fbq === 'function') w.fbq('track', 'Lead', { content_name: `blog_${placement}_${store}` });
+			});
+		});
+	}
+</script>

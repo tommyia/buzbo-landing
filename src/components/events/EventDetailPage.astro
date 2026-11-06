@@ -272,7 +272,7 @@ const chip = 'flex items-center gap-3';
 
 	type AirwallexSdk = {
 		init(options: { env: string; enabledElements: string[] }): Promise<{
-			payments: { redirectToCheckout(options: Record<string, string>): void };
+			payments: { redirectToCheckout(options: Record<string, unknown>): void };
 		}>;
 	};
 
@@ -488,7 +488,7 @@ const chip = 'flex items-center gap-3';
 					location.href = step.url;
 					return;
 				}
-				const { payments } = await (await loadSdk()).init({ env: step.options.env, enabledElements: ['payments'] });
+				const { payments } = await (await loadSdk()).init({ env: String(step.options.env), enabledElements: ['payments'] });
 				payments.redirectToCheckout(step.options);
 			} catch (err) {
 				fail(err instanceof Error ? err.message : 'Something went wrong. Nothing was charged.');

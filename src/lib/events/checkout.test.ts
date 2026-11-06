@@ -40,6 +40,8 @@ describe('nextStep', () => {
         currency: 'EUR',
         successUrl: 'https://buzbo.com/e-abc/orders/tok?welcome=1',
         cancelUrl: here,
+        applePayRequestOptions: { countryCode: 'NL' },
+        googlePayRequestOptions: { countryCode: 'NL' },
       },
     });
   });

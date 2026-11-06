@@ -11,7 +11,7 @@ export type CheckoutAnswer = {
 
 export type NextStep =
   | { kind: 'redirect'; url: string }
-  | { kind: 'airwallex'; options: Record<string, string> };
+  | { kind: 'airwallex'; options: Record<string, unknown> };
 
 export function checkoutLabel(priceCents: number): 'Buy ticket' | 'Register' {
   return priceCents > 0 ? 'Buy ticket' : 'Register';
@@ -93,6 +93,13 @@ export function nextStep(data: CheckoutAnswer, here: string): NextStep {
       // kept every buyer in EUR (found 2026-10-27 from a UK connection).
       successUrl: orderUrl,
       cancelUrl: here,
+      // The MERCHANT's country, not the buyer's: Buzbo sells from the Netherlands. It
+      // does not touch currency conversion, which follows the buyer's location. Apple Pay
+      // is active on the account for every currency and country, yet the page did not
+      // offer it without this (found 2026-11-06 on an iPhone that pays fine on Apple's
+      // own demo). Google Pay takes the same option.
+      applePayRequestOptions: { countryCode: 'NL' },
+      googlePayRequestOptions: { countryCode: 'NL' },
     },
   };
 }

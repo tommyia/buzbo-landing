@@ -1,5 +1,5 @@
 import { getPublicSupabase, isSupabaseConfigured } from '../supabase';
-import type { EventDetail, EventSummary } from './types';
+import { SITE_EVENT_COUNTRY, type EventDetail, type EventSummary } from './types';
 import { withoutUnlisted } from './unlisted';
 
 const EVENTS_TABLE = 'buzbo_events';
@@ -14,7 +14,7 @@ const DETAIL_COLUMNS =
 // query says what it means, and still means it if this file is ever pointed at a key
 // that sees more.
 
-/** Every listed published event that has a start time. Never throws: a visitor gets the empty
+/** Every listed published event in this site's country that has a start time. Never throws: a visitor gets the empty
  *  state, not a database error. */
 export async function listPublishedEvents(): Promise<EventSummary[]> {
   if (!isSupabaseConfigured()) return [];
@@ -23,6 +23,7 @@ export async function listPublishedEvents(): Promise<EventSummary[]> {
     .from(EVENTS_TABLE)
     .select(SUMMARY_COLUMNS)
     .eq('status', 'published')
+    .eq('country', SITE_EVENT_COUNTRY)
     .not('starts_at', 'is', null)
     .order('starts_at', { ascending: true });
 

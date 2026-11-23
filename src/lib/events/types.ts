@@ -1,6 +1,10 @@
 // Rows of buzbo_events and buzbo_event_ticket_types, as the publishable key sees them:
 // published events only. They are authored in buzbo-event (Landing Page → Events).
 
+/** The country whose events buzbo.com lists. GB events are listed on london.buzbo.com;
+ *  their detail pages and checkout still live here. */
+export const SITE_EVENT_COUNTRY = 'NL';
+
 export interface TicketPrice {
   /** Integer cents. 0 is a free ticket. */
   price_cents: number;

@@ -1,4 +1,5 @@
 ---
+import { allEventsHref } from '../../lib/events/country';
 import BlogLayout from '../../layouts/BlogLayout.astro';
 import ShareButtons from '../../components/ShareButtons.astro';
 import {
@@ -92,7 +93,7 @@ const chip = 'flex items-center gap-3';
 >
 	<article class={`event-flow mx-auto max-w-6xl px-6 pb-20 lg:px-8 ${bare ? 'pt-6 lg:pt-8' : 'pt-36 lg:pt-44'}`}>
 		{bare ? null : (
-			<a href={eventsHref()} class="text-sm font-semibold text-primary-crimson hover:underline">← All events</a>
+			<a href={allEventsHref(event.country, eventsHref())} class="text-sm font-semibold text-primary-crimson hover:underline">← All events</a>
 		)}
 
 		<header class:list={[{ 'mt-6': !bare }, "grid items-center gap-8 rounded-3xl bg-beige p-6 sm:p-8 lg:grid-cols-[1fr_20rem] lg:gap-12 lg:p-10"]}>

@@ -8,7 +8,7 @@ const SUMMARY_COLUMNS =
   'id, title, slug, summary, cover_image_url, starts_at, ends_at, timezone, venue_name, city, host_name, ticket_types:buzbo_event_ticket_types(price_cents, currency)';
 
 const DETAIL_COLUMNS =
-  'id, title, slug, summary, description_html, cover_image_url, starts_at, ends_at, timezone, venue_name, venue_address, city, map_url, host_name, seo_title, seo_description, updated_at, ticket_types:buzbo_event_ticket_types(id, name, description, price_cents, currency, max_buddies, position)';
+  'id, title, slug, summary, description_html, cover_image_url, starts_at, ends_at, timezone, venue_name, venue_address, city, country, map_url, host_name, seo_title, seo_description, updated_at, ticket_types:buzbo_event_ticket_types(id, name, description, price_cents, currency, max_buddies, position)';
 
 // RLS already hides drafts from the publishable key. The status filter is repeated so the
 // query says what it means, and still means it if this file is ever pointed at a key

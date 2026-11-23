@@ -39,6 +39,8 @@ export interface EventSummary {
 
 /** What the page at /events/<slug> needs. */
 export interface EventDetail extends Omit<EventSummary, 'ticket_types'> {
+  /** 'NL' or 'GB'. GB events are listed on london.buzbo.com. */
+  country: string;
   description_html: string | null;
   venue_address: string | null;
   map_url: string | null;

@@ -1,5 +1,6 @@
 ---
 import { allEventsHref } from '../../lib/events/country';
+import { isLondonEvent } from '../../lib/events/list-filter';
 import BlogLayout from '../../layouts/BlogLayout.astro';
 import ShareButtons from '../../components/ShareButtons.astro';
 import {
@@ -90,6 +91,7 @@ const chip = 'flex items-center gap-3';
 	hideHeader={bare}
 	footerWaitlistUrl={eventWaitlistUrl(event.slug)}
 	footerSocials={bare}
+	site={isLondonEvent(event) ? 'london' : 'buzbo'}
 >
 	<article class={`event-flow mx-auto max-w-6xl px-6 pb-20 lg:px-8 ${bare ? 'pt-6 lg:pt-8' : 'pt-36 lg:pt-44'}`}>
 		{bare ? null : (

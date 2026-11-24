@@ -1,0 +1,44 @@
+---
+import { LONDON_SITE_URL as L } from '../../lib/events/london';
+---
+
+<div id="announcement-bar" class="relative flex items-center gap-x-6 bg-burgundy px-6 py-2.5 after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-cream/20 sm:px-3.5 sm:before:flex-1">
+	<p class="text-sm/6 text-white">
+		<a href={`${L}/#signup`}>
+			<strong class="font-semibold">BUZBO is coming to London</strong><svg viewBox="0 0 2 2" aria-hidden="true" class="mx-2 inline size-0.5 fill-current"></svg>→ Join the waitlist &amp; get updated on our upcoming events in London!
+		</a>
+	</p>
+	<div class="flex flex-1 justify-end">
+		<button type="button" data-announcement-dismiss class="-m-3 p-3 focus-visible:-outline-offset-4">
+			<span class="sr-only">Dismiss</span>
+			<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-5 text-white">
+				<path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z"></path>
+			</svg>
+		</button>
+	</div>
+</div>
+
+<script is:inline>
+	(function () {
+		var KEY = 'buzbo-uk-banner-dismissed';
+		var bar = document.getElementById('announcement-bar');
+		if (!bar) return;
+		// Storage can throw (private windows, blocked site data); the bar then
+		// simply comes back on the next page load.
+		try {
+			if (sessionStorage.getItem(KEY) === '1') {
+				bar.remove();
+				return;
+			}
+		} catch (e) {}
+		var dismiss = bar.querySelector('[data-announcement-dismiss]');
+		if (dismiss) {
+			dismiss.addEventListener('click', function () {
+				bar.remove();
+				try {
+					sessionStorage.setItem(KEY, '1');
+				} catch (e) {}
+			});
+		}
+	})();
+</script>

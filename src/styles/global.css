@@ -4,6 +4,8 @@
 @theme {
 	/* Brand: 50% cream, 30% beige + white, 20% burgundy */
 	--color-cream: #f7f3e9;
+	/* london.buzbo.com's darkest burgundy: the London footer on a GB event's pages. */
+	--color-burgundy-darkest: #2a0b10;
 	--color-beige: #ede4d5;
 	--color-burgundy: #801c29;
 	--color-ink: #1e1a17;
@@ -53,6 +55,11 @@
 			background-position: -200% 0;
 		}
 	}
+}
+
+/* london.buzbo.com's side padding, for the London header and footer (components/london). */
+@utility pad-x {
+	padding-inline: clamp(20px, 8.5vw, 200px);
 }
 
 @layer base {

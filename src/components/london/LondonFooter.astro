@@ -1,0 +1,14 @@
+---
+import { LONDON_SOCIAL as SOCIAL } from '../../lib/events/london';
+
+const MAIN_SITE_URL = '/';
+---
+
+<footer class="pad-x flex flex-wrap items-center justify-between gap-4 bg-burgundy-darkest py-8 text-sm/6 text-cream/75">
+	<span>&copy; 2026 Buzbo. All rights reserved.</span>
+	<div class="flex gap-7">
+		<a href={MAIN_SITE_URL} class="underline hover:text-cream">buzbo.com</a>
+		<a href={SOCIAL.instagram} target="_blank" rel="noopener" class="underline hover:text-cream">Instagram</a>
+		<a href={SOCIAL.linkedin} target="_blank" rel="noopener" class="underline hover:text-cream">LinkedIn</a>
+	</div>
+</footer>

@@ -1,4 +1,5 @@
 ---
+import { isLondonEvent } from '../../lib/events/list-filter';
 import BlogLayout from '../../layouts/BlogLayout.astro';
 import { formatDayLong, formatTimeRange, formatUtcOffset } from '../../lib/events/format';
 import { nextRefresh, questionnaireLink, type OrderView } from '../../lib/events/order';
@@ -38,6 +39,7 @@ const questionnaire = questionnaireLink(order);
 	robots="noindex, nofollow"
 	analytics={false}
 	footerWaitlistUrl={eventWaitlistUrl(event.slug)}
+	site={isLondonEvent(event) ? 'london' : 'buzbo'}
 	canonical={new URL(eventHref, Astro.url.origin).href}
 >
 	{/* One fragment for the slot: an element and an expression that each name the same

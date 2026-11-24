@@ -2,6 +2,7 @@
 import EventCard from '../../components/events/EventCard.astro';
 import BlogLayout from '../../layouts/BlogLayout.astro';
 import { formatDayShort, formatWeekday, groupByDay, splitByTime } from '../../lib/events/format';
+import { eventsListHref, listCountry } from '../../lib/events/list-filter';
 import { eventsHref } from '../../lib/events/paths';
 import { listPublishedEvents } from '../../lib/events/queries';
 import { PAGE_SEO } from '../../lib/seo';
@@ -9,10 +10,17 @@ import { PAGE_SEO } from '../../lib/seo';
 export const prerender = false;
 
 const period = Astro.url.searchParams.get('period') === 'past' ? 'past' : 'upcoming';
-const { upcoming, past } = splitByTime(await listPublishedEvents(), new Date());
+// NL by default; ?country=uk shows the London events (their pages wear the London look).
+const country = listCountry(Astro.url.searchParams.get('country'));
+const { upcoming, past } = splitByTime(await listPublishedEvents(country), new Date());
+const where = country === 'GB' ? 'the UK' : 'the Netherlands';
+const listHref = (c: typeof country, p: typeof period) => eventsListHref(eventsHref(), c, p);
 const shown = period === 'past' ? past : upcoming;
 const days = groupByDay(shown);
 
+// The country links load a new page, so they keep the plain aria-current look.
+const countryTab =
+	'rounded-full px-4 py-1.5 text-muted transition-colors hover:text-ink aria-[current=page]:bg-white aria-[current=page]:text-ink aria-[current=page]:shadow-sm';
 // The look follows aria-current, so the script only has to move that attribute. With the
 // script running, a sliding pill draws the white background instead (data-thumb on the nav).
 const tab =
@@ -23,7 +31,7 @@ const tab =
 	title={PAGE_SEO.events.title}
 	description={PAGE_SEO.events.description}
 	keywords={PAGE_SEO.events.keywords}
-	canonical={new URL(eventsHref(), Astro.url.origin).href}
+	canonical={new URL(listHref(country, 'upcoming'), Astro.url.origin).href}
 	image={PAGE_SEO.events.image}
 	titleSuffix="Buzbo"
 >
@@ -35,17 +43,23 @@ const tab =
 					Show up as the real you and connect on what actually matters. Before the event, we pre-match you with 3 people based on what you’re looking for: a new job, a new hire, a co-founder, an industry expert and beyond. Intentional networking, designed so you leave the room with real opportunities.
 				</p>
 			</div>
+			<div class="flex flex-wrap items-center gap-3">
+			<nav aria-label="Where" class="inline-flex rounded-full bg-beige p-1 text-sm font-semibold">
+				<a href={listHref('NL', period)} aria-current={country === 'NL' ? 'page' : undefined} class={countryTab}>Netherlands</a>
+				<a href={listHref('GB', period)} aria-current={country === 'GB' ? 'page' : undefined} class={countryTab}>United Kingdom</a>
+			</nav>
 			<nav aria-label="Which events" class="group/tabs relative inline-flex rounded-full bg-beige p-1 text-sm font-semibold">
 				<span data-tab-thumb aria-hidden="true" class="absolute inset-y-1 left-0 hidden rounded-full bg-white shadow-sm group-data-thumb/tabs:block"></span>
-				<a href={eventsHref()} data-period-tab aria-current={period === 'upcoming' ? 'page' : undefined} class={tab}>Upcoming</a>
-				<a href={eventsHref('?period=past')} data-period-tab aria-current={period === 'past' ? 'page' : undefined} class={tab}>Past</a>
+				<a href={listHref(country, 'upcoming')} data-period-tab aria-current={period === 'upcoming' ? 'page' : undefined} class={tab}>Upcoming</a>
+				<a href={listHref(country, 'past')} data-period-tab aria-current={period === 'past' ? 'page' : undefined} class={tab}>Past</a>
 			</nav>
+			</div>
 		</div>
 
 		<div data-events-list aria-live="polite">
 		{days.length === 0 ? (
 			<p class="mt-12 rounded-2xl bg-white px-6 py-12 text-center text-muted ring-1 ring-line">
-				{period === 'past' ? 'No past events yet.' : 'No upcoming events right now.'}
+				{period === 'past' ? `No past events in ${where} yet.` : `No upcoming events in ${where} right now.`}
 			</p>
 		) : (
 			<ol class="mt-12">

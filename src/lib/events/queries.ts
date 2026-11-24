@@ -14,16 +14,16 @@ const DETAIL_COLUMNS =
 // query says what it means, and still means it if this file is ever pointed at a key
 // that sees more.
 
-/** Every listed published event in this site's country that has a start time. Never throws: a visitor gets the empty
+/** Every listed published event in one country (this site's, NL, unless the list filter asks for GB) that has a start time. Never throws: a visitor gets the empty
  *  state, not a database error. */
-export async function listPublishedEvents(): Promise<EventSummary[]> {
+export async function listPublishedEvents(country: string = SITE_EVENT_COUNTRY): Promise<EventSummary[]> {
   if (!isSupabaseConfigured()) return [];
 
   const { data, error } = await getPublicSupabase()
     .from(EVENTS_TABLE)
     .select(SUMMARY_COLUMNS)
     .eq('status', 'published')
-    .eq('country', SITE_EVENT_COUNTRY)
+    .eq('country', country)
     .not('starts_at', 'is', null)
     .order('starts_at', { ascending: true });
 

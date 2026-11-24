@@ -5,6 +5,8 @@ import MetaPixel from '../components/MetaPixel.astro';
 import Seo from '../components/Seo.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import SiteHeader from '../components/SiteHeader.astro';
+import LondonFooter from '../components/london/LondonFooter.astro';
+import LondonHeader from '../components/london/LondonHeader.astro';
 import { PAGE_SEO, SITE_NAME } from '../lib/seo';
 import '../styles/global.css';
 
@@ -36,6 +38,8 @@ interface Props {
 	footerWaitlistUrl?: string | null;
 	/** Shows Buzbo's social media links in the footer. */
 	footerSocials?: boolean;
+	/** 'london' wears london.buzbo.com's header and footer: a GB event's detail and order pages. */
+	site?: 'buzbo' | 'london';
 }
 
 const {
@@ -57,6 +61,7 @@ const {
 	hideHeader = false,
 	footerWaitlistUrl = null,
 	footerSocials = false,
+	site = 'buzbo',
 } = Astro.props;
 
 const fullTitle = `${title} · ${titleSuffix}`;
@@ -108,10 +113,14 @@ const articleJsonLd =
 		<slot name="head" />
 	</head>
 	<body class="bg-primary-beige font-sans antialiased text-gray-900">
-		{hideHeader ? null : <SiteHeader />}
+		{hideHeader ? null : site === 'london' ? <LondonHeader /> : <SiteHeader />}
 		<main>
 			<slot />
 		</main>
-		<SiteFooter waitlistAnchor={footerWaitlistAnchor} waitlistUrl={footerWaitlistUrl} socials={footerSocials} />
+		{site === 'london' ? (
+			<LondonFooter />
+		) : (
+			<SiteFooter waitlistAnchor={footerWaitlistAnchor} waitlistUrl={footerWaitlistUrl} socials={footerSocials} />
+		)}
 	</body>
 </html>

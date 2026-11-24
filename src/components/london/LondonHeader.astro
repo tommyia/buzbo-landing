@@ -1,0 +1,12 @@
+---
+// london.buzbo.com's announcement bar and header, on a GB event's pages here, so
+// somebody who came from the London site finds their way back to it. Copied from
+// buzbo-landing-uk (AnnouncementBar.astro, SiteHeader.astro); every link goes there.
+import LondonAnnouncementBar from './LondonAnnouncementBar.astro';
+import LondonNav from './LondonNav.astro';
+---
+
+<div class="fixed inset-x-0 top-0 z-50">
+	<LondonAnnouncementBar />
+	<LondonNav />
+</div>

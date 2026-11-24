@@ -1,0 +1,87 @@
+---
+import { checkoutApiUrl } from '../lib/events/paths';
+import { subscribeEndpoint } from '../lib/newsletter';
+
+// buzbo-be adds the address and sends the welcome email. Without its address the form is left out.
+const endpoint = subscribeEndpoint(checkoutApiUrl());
+---
+
+{endpoint && (
+	<div class="border-t border-line">
+		<div class="mx-auto max-w-xl px-6 py-14 text-center">
+			<h3 class="font-sans text-2xl font-extrabold tracking-tight text-burgundy">Get the Buzbo newsletter</h3>
+			<p class="mt-2 text-base/7 text-muted">Upcoming evenings and stories from the community, in your inbox. No spam.</p>
+			<form data-newsletter-form action={endpoint} method="post" class="mt-6 flex flex-col gap-3 sm:flex-row">
+				<label for="newsletter-email" class="sr-only">Email address</label>
+				<input
+					id="newsletter-email"
+					name="email"
+					type="email"
+					required
+					maxlength={320}
+					autocomplete="email"
+					placeholder="you@example.com"
+					class="min-w-0 flex-1 rounded-full border border-line bg-white px-5 py-3 text-base text-ink placeholder:text-muted/70 focus:outline-2 focus:outline-offset-2 focus:outline-burgundy"
+				/>
+				<!-- Honeypot: hidden from people and from assistive tech; only bots fill it. -->
+				<div aria-hidden="true" class="absolute -left-[9999px] size-px overflow-hidden">
+					<label for="newsletter-website">Website</label>
+					<input id="newsletter-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+				</div>
+				<button
+					type="submit"
+					class="cursor-pointer rounded-full bg-primary-crimson px-7 py-3 text-base font-semibold text-white transition hover:bg-primary-crimson/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-burgundy disabled:cursor-not-allowed disabled:opacity-60"
+				>Subscribe</button>
+			</form>
+			<p data-newsletter-status role="status" aria-live="polite" class="mt-3 hidden text-sm font-semibold"></p>
+			<p class="mt-4 text-xs/5 text-muted">You can unsubscribe at any time. See our <a href="/app/pp" class="underline hover:text-ink">Privacy Policy</a>.</p>
+		</div>
+	</div>
+)}
+
+<script>
+	import { subscribeResult } from '../lib/newsletter';
+
+	type Gtag = (command: 'event', name: string, params?: Record<string, string>) => void;
+	type Fbq = (command: 'track', name: string, params: Record<string, string>) => void;
+
+	for (const form of document.querySelectorAll<HTMLFormElement>('[data-newsletter-form]')) {
+		const status = form.parentElement?.querySelector<HTMLElement>('[data-newsletter-status]');
+		const button = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+		if (!status || !button) continue;
+		const idle = button.textContent;
+
+		form.addEventListener('submit', async (event) => {
+			event.preventDefault();
+			if (button.disabled) return;
+			const data = new FormData(form);
+			button.disabled = true;
+			button.textContent = 'Subscribing…';
+
+			let code = 0;
+			try {
+				const response = await fetch(form.action, {
+					method: 'POST',
+					headers: { 'content-type': 'application/json' },
+					body: JSON.stringify({ email: String(data.get('email') ?? ''), website: String(data.get('website') ?? '') }),
+				});
+				code = response.status;
+			} catch {
+				code = 0;
+			}
+
+			const result = subscribeResult(code);
+			status.textContent = result.message;
+			status.classList.remove('hidden', 'text-success', 'text-error');
+			status.classList.add(result.ok ? 'text-success' : 'text-error');
+			if (result.ok) {
+				form.reset();
+				const w = window as unknown as { gtag?: Gtag; fbq?: Fbq };
+				if (typeof w.gtag === 'function') w.gtag('event', 'generate_lead', { method: 'newsletter' });
+				if (typeof w.fbq === 'function') w.fbq('track', 'Lead', { content_name: 'newsletter' });
+			}
+			button.disabled = false;
+			button.textContent = idle;
+		});
+	}
+</script>

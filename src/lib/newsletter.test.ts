@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { subscribeEndpoint, subscribeResult } from './newsletter.ts';
+import { checkSignup, subscribeEndpoint, subscribeResult } from './newsletter.ts';
 
 test('the endpoint is buzbo-be’s subscribe route', () => {
 	assert.equal(subscribeEndpoint('https://api.buzbo.com'), 'https://api.buzbo.com/api/email/subscribe');
@@ -25,4 +25,18 @@ test('too many tries asks to wait', () => {
 test('anything else is a plain failure', () => {
 	assert.deepEqual(subscribeResult(503), { ok: false, message: 'Something went wrong. Please try again.' });
 	assert.deepEqual(subscribeResult(0), { ok: false, message: 'Something went wrong. Please try again.' });
+});
+
+test('a failed human check asks to try again', () => {
+	assert.deepEqual(subscribeResult(403), { ok: false, message: 'We could not confirm you are human. Please try again.' });
+});
+
+test('a sign-up needs a name and an email address that looks like one', () => {
+	assert.equal(checkSignup('Anna', 'anna@example.com'), null);
+	assert.equal(checkSignup('  ', 'anna@example.com'), 'Please enter your name.');
+	assert.equal(checkSignup('x'.repeat(101), 'anna@example.com'), 'Please keep your name under 100 characters.');
+	for (const email of ['', 'anna', 'anna@', 'anna@example', '@example.com', 'an na@example.com', 'anna@exa mple.com']) {
+		assert.equal(checkSignup('Anna', email), 'Enter a valid email address.', email);
+	}
+	assert.equal(checkSignup('Anna', `${'a'.repeat(310)}@example.com`), 'Enter a valid email address.');
 });

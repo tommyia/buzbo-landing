@@ -1,9 +1,12 @@
 ---
 import { checkoutApiUrl } from '../lib/events/paths';
-import { subscribeEndpoint } from '../lib/newsletter';
+import { NAME_MAX, subscribeEndpoint } from '../lib/newsletter';
+import { readEnv } from '../lib/env';
 
 // buzbo-be adds the address and sends the welcome email. Without its address the form is left out.
 const endpoint = subscribeEndpoint(checkoutApiUrl());
+// Turnstile shows once its site key is set; buzbo-be asks for the token once TURNSTILE_SECRET_KEY is set there.
+const turnstileSiteKey = readEnv('PUBLIC_TURNSTILE_SITE_KEY');
 ---
 
 {endpoint && (
@@ -11,7 +14,19 @@ const endpoint = subscribeEndpoint(checkoutApiUrl());
 		<div class="mx-auto max-w-xl px-6 py-14 text-center">
 			<h3 class="font-sans text-2xl font-extrabold tracking-tight text-burgundy">Get the Buzbo newsletter</h3>
 			<p class="mt-2 text-base/7 text-muted">Upcoming evenings and stories from the community, in your inbox. No spam.</p>
-			<form data-newsletter-form action={endpoint} method="post" class="mt-6 flex flex-col gap-3 sm:flex-row">
+			<form data-newsletter-form action={endpoint} method="post" novalidate class="mt-6 flex flex-col gap-3">
+				<div class="flex flex-col gap-3 sm:flex-row">
+				<label for="newsletter-name" class="sr-only">Name</label>
+				<input
+					id="newsletter-name"
+					name="name"
+					type="text"
+					required
+					maxlength={NAME_MAX}
+					autocomplete="given-name"
+					placeholder="Your name"
+					class="min-w-0 flex-1 rounded-full border border-line bg-white px-5 py-3 text-base text-ink placeholder:text-muted/70 focus:outline-2 focus:outline-offset-2 focus:outline-burgundy"
+				/>
 				<label for="newsletter-email" class="sr-only">Email address</label>
 				<input
 					id="newsletter-email"
@@ -32,18 +47,28 @@ const endpoint = subscribeEndpoint(checkoutApiUrl());
 					type="submit"
 					class="cursor-pointer rounded-full bg-primary-crimson px-7 py-3 text-base font-semibold text-white transition hover:bg-primary-crimson/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-burgundy disabled:cursor-not-allowed disabled:opacity-60"
 				>Subscribe</button>
+				</div>
+				{turnstileSiteKey && <div class="cf-turnstile flex justify-center" data-sitekey={turnstileSiteKey} data-size="flexible"></div>}
 			</form>
 			<p data-newsletter-status role="status" aria-live="polite" class="mt-3 hidden text-sm font-semibold"></p>
 			<p class="mt-4 text-xs/5 text-muted">You can unsubscribe at any time. See our <a href="/app/pp" class="underline hover:text-ink">Privacy Policy</a>.</p>
 		</div>
 	</div>
 )}
+{endpoint && turnstileSiteKey && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
 
 <script>
-	import { subscribeResult } from '../lib/newsletter';
+	import { checkSignup, subscribeResult } from '../lib/newsletter';
 
 	type Gtag = (command: 'event', name: string, params?: Record<string, string>) => void;
 	type Fbq = (command: 'track', name: string, params: Record<string, string>) => void;
+	type Turnstile = { reset: (widget?: string | HTMLElement) => void };
+
+	const show = (status: HTMLElement, ok: boolean, message: string) => {
+		status.textContent = message;
+		status.classList.remove('hidden', 'text-success', 'text-error');
+		status.classList.add(ok ? 'text-success' : 'text-error');
+	};
 
 	for (const form of document.querySelectorAll<HTMLFormElement>('[data-newsletter-form]')) {
 		const status = form.parentElement?.querySelector<HTMLElement>('[data-newsletter-status]');
@@ -55,6 +80,14 @@ const endpoint = subscribeEndpoint(checkoutApiUrl());
 			event.preventDefault();
 			if (button.disabled) return;
 			const data = new FormData(form);
+			const name = String(data.get('name') ?? '');
+			const email = String(data.get('email') ?? '');
+			const problem = checkSignup(name, email);
+			if (problem) return show(status, false, problem);
+			// Turnstile writes its token into a hidden field once the check passes.
+			const widget = form.querySelector<HTMLElement>('.cf-turnstile');
+			const turnstileToken = String(data.get('cf-turnstile-response') ?? '');
+			if (widget && !turnstileToken) return show(status, false, 'Please complete the check above the button.');
 			button.disabled = true;
 			button.textContent = 'Subscribing…';
 
@@ -63,7 +96,12 @@ const endpoint = subscribeEndpoint(checkoutApiUrl());
 				const response = await fetch(form.action, {
 					method: 'POST',
 					headers: { 'content-type': 'application/json' },
-					body: JSON.stringify({ email: String(data.get('email') ?? ''), website: String(data.get('website') ?? '') }),
+					body: JSON.stringify({
+						name: name.trim(),
+						email: email.trim(),
+						website: String(data.get('website') ?? ''),
+						...(turnstileToken ? { turnstileToken } : {}),
+					}),
 				});
 				code = response.status;
 			} catch {
@@ -71,9 +109,10 @@ const endpoint = subscribeEndpoint(checkoutApiUrl());
 			}
 
 			const result = subscribeResult(code);
-			status.textContent = result.message;
-			status.classList.remove('hidden', 'text-success', 'text-error');
-			status.classList.add(result.ok ? 'text-success' : 'text-error');
+			show(status, result.ok, result.message);
+			// A token is good once: any answer spends it, so a second try needs a fresh one.
+			const turnstile = (window as unknown as { turnstile?: Turnstile }).turnstile;
+			if (widget && turnstile) turnstile.reset(widget);
 			if (result.ok) {
 				form.reset();
 				const w = window as unknown as { gtag?: Gtag; fbq?: Fbq };

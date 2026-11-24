@@ -33,14 +33,14 @@ const tab =
 	titleSuffix="Buzbo"
 >
 	<section class="event-flow mx-auto max-w-4xl px-6 pt-36 pb-20 lg:px-8 lg:pt-44">
-		<div class="flex flex-wrap items-end justify-between gap-4">
-			<div>
-				<h1 class="font-sans text-4xl font-extrabold tracking-tight text-burgundy sm:text-5xl">Events</h1>
-				<p class="mt-3 max-w-2xl text-base/7 text-muted">
-					Show up as the real you and connect on what actually matters. Before the event, we pre-match you with 3 people based on what you’re looking for: a new job, a new hire, a co-founder, an industry expert and beyond. Intentional networking, designed so you leave the room with real opportunities.
-				</p>
-			</div>
-			<div class="ml-auto flex flex-wrap items-center justify-end gap-3">
+		<div>
+			<h1 class="font-sans text-4xl font-extrabold tracking-tight text-burgundy sm:text-5xl">Events</h1>
+			<p class="mt-3 max-w-2xl text-base/7 text-muted">
+				Show up as the real you and connect on what actually matters. Before the event, we pre-match you with 3 people based on what you’re looking for: a new job, a new hire, a co-founder, an industry expert and beyond. Intentional networking, designed so you leave the room with real opportunities.
+			</p>
+		</div>
+		{/* Upcoming / Past on the left, the country on the right. */}
+		<div class="mt-8 flex flex-wrap items-center justify-between gap-3">
 			<nav aria-label="Which events" class="group/tabs relative inline-flex rounded-full bg-beige p-1 text-sm font-semibold">
 				<span data-tab-thumb aria-hidden="true" class="absolute inset-y-1 left-0 hidden rounded-full bg-white shadow-sm group-data-thumb/tabs:block"></span>
 				<a href={listHref(country, 'upcoming')} data-period-tab aria-current={period === 'upcoming' ? 'page' : undefined} class={tab}>Upcoming</a>
@@ -64,7 +64,6 @@ const tab =
 				</svg>
 				<noscript><button type="submit" class="ml-2 text-sm font-semibold text-burgundy underline">Show</button></noscript>
 			</form>
-			</div>
 		</div>
 
 		<div data-events-list aria-live="polite">

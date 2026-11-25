@@ -17,6 +17,8 @@ export interface OrderView {
   ticket: { code: string; status: 'valid' | 'void'; type_name: string | null } | null;
   /** The event's questionnaire, while this ticket's holder has yet to fill it in. */
   questionnaire_url?: string | null;
+  /** For the Meta Purchase event: the buyer's own paid order only. Total in major units, 0 when free. */
+  purchase?: { id: string; value: number; currency: string; num_items: number } | null;
 }
 
 /** The same shape buzbo-be accepts. Anything else is not an order and is not sent. */

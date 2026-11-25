@@ -1,0 +1,68 @@
+---
+import BlogLayout from '../../layouts/BlogLayout.astro';
+import { isLondonEvent } from '../../lib/events/list-filter';
+import type { OrderView } from '../../lib/events/order';
+import type { PurchaseHandoff } from '../../lib/events/purchase';
+
+// The moment after checkout: tells Meta about the purchase, then moves on to the
+// questionnaire or the ticket. The address bar first shows the event page, not this
+// one: this page's address is the ticket, and the pixel reports the address it sees.
+interface Props {
+	order: OrderView;
+	handoff: PurchaseHandoff;
+}
+
+const { order, handoff } = Astro.props;
+---
+
+<BlogLayout
+	title={`Your ticket for ${order.event.title}`}
+	description="Your Buzbo event ticket."
+	titleSuffix="Buzbo Events"
+	robots="noindex, nofollow"
+	analytics={false}
+	site={isLondonEvent(order.event) ? 'london' : 'buzbo'}
+>
+	<Fragment slot="head">
+		<meta name="referrer" content="no-referrer" />
+		<noscript><meta http-equiv="refresh" content={`0;url=${handoff.next}`} /></noscript>
+	</Fragment>
+	<article class="mx-auto max-w-xl px-6 pt-36 pb-20 lg:pt-44">
+		<section class="rounded-2xl bg-white px-6 py-8 text-center ring-1 ring-line" aria-live="polite">
+			<p class="font-semibold text-ink">You're in! Your ticket is confirmed.</p>
+			<p class="mt-2 text-sm text-muted">One moment…</p>
+			<p class="mt-4 text-sm"><a href={handoff.next} class="font-semibold text-burgundy underline">Continue</a></p>
+		</section>
+	</article>
+</BlogLayout>
+
+<script is:inline define:vars={{ handoff }}>
+	(function () {
+		var go = function () { location.replace(handoff.next); };
+		// Never send the pixel from the ticket's own address.
+		try { history.replaceState(null, '', handoff.cleanPath); } catch (e) {}
+		if (location.pathname !== handoff.cleanPath) return go();
+
+		// Meta Pixel, as in MetaPixel.astro, without its PageView.
+		!function(f,b,e,v,n,t,s)
+		{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+		n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+		if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+		n.queue=[];t=b.createElement(e);t.async=!0;
+		t.src=v;s=b.getElementsByTagName(e)[0];
+		s.parentNode.insertBefore(t,s)}(window, document,'script',
+		'https://connect.facebook.net/en_US/fbevents.js');
+		fbq('init', '1402987591770334');
+		fbq('track', 'Purchase', handoff.params, { eventID: handoff.eventId });
+
+		// On once the pixel has had a moment to send, or after 2.5 s if it is blocked.
+		var done = false;
+		var once = function () { if (!done) { done = true; go(); } };
+		var tag = document.querySelector('script[src*="connect.facebook.net"]');
+		if (tag) {
+			tag.addEventListener('load', function () { setTimeout(once, 500); });
+			tag.addEventListener('error', once);
+		}
+		setTimeout(once, 2500);
+	})();
+</script>

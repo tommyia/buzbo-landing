@@ -1,8 +1,10 @@
 ---
 import OrderTicket from '../../../components/events/OrderTicket.astro';
+import PurchaseHandoff from '../../../components/events/PurchaseHandoff.astro';
 import BlogLayout from '../../../layouts/BlogLayout.astro';
 import { fetchOrder, nextRefresh, questionnaireLink, withLaterLink } from '../../../lib/events/order';
-import { checkoutApiUrl } from '../../../lib/events/paths';
+import { checkoutApiUrl, eventsHref } from '../../../lib/events/paths';
+import { purchaseHandoff } from '../../../lib/events/purchase';
 
 export const prerender = false;
 
@@ -29,9 +31,12 @@ const order = result.kind === 'found' ? result.order : null;
 
 // Straight from checkout: on to the questionnaire as soon as the ticket exists.
 const welcome = Astro.url.searchParams.get('welcome') === '1';
-const questionnaire = order && welcome ? questionnaireLink(order) : null;
+const ticketPage = `${Astro.url.origin}${Astro.url.pathname}`;
+// First, once, the Meta Purchase event on a page of its own; it then moves on itself.
+const handoff = order && welcome ? purchaseHandoff(order, ticketPage, eventsHref(`/${order.event.slug}`)) : null;
+const questionnaire = order && welcome && !handoff ? questionnaireLink(order) : null;
 if (questionnaire) {
-	return Astro.redirect(withLaterLink(questionnaire, `${Astro.url.origin}${Astro.url.pathname}`), 302);
+	return Astro.redirect(withLaterLink(questionnaire, ticketPage), 302);
 }
 ---
 
@@ -48,6 +53,8 @@ if (questionnaire) {
 			</section>
 		</article>
 	</BlogLayout>
+) : handoff ? (
+	<PurchaseHandoff order={order} handoff={handoff} />
 ) : (
 	<OrderTicket order={order} attempt={attempt} welcome={welcome} />
 )}
